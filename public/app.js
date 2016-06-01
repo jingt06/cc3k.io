@@ -13,9 +13,13 @@ document.addEventListener('DOMContentLoaded', function() {
 			context.beginPath();
 			context.arc(users[id].x,users[id].y, users[id].r,0,2*Math.PI);
 			if(id == clientId){
+				context.fillStyle = "blue";
+			} else if (id == 'fruit') {
+				context.fillStyle = 'yellow'
+			} else {
 				context.fillStyle = "red";
-				context.fill();
 			}
+			context.fill();
 			context.stroke();
 		}
  	});
