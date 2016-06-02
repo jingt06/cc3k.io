@@ -16,7 +16,7 @@ http.listen(3000, function(){
   console.log('listening on *:3000');
 });
 
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/static'));
 
 
 io.on('connection', function(socket){
@@ -27,6 +27,7 @@ io.on('connection', function(socket){
   socket.on('disconnect', function(){
     delete users[socket.id]
     delete move[socket.id]
+    devil = null
   });
   socket.send(socket.id)
   socket.on('k', function(key){
