@@ -1,6 +1,7 @@
 requirejs(["helper/init.js"], function(init) {
-	init.socketioInit();
-	canvasWidth = init.width;
-	canvasHeight = init.height;
+	init.socketInit();
+	screenWidth = init.width;
+	console.log(init.map);
+	console.log(init.clientId);
 });
 

@@ -1,40 +1,32 @@
 define(function(require, exports, module) {
-	var socket = io()
 	var context;
 	var canvas;
+	var width;
 	var clientId;
-	var canvas = document.getElementById('myCanvas');
-	var context = canvas.getContext("2d");
-	canvas.width = document.body.clientWidth;
-	canvas.height = document.body.clientHeight;
-	canvasWidth = canvas.width;
-	canvasHeight = canvas.height;
-    exports.socketioInit = function(){
-		socket.on('users', function(usersString){
-			users = eval("(" + usersString + ")")
-			context.clearRect(0, 0, canvas.width, canvas.height);
-			for (id in users) {
-				context.beginPath();
-				context.arc(users[id].x,users[id].y, users[id].r,0,2*Math.PI);
-				if(id == clientId){
-					context.fillStyle = "blue";
-				} else if (id == 'fruit') {
-					context.fillStyle = 'yellow'
-				} else {
-					context.fillStyle = "red";
-				}
-				context.fill();
-				context.stroke();
-			}
-	 	});
+	var map;
+	socket = io()
+	canvas = document.getElementById('myCanvas');
+	context = canvas.getContext("2d");
+	ScreenWidth = document.body.clientWidth;
+	ScreenHeight = document.body.clientHeight;
+	width = (ScreenWidth > ScreenHeight ? ScreenHeight : ScreenWidth); // we need a square screen
+	canvas.width = width;
+	canvas.height = width;
+    exports.socketInit = function(){
 		window.onkeyup = function(e) {
 		    var key = e.keyCode ? e.keyCode : e.which;
 		    socket.emit('k',key);
 		}
-		socket.on('message', function(id){
+		socket.on('map', function(m){
+	 		map = m;
+	 	});
+		socket.on('id', function(id){
 			clientId = id
 		})
 	};
-	exports.width = canvas.width;
-	exports.height = canvas.height;
+	exports.width = width;
+	exports.socket = socket;
+	exports.cellWidth = width/21;
+	exports.map = map;
+	exports.clientId = clientId;
 });
