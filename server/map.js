@@ -48,15 +48,22 @@ map = ['                                                                        
        '                                                                                                    ',
        '                                                                                                    '
        ];
+generateSpawnPoint = function(){
+    point = [Math.floor(Math.random()*mapHeight + mapMargin),
+             Math.floor(Math.random()*mapWidth + mapMargin)];
+    if (map[point[0]][point[1]] == '.'){
+      return point;
+    } else {
+      return generateSpawnPoint();
+    }
+}
 module.exports = {
   map: map,
   height: mapHeight,
   width: mapWidth,
   margin:mapMargin,
-  generateSpawnPoint: function(){
-    return [Math.random()*mapWidth + mapMargin, Math.random()*mapHeight + mapMargin];
-  },
-  getSight: function(x, y){
+  generateSpawnPoint: generateSpawnPoint,
+  getSight: function(y, x){
     slicedMap = map.slice(y-10, y + 11);
     sight = []
     for (index in slicedMap) {

@@ -28,7 +28,6 @@ io.on('connection', function(socket){
   socket.emit('id', socket.id)
   spawnPoint = map.generateSpawnPoint();
   socket.emit('map', map.getSight(spawnPoint[0], spawnPoint[1]))
-
   // initialization done
 
   // when user disconnect
