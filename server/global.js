@@ -1,1 +1,0 @@
-var globalint = 1;
