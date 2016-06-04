@@ -5,20 +5,8 @@ var io = require('socket.io')(http);
 var map = require('./server/map');
 var player = require('./server/player');
 
-var keyLeft = function(cid) {
-  player.move(cid, 0, -1);
-}
-var keyUp = function(cid) {
-  player.move(cid, 1, 0);
-}
-var keyRight = function(cid) {
-  player.move(cid, 0, 1);
-}
-var keyDown = function(cid) {
-  player.move(cid, -1, 0);
-}
 
-var keyListener = require('./server/keylistener')(keyLeft, keyUp, keyRight, keyDown);
+var keyListener = require('./server/keylistener')(player);
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
