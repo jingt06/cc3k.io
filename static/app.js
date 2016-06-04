@@ -4,7 +4,7 @@ requirejs(["helper/init", "graphic"], function(init, graphic) {
 	screenWidth = init.width;
   	socket = io();
 
-  	graphic = graphic.init(init.context, init.cellWidth);
+  	graphic = graphic.init(init.canvas, init.context, init.cellWidth);
     window.onkeyup = function(e) {
         var key = e.keyCode ? e.keyCode : e.which;
         socket.emit('k',key);

@@ -3,7 +3,22 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var map = require('./server/map');
-var keyListener = require('./server/keylistener')(null, null, null, null);
+var player = require('./server/player');
+
+var keyLeft = function(cid) {
+  player.move(cid, 0, -1);
+}
+var keyUp = function(cid) {
+  player.move(cid, 1, 0);
+}
+var keyRight = function(cid) {
+  player.move(cid, 0, 1);
+}
+var keyDown = function(cid) {
+  player.move(cid, -1, 0);
+}
+
+var keyListener = require('./server/keylistener')(keyLeft, keyUp, keyRight, keyDown);
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
@@ -27,16 +42,18 @@ io.on('connection', function(socket){
   // send initialization object to this user
   socket.emit('id', socket.id)
   spawnPoint = map.generateSpawnPoint();
-  socket.emit('map', map.getSight(spawnPoint[0], spawnPoint[1]))
+  newPlayer = player.createPlayer(socket.id, map, spawnPoint, socket);
+  socket.emit('map', map.getSight(spawnPoint))
   // initialization done
 
   // when user disconnect
   socket.on('disconnect', function(){
+    player.deletePlayer(socket.id);
   });
 
   // when user pressed some key
   socket.on('k', function(key){
-    keyListener(key);
+    keyListener(socket.id, key);
   })
 })
 
