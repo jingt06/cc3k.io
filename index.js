@@ -30,8 +30,7 @@ io.on('connection', function(socket){
   // send initialization object to this user
   socket.emit('id', socket.id)
   spawnPoint = map.generateSpawnPoint();
-  newPlayer = player.createPlayer(socket.id, map, spawnPoint, socket);
-  socket.emit('map', map.getSight(spawnPoint))
+  newPlayer = player.createPlayer(socket.id, map, spawnPoint, socket); 
   // initialization done
 
   // when user disconnect

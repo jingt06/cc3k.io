@@ -100,7 +100,10 @@ module.exports = {
     for (index in sliceObj) {
       obj.push(sliceObj[index].slice(x-10, x+11).map(function(o) {
         if (o) {
-          return o.type;
+          return {
+            type: o.type,
+            info: o.item.getInfo()
+          }
         } else {
           return null;
         }
