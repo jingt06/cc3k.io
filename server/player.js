@@ -1,8 +1,8 @@
+var attack = require('./attack')
 east = 0;
 south = 1;
 west = 2;
 north = 3;
-
 allPlayer = {}
 
 determineFace = function(y, x){
@@ -32,11 +32,11 @@ module.exports = {
     p.position = pos;
     p.maxHP = 100;
     p.HP = 100;
-    p.attack = 20
-    p.defence =20
+    p.attackPoint = 20
+    p.defencePoint =20
 
-    // player methodmi
-    var notify = function() {
+    // player method
+    p.notify = function() {
       mapInfo = p.map.getSight(p.position);
       mapInfo.user = {
         face: p.face,
@@ -54,11 +54,13 @@ module.exports = {
         p.position = newPos;
         p.map.addItem(newPos, 'player', p);
       } else {
-        notify();
+        p.notify();
       }
     };
 
-    p.notify = notify
+    p.attack = function() {
+      attack.basicAttack(p.map, p.position, p.face, p.attackPoint);
+    }
 
     p.getInfo = function() {
       return {
@@ -77,8 +79,8 @@ module.exports = {
     delete allPlayer[cid];
   },
 
-  move : function(cid, x, y) {
-    allPlayer[cid].move(x, y);
+  getPlayer : function(cid) {
+    return allPlayer[cid]
   }
 
 
