@@ -140,7 +140,7 @@ module.exports = {
     };
   },
   available: function(point){
-    return ((map[point[0]][point[1]] == '.' || map[point[0]][point[1]] == '#') && !object[point[0]][point[1]])
+    return ((map[point[0]][point[1]] == '.' || map[point[0]][point[1]] == '#') && !object[point[0]][point[1]]);
   },
   addItem: function(point, type, item) {
     object[point[0]][point[1]] = {

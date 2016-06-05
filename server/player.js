@@ -20,17 +20,28 @@ determineFace = function(y, x){
 module.exports = {
   createPlayer: function(cid, m, pos, skt){
     var p = {};
-    p.position = pos;
+
+    // player meta data and other object
     p.map = m;
     p.clientId = cid;
     p.face = east;
     allPlayer[cid] = p;
     p.socket = skt;
 
+    // player status info
+    p.position = pos;
+    p.maxHP = 100;
+    p.HP = 100;
+    p.attack = 20
+    p.defence =20
+
+    // player methodmi
     var notify = function() {
       mapInfo = p.map.getSight(p.position);
       mapInfo.user = {
-        face: p.face
+        face: p.face,
+        HP: p.HP,
+        maxHP: p.maxHP
       };
       p.socket.emit('map', mapInfo);
     };
@@ -51,7 +62,9 @@ module.exports = {
 
     p.getInfo = function() {
       return {
-        face: p.face
+        face: p.face,
+        HP: p.HP,
+        maxHP: p.maxHP
       }
     }
     p.map.addItem(pos, 'player', p);

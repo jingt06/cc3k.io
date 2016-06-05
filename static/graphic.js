@@ -9,6 +9,7 @@ define(function(require, exports, module) {
   wallV = '-';
   corr = '#';
   door = '+';
+
   exports.init = function(canvas, context, cellWidth){
     var draw = function(x, y, type){
       if(!type){
@@ -16,7 +17,7 @@ define(function(require, exports, module) {
       }
       switch (type) {
         case empty:
-          context.fillStyle = '#061025'
+          context.fillStyle = '#00003f'
           break;
         case floor:
           context.fillStyle = '#ebebeb'
@@ -41,6 +42,24 @@ define(function(require, exports, module) {
       context.fillRect(x*cellWidth, y*cellWidth, cellWidth, cellWidth);
       context.closePath();
     };
+
+    var drawHP = function(hp, maxHP, x, y){
+      startPointX = x - cellWidth;
+      startPointY = y + cellWidth;
+      totalLength = 2 * cellWidth;
+      context.beginPath();
+      context.rect(startPointX,startPointY, totalLength, cellWidth/5);
+      context.lineWidth = 5;
+      context.stroke();
+      context.closePath();
+      context.beginPath();
+      hpLength = totalLength * hp / maxHP;
+      context.fillStyle = '#ff0000'
+      context.rect(startPointX,startPointY, hpLength, cellWidth/5);
+      context.fill();
+      context.closePath();
+    };
+
     var drawItem = function(x, y, obj){
       type = obj.type;
       info = obj.info;
@@ -57,8 +76,10 @@ define(function(require, exports, module) {
       context.arc(x,y,cellWidth/2,0,2*Math.PI);
       context.fill();
       context.closePath();
-      drawFace(info.face, x, y)
+      drawFace(info.face, x, y);
+      drawHP(info.HP, info.maxHP, x, y);
     };
+
     var drawFace = function(face, x, y) {
       context.beginPath();
       switch (face) {
@@ -76,16 +97,19 @@ define(function(require, exports, module) {
           break;
       }
       context.closePath();
+    };
 
-    }
     var drawSelf = function(userInfo){
       face = userInfo.face;
-      x = 10*cellWidth + cellWidth/2
-      y = 10*cellWidth + cellWidth/2
-      context.fillStyle = 'blue'
+      x = 10*cellWidth + cellWidth/2;
+      y = 10*cellWidth + cellWidth/2;
+      context.beginPath();
+      context.fillStyle = 'blue';
       context.arc(x,y,cellWidth/2,0,2*Math.PI);
       context.fill();
+      context.closePath();
       drawFace(face, x, y);
+      drawHP(userInfo.HP, userInfo.maxHP,x ,y)
     }
     return {
       draw: draw,
@@ -98,6 +122,10 @@ define(function(require, exports, module) {
           for (j in map[i]) {
             if(map[i][j] == '.'){}
             draw(j, i, map[i][j])
+          }
+        }
+        for(i in object) {
+          for (j in object[i]) {
             if (object[i][j]){
               if(i != 10 || j != 10) drawItem(j, i, object[i][j])
             }
