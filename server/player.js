@@ -87,7 +87,7 @@ module.exports = {
   },
 
   deletePlayer: function(cid) {
-    allPlayer[cid].map.removeItem(allPlayer[cid].position);
+    if(allPlayer[cid]) allPlayer[cid].map.removeItem(allPlayer[cid].position);
     delete allPlayer[cid];
   },
 
