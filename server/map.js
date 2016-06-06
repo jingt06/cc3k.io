@@ -81,6 +81,17 @@ for (var i = 0; i < mapHeight + mapMargin * 2; ++i) {
   }
   object.push(row);
 }
+
+effect = [];
+for (var i = 0; i < mapHeight + mapMargin * 2; ++i) {
+  row = [];
+  for (var j = 0; j < mapWidth + mapMargin * 2; ++j) {
+    row.push(null);
+  }
+  object.push(row);
+}
+
+
 generateSpawnPoint = function(){
     point = [Math.floor(Math.random()*mapHeight + mapMargin),
              Math.floor(Math.random()*mapWidth + mapMargin)];
