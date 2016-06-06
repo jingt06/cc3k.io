@@ -29,6 +29,7 @@ module.exports = {
     p.socket = skt;
 
     // player status info
+    p.point = 0;
     p.position = pos;
     p.maxHP = 100;
     p.HP = 100;
@@ -60,7 +61,11 @@ module.exports = {
 
     p.attack = function() {
       attack.basicAttack(p.map, p.position, p.face, p.attackPoint);
-    }
+    };
+
+    p.isDead = function() {
+      return p.HP < 0;
+    };
 
     p.getInfo = function() {
       return {
@@ -68,10 +73,17 @@ module.exports = {
         HP: p.HP,
         maxHP: p.maxHP
       }
+    };
+
+    p.delete = function() {
+      cid = p.clientId;
+      allPlayer[cid].map.removeItem(allPlayer[cid].position);
+      delete allPlayer[cid];
+      p.socket.emit('message', 'dead');
     }
+
     p.map.addItem(pos, 'player', p);
-    
-    return p
+    return p;
   },
 
   deletePlayer: function(cid) {

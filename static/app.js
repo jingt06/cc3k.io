@@ -18,5 +18,13 @@ requirejs(["helper/init", "graphic"], function(init, graphic) {
     socket.on('id', function(id){
       clientId = id
     });
+
+    socket.on('message', function(message) {
+      switch(message) {
+        case 'dead':
+          graphic.dead();
+          break;
+      }
+    })
 });
 

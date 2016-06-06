@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
   east = 0;
-  south = 1; 
+  south = 1;
   west = 2;
   north = 3;
   empty = ' ';
@@ -132,6 +132,21 @@ define(function(require, exports, module) {
           }
         }
         drawSelf(userInfo);
+      },
+      dead: function() {
+        context.beginPath();
+        context.fillStyle = 'black'
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.font="30px Verdana";
+        // Create gradient
+        var gradient=context.createLinearGradient(0,0,canvas.width,0);
+        gradient.addColorStop("0","magenta");
+        gradient.addColorStop("0.5","blue");
+        gradient.addColorStop("1.0","red");
+        // Fill with gradient
+        context.fillStyle=gradient;
+        context.fillText("You Dead!",5 * cellWidth,9 * cellWidth);
+        context.closePath();
       }
     }
   }

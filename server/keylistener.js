@@ -7,19 +7,19 @@ var space = 32;
 
 module.exports = function(player){
   var keyLeft = function(cid) {
-    player.getPlayer(cid).move(0, -1);
+    if (player.getPlayer(cid)) player.getPlayer(cid).move(0, -1);
   }
   var keyDown = function(cid) {
-    player.getPlayer(cid).move(1, 0);
+    if (player.getPlayer(cid)) player.getPlayer(cid).move(1, 0);
   }
   var keyRight = function(cid) {
-    player.getPlayer(cid).move(0, 1);
+    if (player.getPlayer(cid)) player.getPlayer(cid).move(0, 1);
   }
   var keyUp = function(cid) {
-    player.getPlayer(cid).move(-1, 0);
+    if (player.getPlayer(cid)) player.getPlayer(cid).move(-1, 0);
   }
   var keySpace = function(cid) {
-    player.getPlayer(cid).attack();
+    if (player.getPlayer(cid)) player.getPlayer(cid).attack();
   }
 
   var keyListener = function(cid, key){
