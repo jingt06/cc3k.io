@@ -1,5 +1,5 @@
 define(function(require, exports, module) {
-	exports.init = function(map) {
+	exports.init = function(map, canvas, context, cellWidth, graphics) {
 		var effectList = [];
 		var length = map.length;
 		var width = map[0].length;
@@ -14,17 +14,24 @@ define(function(require, exports, module) {
 
     //this function runs for every 0.1 s
     run = function () {
+      var redraw = false;
       var i = 0;
       while (i < effectList.length) {
         var effect = effectList[i];
         effect.duration--;
         if (effect.duration == 0){
+          redraw = true;
           effectMap[effect.location[0]][effect.location[1]] = null;
           effectList.splice(i, 1);
+        } else {
+          ++i;
         }
       }
+      if (redraw) {
+        graphics.redraw();
+      }
     }
-    setInterval(run, 1000);
+    window.setInterval(run, 100);
 		return {
 			addEffect: function(effect) {
 				// effect = {type: , duration: , location:}
@@ -46,7 +53,29 @@ define(function(require, exports, module) {
           effects.push(row);
         }
         return effects;
+      },
+      drawEffect: function(x, y, effectType) {
+      x = parseInt(x);
+      y = parseInt(y);
+      switch (effectType) {
+        case 'attack':
+          context.beginPath();
+          context.lineWidth = 2;
+          context.strokeStyle="#FF0000";
+          context.moveTo(cellWidth * x, cellWidth * y);
+          context.lineTo(cellWidth * (x + 1), cellWidth * (y + 1));
+          context.stroke();
+          context.closePath();
+          context.beginPath();
+          context.moveTo(cellWidth * (x + 1), cellWidth * y);
+          context.lineTo(cellWidth * x, cellWidth * (y + 1));
+          context.stroke();
+          context.closePath();
+          break;
+        default:
+          return;
       }
+    }
 		}
 	}
 })
