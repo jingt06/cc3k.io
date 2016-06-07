@@ -118,6 +118,21 @@ define(function(require, exports, module) {
       drawHP(userInfo.HP, userInfo.maxHP,x ,y)
     }
 
+    var drawMiniMap = function() {
+      context.beginPath();
+      context.fillStyle = 'rgba(255, 255, 255, 0.5)';
+      context.fillRect(18 * cellWidth + 10, 10, 3 * cellWidth - 20, 2 * cellWidth - 20);
+      context.closePath();
+      var height = map.length;
+      var width = map[0].length;
+      context.beginPath();
+      context.fillStyle = 'yellow';
+      context.arc(18 * cellWidth + 10 + (3 * cellWidth - 15) * point[1] / width,
+        10 + (2 * cellWidth - 20) * point[0] / height, cellWidth / 10, 0, 2 * Math.PI);
+      context.fill();
+      context.closePath();
+    }
+
     graphics.draw = draw;
     graphics.redraw = function() {
       var x = point[0];
@@ -149,6 +164,7 @@ define(function(require, exports, module) {
           }
         }
       }
+      drawMiniMap();
     };
     graphics.drawMap = function(m) {
       objects = m.object;
@@ -172,7 +188,11 @@ define(function(require, exports, module) {
       gradient.addColorStop("1.0","blue");
       // Fill with gradient
       context.fillStyle=gradient;
-      context.fillText("You Dead!",5 * cellWidth,9 * cellWidth);
+      context.font="70px Georgia";
+      context.fillText("You Dead!",6 * cellWidth,7 * cellWidth);
+      context.fillStyle='white';
+      context.font="50px Georgia";
+      context.fillText("space to restart",6 * cellWidth,10 * cellWidth);
       context.closePath();
     };
     graphics.addEffect = function(message) {
