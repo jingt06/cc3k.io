@@ -73,13 +73,13 @@ map = ['                                                                        
        '                                                                                                                                                            ',
        '                                                                                                                                                            '
        ];
-object = [];
+objects = [];
 for (var i = 0; i < mapHeight + mapMargin * 2; ++i) {
   row = [];
   for (var j = 0; j < mapWidth + mapMargin * 2; ++j) {
     row.push(null);
   }
-  object.push(row);
+  objects.push(row);
 }
 
 effect = [];
@@ -88,14 +88,14 @@ for (var i = 0; i < mapHeight + mapMargin * 2; ++i) {
   for (var j = 0; j < mapWidth + mapMargin * 2; ++j) {
     row.push(null);
   }
-  object.push(row);
+  objects.push(row);
 }
 
 
 generateSpawnPoint = function(){
     point = [Math.floor(Math.random()*mapHeight + mapMargin),
              Math.floor(Math.random()*mapWidth + mapMargin)];
-    if (map[point[0]][point[1]] == '.' && !object[point[0]][point[1]]) {
+    if (map[point[0]][point[1]] == '.' && !objects[point[0]][point[1]]) {
       return point;
     } else {
       return generateSpawnPoint();
@@ -107,9 +107,9 @@ notify = function(point) {
     x = point[1]
     for(var i = y - 10; i < y + 11; ++i) {
       for(var j = x - 10; j < x + 11; ++j) {
-        if (object[i][j]) {
-          if (object[i][j].type == 'player') {
-            object[i][j].obj.notify();
+        if (objects[i][j]) {
+          if (objects[i][j].type == 'player') {
+            objects[i][j].obj.notify();
           }
         }
       }
@@ -118,7 +118,7 @@ notify = function(point) {
 
 module.exports = {
   map: map,
-  object: object,
+  objects: objects,
   height: mapHeight,
   width: mapWidth,
   margin:mapMargin,
@@ -126,7 +126,7 @@ module.exports = {
   getSight: function(point){
     y = point[0]
     x = point[1]
-    sliceObj = object.slice(y-10, y + 11);
+    sliceObj = objects.slice(y-10, y + 11);
     floor = []
     obj = []
     for (index in sliceObj) {
@@ -147,21 +147,21 @@ module.exports = {
     };
   },
   available: function(point){
-    return ((map[point[0]][point[1]] == '.' || map[point[0]][point[1]] == '#') && !object[point[0]][point[1]]);
+    return ((map[point[0]][point[1]] == '.' || map[point[0]][point[1]] == '#') && !objects[point[0]][point[1]]);
   },
   addObject: function(point, type, obj) {
-    object[point[0]][point[1]] = {
+    objects[point[0]][point[1]] = {
       type: type,
       obj: obj
     };
     notify(point);
   },
   removeObject: function(point){
-    object[point[0]][point[1]] = null;
+    objects[point[0]][point[1]] = null;
     notify(point);
   },
   attack: function(point, attack) {
-    obj = object[point[0]][point[1]];
+    obj = objects[point[0]][point[1]];
     if(obj && obj.type == 'player'){
       player = obj.obj;
       player.HP -= attack * 100 / (100 + player.defencePoint);
