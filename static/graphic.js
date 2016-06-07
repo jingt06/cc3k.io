@@ -139,6 +139,7 @@ define(function(require, exports, module) {
           }
         }
       }
+      drawSelf(userInfo);
       effects = effect.getEffect(point);
       // draw effects
       for(i in effects) {
@@ -148,7 +149,6 @@ define(function(require, exports, module) {
           }
         }
       }
-      drawSelf(userInfo);
     };
     graphics.drawMap = function(m) {
       objects = m.object;
@@ -159,15 +159,17 @@ define(function(require, exports, module) {
       graphics.redraw();
     };
     graphics.dead = function() {
+      effect.stop();
       context.beginPath();
       context.fillStyle = 'black';
       context.clearRect(0, 0, canvas.width, canvas.height);
+      context.fillRect(0, 0, canvas.width, canvas.height);
       context.font="30px Verdana";
       // Create gradient
       var gradient=context.createLinearGradient(0,0,canvas.width,0);
-      gradient.addColorStop("0","magenta");
-      gradient.addColorStop("0.5","blue");
-      gradient.addColorStop("1.0","red");
+      gradient.addColorStop("0","yellow");
+      gradient.addColorStop("0.5","red");
+      gradient.addColorStop("1.0","blue");
       // Fill with gradient
       context.fillStyle=gradient;
       context.fillText("You Dead!",5 * cellWidth,9 * cellWidth);

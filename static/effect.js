@@ -1,5 +1,6 @@
 define(function(require, exports, module) {
 	exports.init = function(map, canvas, context, cellWidth, graphics) {
+    var running = true;
 		var effectList = [];
 		var length = map.length;
 		var width = map[0].length;
@@ -27,12 +28,15 @@ define(function(require, exports, module) {
           ++i;
         }
       }
-      if (redraw) {
+      if (redraw && running) {
         graphics.redraw();
       }
     }
     window.setInterval(run, 100);
 		return {
+      stop: function() {
+        running = false;
+      },
 			addEffect: function(effect) {
 				// effect = {type: , duration: , location:}
 				var type = effect.type;
