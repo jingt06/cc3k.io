@@ -10,7 +10,7 @@ define(function(require, exports, module) {
   corr = '#';
   door = '+';
 
-  exports.init = function(canvas, context, cellWidth){
+  exports.init = function(map, canvas, context, cellWidth){
     var draw = function(x, y, type){
       if(!type){
         type = empty;
@@ -114,14 +114,18 @@ define(function(require, exports, module) {
     return {
       draw: draw,
       drawMap: function(m) {
-        map = m.floor;
+        console.log(map)
         object = m.object;
         userInfo = m.user;
+        point = m.location;
+        x = point[0];
+        y = point[1];
         context.clearRect(0, 0, canvas.width, canvas.height);
-        for(i in map) {
-          for (j in map[i]) {
-            if(map[i][j] == '.'){}
-            draw(j, i, map[i][j])
+        for(var i = 0; i <= 20; ++i) {
+          for (var j = 0; j <= 20; ++j) {
+            pointX = x - 10 + i;
+            pointY = y - 10 + j;
+            draw(j, i, map[pointX][pointY]);
           }
         }
         for(i in object) {
@@ -135,7 +139,7 @@ define(function(require, exports, module) {
       },
       dead: function() {
         context.beginPath();
-        context.fillStyle = 'black'
+        context.fillStyle = 'black';
         context.clearRect(0, 0, canvas.width, canvas.height);
         context.font="30px Verdana";
         // Create gradient

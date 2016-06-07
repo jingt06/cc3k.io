@@ -44,7 +44,7 @@ module.exports = {
         HP: p.HP,
         maxHP: p.maxHP
       };
-      p.socket.emit('map', mapInfo);
+      p.socket.emit('event', mapInfo);
     };
 
     p.move = function (x, y) {

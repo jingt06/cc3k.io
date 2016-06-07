@@ -126,12 +126,8 @@ module.exports = {
   getSight: function(point){
     y = point[0]
     x = point[1]
-    slicedMap = map.slice(y-10, y + 11);
     sliceObj = object.slice(y-10, y + 11);
     floor = []
-    for (index in slicedMap) {
-      floor.push(slicedMap[index].substring(x-10, x+11));
-    }
     obj = []
     for (index in sliceObj) {
       obj.push(sliceObj[index].slice(x-10, x+11).map(function(o) {
@@ -143,10 +139,10 @@ module.exports = {
         } else {
           return null;
         }
-      }))
+      }));
     }
     return {
-      floor: floor,
+      location: point,
       object: obj
     };
   },
