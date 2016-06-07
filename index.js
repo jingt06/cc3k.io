@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var map = require('./server/map');
+var map = require('./server/map')(io);
 var player = require('./server/player');
 
 
@@ -30,8 +30,8 @@ io.on('connection', function(socket){
   // send initialization object to this user
   socket.emit('id', socket.id)
   socket.emit('map', map.map);
-  spawnPoint = map.generateSpawnPoint();
-  newPlayer = player.createPlayer(socket.id, map, spawnPoint, socket); 
+  var spawnPoint = map.generateSpawnPoint();
+  var newPlayer = player.createPlayer(socket.id, map, spawnPoint, socket); 
   newPlayer.notify();
   // initialization done
 

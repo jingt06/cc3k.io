@@ -1,16 +1,18 @@
 define(function(require, exports, module) {
-  east = 0;
-  south = 1;
-  west = 2;
-  north = 3;
-  empty = ' ';
-  floor = '.';
-  wallH = '|';
-  wallV = '-';
-  corr = '#';
-  door = '+';
+  var effect;
+  var east = 0;
+  var south = 1;
+  var west = 2;
+  var north = 3;
+  var empty = ' ';
+  var floor = '.';
+  var wallH = '|';
+  var wallV = '-';
+  var corr = '#';
+  var door = '+';
 
   exports.init = function(map, canvas, context, cellWidth){
+    effect = require('effect').init(map);
     var draw = function(x, y, type){
       if(!type){
         type = empty;
@@ -50,6 +52,7 @@ define(function(require, exports, module) {
       context.beginPath();
       context.rect(startPointX,startPointY, totalLength, cellWidth/5);
       context.lineWidth = 5;
+      context.strokeStyle = '#000000'
       context.stroke();
       context.closePath();
       context.beginPath();
@@ -60,9 +63,9 @@ define(function(require, exports, module) {
       context.closePath();
     };
 
-    var drawItem = function(x, y, obj){
-      type = obj.type;
-      info = obj.info;
+    var drawObject = function(x, y, obj){
+      var type = obj.type;
+      var info = obj.info;
       switch (type) {
         case 'player':
           context.fillStyle = '#ff0000'
@@ -70,8 +73,8 @@ define(function(require, exports, module) {
         default:
           return;
       }
-      x = x*cellWidth + cellWidth/2
-      y = y*cellWidth + cellWidth/2
+      var x = x*cellWidth + cellWidth/2
+      var y = y*cellWidth + cellWidth/2
       context.beginPath();
       context.arc(x,y,cellWidth/2,0,2*Math.PI);
       context.fill();
@@ -79,6 +82,30 @@ define(function(require, exports, module) {
       drawFace(info.face, x, y);
       drawHP(info.HP, info.maxHP, x, y);
     };
+
+    var drawEffect = function(x, y, effectType) {
+      x = parseInt(x);
+      y = parseInt(y);
+      switch (effectType) {
+        case 'attack':
+          context.beginPath();
+          context.lineWidth = 2;
+          context.strokeStyle="#FF0000";
+          context.moveTo(cellWidth * x, cellWidth * y);
+          context.lineTo(cellWidth * (x + 1), cellWidth * (y + 1));
+          context.stroke();
+          context.closePath();
+          context.beginPath();
+          context.moveTo(cellWidth * (x + 1), cellWidth * y);
+          context.lineTo(cellWidth * x, cellWidth * (y + 1));
+          context.stroke();
+          context.closePath();
+          break;
+        default:
+          return;
+      }
+
+    }
 
     var drawFace = function(face, x, y) {
       context.beginPath();
@@ -100,9 +127,9 @@ define(function(require, exports, module) {
     };
 
     var drawSelf = function(userInfo){
-      face = userInfo.face;
-      x = 10*cellWidth + cellWidth/2;
-      y = 10*cellWidth + cellWidth/2;
+      var face = userInfo.face;
+      var x = 10*cellWidth + cellWidth/2;
+      var y = 10*cellWidth + cellWidth/2;
       context.beginPath();
       context.fillStyle = 'blue';
       context.arc(x,y,cellWidth/2,0,2*Math.PI);
@@ -111,26 +138,40 @@ define(function(require, exports, module) {
       drawFace(face, x, y);
       drawHP(userInfo.HP, userInfo.maxHP,x ,y)
     }
+
+
+
     return {
       draw: draw,
       drawMap: function(m) {
         object = m.object;
         userInfo = m.user;
         point = m.location;
-        x = point[0];
-        y = point[1];
+        var x = point[0];
+        var y = point[1];
         context.clearRect(0, 0, canvas.width, canvas.height);
+        // draw floor
         for(var i = 0; i <= 20; ++i) {
           for (var j = 0; j <= 20; ++j) {
-            pointX = x - 10 + i;
-            pointY = y - 10 + j;
+            var pointX = x - 10 + i;
+            var pointY = y - 10 + j;
             draw(j, i, map[pointX][pointY]);
           }
         }
+        // draw objects
         for(i in object) {
           for (j in object[i]) {
             if (object[i][j]){
-              if(i != 10 || j != 10) drawItem(j, i, object[i][j])
+              if(i != 10 || j != 10) drawObject(j, i, object[i][j])
+            }
+          }
+        }
+        effects = effect.getEffect(point);
+        // draw effects
+        for(i in effects) {
+          for (j in effects[i]) {
+            if (effects[i][j]){
+              drawEffect(j, i, effects[i][j]);
             }
           }
         }
@@ -150,6 +191,9 @@ define(function(require, exports, module) {
         context.fillStyle=gradient;
         context.fillText("You Dead!",5 * cellWidth,9 * cellWidth);
         context.closePath();
+      },
+      addEffect: function(message) {
+        effect.addEffect(message);
       }
     }
   }

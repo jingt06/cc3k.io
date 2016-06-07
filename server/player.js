@@ -1,9 +1,9 @@
 var attack = require('./attack')
-east = 0;
-south = 1;
-west = 2;
-north = 3;
-allPlayer = {}
+var east = 0;
+var south = 1;
+var west = 2;
+var north = 3;
+var allPlayer = {}
 
 determineFace = function(y, x){
   if (x > 0) {
@@ -35,10 +35,13 @@ module.exports = {
     p.HP = 100;
     p.attackPoint = 20
     p.defencePoint =20
+    p.regenHP = 0;
+    p.dodge = 0;
+    p.critAtt = 0;
 
     // player method
     p.notify = function() {
-      mapInfo = p.map.getSight(p.position);
+      var mapInfo = p.map.getSight(p.position);
       mapInfo.user = {
         face: p.face,
         HP: p.HP,
@@ -48,7 +51,7 @@ module.exports = {
     };
 
     p.move = function (x, y) {
-      newPos = [p.position[0] + x, p.position[1] + y];
+      var newPos = [p.position[0] + x, p.position[1] + y];
       p.face = determineFace(x, y);
       if (p.map.available(newPos)){
         p.map.removeObject(p.position);
@@ -60,12 +63,23 @@ module.exports = {
     };
 
     p.attack = function() {
-      attack.basicAttack(p.map, p.position, p.face, p.attackPoint);
+      attack.basicAttack(p.map, p.position, p.face, p.attackPoint, p);
     };
 
     p.isDead = function() {
       return p.HP < 0;
     };
+
+    p.attacked = function(attacker) {
+      roll = Math.random()*100;
+      if (roll > p.dodge) {
+        p.HP -= attacker.attackPoint * 100 / (100 + p.defencePoint);
+        if (p.isDead()) {
+          attacker.point += p.point * 4 / 5;
+          p.delete();
+        }
+      }
+    }
 
     p.getInfo = function() {
       return {
@@ -76,7 +90,7 @@ module.exports = {
     };
 
     p.delete = function() {
-      cid = p.clientId;
+      var cid = p.clientId;
       allPlayer[cid].map.removeObject(allPlayer[cid].position);
       delete allPlayer[cid];
       p.socket.emit('message', 'dead');

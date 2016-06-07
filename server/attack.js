@@ -1,10 +1,10 @@
-east = 0;
-south = 1;
-west = 2;
-north = 3;
+var east = 0;
+var south = 1;
+var west = 2;
+var north = 3;
 
 module.exports = {
-	basicAttack: function(map, point, face, attack) {
+	basicAttack: function(map, point, face, attack, player) {
 		var newPoint;
 		switch (face) {
 			case east:
@@ -20,6 +20,6 @@ module.exports = {
 				newPoint = [point[0] + 1, point[1]]
 				break;
 		}
-    map.attack(newPoint, attack);
+    map.action(player, 'attack', newPoint);
 	}
 }

@@ -73,27 +73,20 @@ map = ['                                                                        
        '                                                                                                                                                            ',
        '                                                                                                                                                            '
        ];
-objects = [];
+
+// objects contains objects on the map,
+// which including items(ruins, potions...), enemies and players
+var objects = [];
 for (var i = 0; i < mapHeight + mapMargin * 2; ++i) {
-  row = [];
+  var row = [];
   for (var j = 0; j < mapWidth + mapMargin * 2; ++j) {
     row.push(null);
   }
   objects.push(row);
 }
-
-effect = [];
-for (var i = 0; i < mapHeight + mapMargin * 2; ++i) {
-  row = [];
-  for (var j = 0; j < mapWidth + mapMargin * 2; ++j) {
-    row.push(null);
-  }
-  objects.push(row);
-}
-
 
 generateSpawnPoint = function(){
-    point = [Math.floor(Math.random()*mapHeight + mapMargin),
+    var point = [Math.floor(Math.random()*mapHeight + mapMargin),
              Math.floor(Math.random()*mapWidth + mapMargin)];
     if (map[point[0]][point[1]] == '.' && !objects[point[0]][point[1]]) {
       return point;
@@ -103,72 +96,77 @@ generateSpawnPoint = function(){
 }
 
 notify = function(point) {
-    y = point[0]
-    x = point[1]
+    var y = point[0]
+    var x = point[1]
     for(var i = y - 10; i < y + 11; ++i) {
       for(var j = x - 10; j < x + 11; ++j) {
         if (objects[i][j]) {
           if (objects[i][j].type == 'player') {
-            objects[i][j].obj.notify();
+            objects[i][j].object.notify();
           }
         }
       }
     }
 }
 
-module.exports = {
-  map: map,
-  objects: objects,
-  height: mapHeight,
-  width: mapWidth,
-  margin:mapMargin,
-  generateSpawnPoint: generateSpawnPoint,
-  getSight: function(point){
-    y = point[0]
-    x = point[1]
-    sliceObj = objects.slice(y-10, y + 11);
-    floor = []
-    obj = []
-    for (index in sliceObj) {
-      obj.push(sliceObj[index].slice(x-10, x+11).map(function(o) {
-        if (o) {
-          return {
-            type: o.type,
-            info: o.obj.getInfo()
+module.exports = function(io) {
+  return {
+    map: map,
+    objects: objects,
+    height: mapHeight,
+    width: mapWidth,
+    margin:mapMargin,
+    generateSpawnPoint: generateSpawnPoint,
+    getSight: function(point){
+      var y = point[0]
+      var x = point[1]
+      var sliceObj = objects.slice(y-10, y + 11);
+      var floor = []
+      var obj = []
+      for (index in sliceObj) {
+        obj.push(sliceObj[index].slice(x-10, x+11).map(function(o) {
+          if (o) {
+            return {
+              type: o.type,
+              info: o.object.getInfo()
+            }
+          } else {
+            return null;
           }
-        } else {
-          return null;
-        }
-      }));
-    }
-    return {
-      location: point,
-      object: obj
-    };
-  },
-  available: function(point){
-    return ((map[point[0]][point[1]] == '.' || map[point[0]][point[1]] == '#') && !objects[point[0]][point[1]]);
-  },
-  addObject: function(point, type, obj) {
-    objects[point[0]][point[1]] = {
-      type: type,
-      obj: obj
-    };
-    notify(point);
-  },
-  removeObject: function(point){
-    objects[point[0]][point[1]] = null;
-    notify(point);
-  },
-  attack: function(point, attack) {
-    obj = objects[point[0]][point[1]];
-    if(obj && obj.type == 'player'){
-      player = obj.obj;
-      player.HP -= attack * 100 / (100 + player.defencePoint);
-      if (obj.isDead()) {
-        player.delete();
+        }));
       }
+      return {
+        location: point,
+        object: obj
+      };
+    },
+    available: function(point){
+      return ((map[point[0]][point[1]] == '.' || map[point[0]][point[1]] == '#') && !objects[point[0]][point[1]]);
+    },
+    addObject: function(point, type, obj) {
+      objects[point[0]][point[1]] = {
+        type: type,
+        object: obj
+      };
       notify(point);
+    },
+    removeObject: function(point){
+      objects[point[0]][point[1]] = null;
+      notify(point);
+    },
+    action: function(player, action, target, options) {
+      var obj = objects[target[0]][target[1]];
+      switch (action) {
+        case 'attack':
+          io.emit('effect' , {type: 'attack', duration: 5, location: target});
+          notify(target);
+          if(obj && obj.type == 'player'){
+            attackedPlayer = obj.object;
+            attackedPlayer.attacked(player)
+            notify(target);
+          }
+          break;
+      }
     }
-  }
-};
+  };
+}
