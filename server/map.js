@@ -109,7 +109,7 @@ notify = function(point) {
       for(var j = x - 10; j < x + 11; ++j) {
         if (object[i][j]) {
           if (object[i][j].type == 'player') {
-            object[i][j].item.notify();
+            object[i][j].obj.notify();
           }
         }
       }
@@ -134,7 +134,7 @@ module.exports = {
         if (o) {
           return {
             type: o.type,
-            info: o.item.getInfo()
+            info: o.obj.getInfo()
           }
         } else {
           return null;
@@ -149,24 +149,24 @@ module.exports = {
   available: function(point){
     return ((map[point[0]][point[1]] == '.' || map[point[0]][point[1]] == '#') && !object[point[0]][point[1]]);
   },
-  addItem: function(point, type, item) {
+  addObject: function(point, type, obj) {
     object[point[0]][point[1]] = {
       type: type,
-      item: item
+      obj: obj
     };
     notify(point);
   },
-  removeItem: function(point){
+  removeObject: function(point){
     object[point[0]][point[1]] = null;
     notify(point);
   },
   attack: function(point, attack) {
     obj = object[point[0]][point[1]];
     if(obj && obj.type == 'player'){
-      item = obj.item;
-      item.HP -= attack * 100 / (100 + item.defencePoint);
-      if (item.isDead()) {
-        item.delete();
+      player = obj.obj;
+      player.HP -= attack * 100 / (100 + player.defencePoint);
+      if (obj.isDead()) {
+        player.delete();
       }
       notify(point);
     }

@@ -114,7 +114,6 @@ define(function(require, exports, module) {
     return {
       draw: draw,
       drawMap: function(m) {
-        console.log(map)
         object = m.object;
         userInfo = m.user;
         point = m.location;

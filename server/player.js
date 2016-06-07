@@ -51,9 +51,9 @@ module.exports = {
       newPos = [p.position[0] + x, p.position[1] + y];
       p.face = determineFace(x, y);
       if (p.map.available(newPos)){
-        p.map.removeItem(p.position);
+        p.map.removeObject(p.position);
         p.position = newPos;
-        p.map.addItem(newPos, 'player', p);
+        p.map.addObject(newPos, 'player', p);
       } else {
         p.notify();
       }
@@ -77,17 +77,17 @@ module.exports = {
 
     p.delete = function() {
       cid = p.clientId;
-      allPlayer[cid].map.removeItem(allPlayer[cid].position);
+      allPlayer[cid].map.removeObject(allPlayer[cid].position);
       delete allPlayer[cid];
       p.socket.emit('message', 'dead');
     }
 
-    p.map.addItem(pos, 'player', p);
+    p.map.addObject(pos, 'player', p);
     return p;
   },
 
   deletePlayer: function(cid) {
-    if(allPlayer[cid]) allPlayer[cid].map.removeItem(allPlayer[cid].position);
+    if(allPlayer[cid]) allPlayer[cid].map.removeObject(allPlayer[cid].position);
     delete allPlayer[cid];
   },
 
