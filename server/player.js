@@ -45,7 +45,11 @@ module.exports = {
       mapInfo.user = {
         face: p.face,
         HP: p.HP,
-        maxHP: p.maxHP
+        maxHP: p.maxHP,
+        att: p.attackPoint,
+        def: p.defencePoint,
+        dog: p.dodge,
+        cri: p.critAtt
       };
       p.socket.emit('event', mapInfo);
     };

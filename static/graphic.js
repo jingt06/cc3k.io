@@ -139,7 +139,7 @@ define(function(require, exports, module) {
 
     var drawMiniMap = function() {
       context.beginPath();
-      context.fillStyle = 'rgba(255, 255, 255, 0.5)';
+      context.fillStyle = 'rgba(200, 200, 200, 0.7)';
       context.fillRect(18 * cellWidth + 10, 10, 3 * cellWidth - 20, 2 * cellWidth - 20);
       context.closePath();
       var height = map.length;
@@ -150,6 +150,17 @@ define(function(require, exports, module) {
         10 + (2 * cellWidth - 20) * point[0] / height, cellWidth / 10, 0, 2 * Math.PI);
       context.fill();
       context.closePath();
+    }
+
+    var drawInfoPanel = function() {
+      context.beginPath();
+      context.fillStyle = 'rgba(200, 200, 200, 0.7)';
+      context.fillRect(10, 18 * cellWidth + 10, 8 * cellWidth - 20, 3 * cellWidth - 20);
+      context.closePath();
+      context.font = "20px Arial";
+      context.fillStyle = '#000000'
+      context.fillText('ATT: ' + userInfo.att + ' Critical Rate: ' + userInfo.cri, 15, 18 * cellWidth + cellWidth);
+      context.fillText('DEF: ' + userInfo.def + ' Dodge Rate: ' + userInfo.dog, 15, 18 * cellWidth + 2 * cellWidth);
     }
 
     graphics.draw = draw;
@@ -184,6 +195,7 @@ define(function(require, exports, module) {
         }
       }
       drawMiniMap();
+      drawInfoPanel();
     };
     graphics.drawMap = function(m) {
       objects = m.object;
