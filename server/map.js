@@ -1,7 +1,9 @@
-mapWidth = 136;
-mapHeight = 50;
-mapMargin = 10;
-map = ['                                                                                                                                                            ',
+var mapWidth = 136;
+var mapHeight = 50;
+var mapMargin = 10;
+var totalObjects = 20;
+var object = require('./object')();
+var map = ['                                                                                                                                                            ',
        '                                                                                                                                                            ',
        '                                                                                                                                                            ',
        '                                                                                                                                                            ',
@@ -85,7 +87,7 @@ for (var i = 0; i < mapHeight + mapMargin * 2; ++i) {
   objects.push(row);
 }
 
-generateSpawnPoint = function(){
+var generateSpawnPoint = function(){
     var point = [Math.floor(Math.random()*mapHeight + mapMargin),
              Math.floor(Math.random()*mapWidth + mapMargin)];
     if (map[point[0]][point[1]] == '.' && !objects[point[0]][point[1]]) {
@@ -95,7 +97,7 @@ generateSpawnPoint = function(){
     }
 }
 
-notify = function(point) {
+var notify = function(point) {
     var y = point[0]
     var x = point[1]
     for(var i = y - 10; i < y + 11; ++i) {
@@ -108,6 +110,25 @@ notify = function(point) {
       }
     }
 }
+
+var addObject = function(point, type, obj) {
+      objects[point[0]][point[1]] = {
+        type: type,
+        object: obj
+      };
+      notify(point);
+}
+
+var generateObject = function() {
+  var point = generateSpawnPoint();
+  var obj = object.createObject();
+  addObject(point, obj.type, obj);
+}
+for (var i = totalObjects; i >= 0; i--) {
+    generateObject();
+}
+
+
 
 module.exports = function(io) {
   return {
@@ -140,17 +161,16 @@ module.exports = function(io) {
         object: obj
       };
     },
-    available: function(point){
-      return ((map[point[0]][point[1]] == '.' || map[point[0]][point[1]] == '#') && !objects[point[0]][point[1]]);
+    available: function(point, player){
+      if(player && objects[point[0]][point[1]] && objects[point[0]][point[1]].object.consumable){
+        objects[point[0]][point[1]].object.use(player);
+        objects[point[0]][point[1]] = null;
+        generateObject();
+      }
+      return (map[point[0]][point[1]] == '.' || map[point[0]][point[1]] == '#') && !objects[point[0]][point[1]];
     },
-    addObject: function(point, type, obj) {
-      objects[point[0]][point[1]] = {
-        type: type,
-        object: obj
-      };
-      notify(point);
-    },
-    removeObject: function(point){
+    addObject: addObject,
+    removeObject: function(point, player){
       objects[point[0]][point[1]] = null;
       notify(point);
     },

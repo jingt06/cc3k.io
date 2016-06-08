@@ -72,18 +72,37 @@ define(function(require, exports, module) {
       switch (type) {
         case 'player':
           context.fillStyle = '#ff0000'
+          var x = x * cellWidth + cellWidth / 2
+          var y = y * cellWidth + cellWidth / 2
+          context.beginPath();
+          context.arc(x, y , cellWidth / 2, 0, 2 * Math.PI);
+          context.fill();
+          context.closePath();
+          drawFace(info.face, x, y);
+          drawHP(info.HP, info.maxHP, x, y);
           break;
+        case 'potion':
+          context.fillStyle = '#FFFF66';
+          var a = x * cellWidth + cellWidth / 2
+          var b = y * cellWidth + cellWidth / 2
+          context.beginPath();
+          context.arc(a, b , cellWidth / 3, 0, 2 * Math.PI);
+          context.fill();
+          context.closePath()
+          context.fillStyle = '#FF0000';
+          a = x * cellWidth + cellWidth / 4;
+          b = y * cellWidth + cellWidth * 2 / 5;
+          context.beginPath();
+          context.fillRect(a, b, cellWidth / 2, cellWidth / 5);
+          context.closePath()
+          a = x * cellWidth + cellWidth * 2 / 5;
+          b = y * cellWidth + cellWidth / 4;
+          context.beginPath();
+          context.fillRect(a, b, cellWidth / 5, cellWidth / 2);
+          context.closePath()
         default:
           return;
       }
-      var x = x*cellWidth + cellWidth/2
-      var y = y*cellWidth + cellWidth/2
-      context.beginPath();
-      context.arc(x,y,cellWidth/2,0,2*Math.PI);
-      context.fill();
-      context.closePath();
-      drawFace(info.face, x, y);
-      drawHP(info.HP, info.maxHP, x, y);
     };
 
     var drawFace = function(face, x, y) {
