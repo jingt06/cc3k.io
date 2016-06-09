@@ -208,7 +208,7 @@ define(function(require, exports, module) {
       context.closePath();
       context.beginPath();
       var length = (6 * cellWidth - 3) * userInfo.exp / userInfo.nextLevel;
-      context.fillStyle = '#00bfff'
+      context.fillStyle = '#00bfff';
       context.rect(17, 19 * cellWidth + 12, length-1, cellWidth / 3 - 5);
       context.fill();
       context.closePath();
