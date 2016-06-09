@@ -187,7 +187,6 @@ define(function(require, exports, module) {
       context.closePath();
       context.beginPath();
       context.fillStyle = '#acacac';
-      context.textBaseline = 'Top'
       context.font = "15px Arial";
       context.fillText(userInfo.numUsers + ' online players', 18 * cellWidth + 15, 2 * cellWidth - 10);
       context.closePath();
