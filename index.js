@@ -4,7 +4,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var map = require('./server/map')(io);
 var player = require('./server/player');
-
+var memwatch = require('memwatch-next');
 
 var keyListener = require('./server/keylistener')(player);
 
@@ -16,6 +16,13 @@ http.listen(3000, function(){
   console.log('listening on *:3000');
 });
 
+memwatch.on('leak', function(info) {
+  console.log('memory leak ' + JSON.stringify(info));
+});
+
+memwatch.on('stats', function(stats) {
+  console.log('stat '+ JSON.stringify(stats));
+});
 
 app.use(express.static(__dirname + '/static'));
 
