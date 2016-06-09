@@ -192,10 +192,26 @@ define(function(require, exports, module) {
       context.fillStyle = 'rgba(200, 200, 200, 0.7)';
       context.fillRect(10, 18 * cellWidth + 10, 8 * cellWidth - 20, 3 * cellWidth - 20);
       context.closePath();
+      context.textBaseline="Bottom"; 
       context.font = "20px Arial";
       context.fillStyle = '#000000'
-      context.fillText('ATT: ' + userInfo.att + ' Critical Rate: ' + userInfo.cri, 15, 18 * cellWidth + cellWidth);
-      context.fillText('DEF: ' + userInfo.def + ' Dodge Rate: ' + userInfo.dog, 15, 18 * cellWidth + 2 * cellWidth);
+      context.fillText(userInfo.class + '-LV.' + userInfo.level, 15, 19 * cellWidth);
+      context.fillText('ATT: ' + userInfo.att, 15, 20 * cellWidth);
+      context.fillText('Critical Rate: ' + userInfo.cri, 3 * cellWidth, 20 * cellWidth)
+      context.fillText('DEF: ' + userInfo.def, 15, 20.5 * cellWidth);
+      context.fillText('Dodge Rate: ' + userInfo.dog,  3 * cellWidth, 20.5 * cellWidth);
+      context.beginPath();
+      context.rect(15, 19 * cellWidth + 10, 6 * cellWidth, cellWidth / 3);
+      context.strokeStyle = '#000000'
+      context.lineWidth = 5;
+      context.stroke();
+      context.closePath();
+      context.beginPath();
+      var length = 6 * cellWidth * userInfo.exp / userInfo.nextLevel;
+      context.fillStyle = '#00bfff'
+      context.rect(17, 19 * cellWidth + 12, length-1, cellWidth / 3 - 5);
+      context.fill();
+      context.closePath();
     }
 
     graphics.draw = draw;

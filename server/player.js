@@ -1,4 +1,4 @@
-var attack = require('./attack')
+var classes = require('./classes/classes');
 var east = 0;
 var south = 1;
 var west = 2;
@@ -35,13 +35,16 @@ module.exports = {
     // player method
     p.initStatus = function() {
       p.maxHP = 100;
-      p.point = 0;
+      p.exp = 20;
+      p.level = 1;
+      p.expNextLevel = 50;
       p.HP = p.maxHP;
       p.attackPoint = 20;
       p.defencePoint =20;
       p.regenHP = 0;
       p.dodge = 0;
       p.critAtt = 0;
+      classes.createSoldier(p);
     }
     p.initStatus();
 
@@ -54,7 +57,11 @@ module.exports = {
         att: p.attackPoint,
         def: p.defencePoint,
         dog: p.dodge,
-        cri: p.critAtt
+        cri: p.critAtt,
+        class: p.class.name,
+        level: p.level,
+        exp: p.exp,
+        nextLevel: p.expNextLevel
       };
       p.socket.emit('event', mapInfo);
     };
@@ -72,14 +79,19 @@ module.exports = {
       }
     };
 
-    p.attack = function() {
-      attack.basicAttack(p.map, p.position, p.face, p.attackPoint, p);
-    };
-
     p.isDead = function() {
       return p.HP < 0;
     };
 
+    p.addExp = function (expGain) {
+      p.exp += expGain;
+      while(p.exp >= p.expNextLevel){
+        p.levelUp();
+        p.level ++;
+        p.exp -= p.expNextLevel;
+        p.expNextLevel = p.level * (p.level - 1) * 50;
+      }
+    }
 
     p.restart = function() {
       p.socket.emit('id', p.socket.id)
@@ -95,7 +107,7 @@ module.exports = {
       if (roll > p.dodge) {
         p.HP -= attacker.attackPoint * 100 / (100 + p.defencePoint);
         if (p.isDead()) {
-          attacker.point += p.point * 4 / 5;
+          attacker.exp += p.exp * 4 / 5;
           p.delete();
         }
       }
