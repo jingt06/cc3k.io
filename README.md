@@ -27,5 +27,5 @@
 - [ ] Functional
    - [x] Move and comsume potion
    - [x] Attack and kill
-   - [ ] space to restart
+   - [x] space to restart (@b232wang)
    - [ ] ...
