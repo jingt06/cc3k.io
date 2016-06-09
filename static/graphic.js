@@ -185,12 +185,16 @@ define(function(require, exports, module) {
         10 + (2 * cellWidth - 20) * point[0] / height, cellWidth / 10, 0, 2 * Math.PI);
       context.fill();
       context.closePath();
+      context.fillStyle = '#acacac';
+      context.textBaseline = 'top'
+      context.font = "15px Arial";
+      context.fillText(userInfo.numUsers + ' online players', 18 * cellWidth + 15, 2 * cellWidth - 10);
     }
 
     var drawInfoPanel = function() {
       context.beginPath();
       context.fillStyle = 'rgba(200, 200, 200, 0.7)';
-      context.fillRect(10, 18 * cellWidth + 10, 8 * cellWidth - 20, 3 * cellWidth - 20);
+      context.fillRect(10, 18 * cellWidth + 10, 7 * cellWidth - 20, 3 * cellWidth - 20);
       context.closePath();
       context.textBaseline="Bottom"; 
       context.font = "20px Arial";

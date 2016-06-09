@@ -26,6 +26,7 @@ run = function () {
 setInterval(run, 10);
 
 io.on('connection', function(socket){
+  map.onlineUser++;
   // when the new user connect to server
   // send initialization object to this user
   socket.emit('id', socket.id)
@@ -37,6 +38,7 @@ io.on('connection', function(socket){
 
   // when user disconnect
   socket.on('disconnect', function(){
+    map.onlineUser--;
     player.deletePlayer(socket.id);
   });
 

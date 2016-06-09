@@ -132,6 +132,7 @@ for (var i = totalObjects; i >= 0; i--) {
 
 module.exports = function(io) {
   return {
+    onlineUser: 0,
     map: map,
     objects: objects,
     height: mapHeight,

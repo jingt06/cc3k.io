@@ -61,7 +61,8 @@ module.exports = {
         class: p.class.name,
         level: p.level,
         exp: p.exp,
-        nextLevel: p.expNextLevel
+        nextLevel: p.expNextLevel,
+        numUsers: p.map.onlineUser
       };
       p.socket.emit('event', mapInfo);
     };
