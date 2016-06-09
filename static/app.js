@@ -3,7 +3,7 @@ requirejs(["helper/init", "graphic"], function(init, graphic) {
 	var map;
   var graphic
 	screenWidth = init.width;
-  var socket = io();
+  var socket = io.connect(window.location.hostname);
   window.onkeydown = function(e) {
       var key = e.keyCode ? e.keyCode : e.which;
       socket.emit('k',key);
