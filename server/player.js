@@ -31,10 +31,10 @@ module.exports = {
 
     // player status info
     p.position = pos;
-    p.maxHP = 100;
 
     // player method
     p.initStatus = function() {
+      p.maxHP = 100;
       p.point = 0;
       p.HP = p.maxHP;
       p.attackPoint = 20;
