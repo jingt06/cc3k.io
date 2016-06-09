@@ -28,18 +28,23 @@ module.exports = {
     allPlayer[cid] = p;
     p.socket = skt;
 
+
     // player status info
-    p.point = 0;
     p.position = pos;
     p.maxHP = 100;
-    p.HP = 100;
-    p.attackPoint = 20
-    p.defencePoint =20
-    p.regenHP = 0;
-    p.dodge = 0;
-    p.critAtt = 0;
 
     // player method
+    p.initStatus = function() {
+      p.point = 0;
+      p.HP = p.maxHP;
+      p.attackPoint = 20;
+      p.defencePoint =20;
+      p.regenHP = 0;
+      p.dodge = 0;
+      p.critAtt = 0;
+    }
+    p.initStatus();
+
     p.notify = function() {
       var mapInfo = p.map.getSight(p.position);
       mapInfo.user = {
@@ -75,6 +80,16 @@ module.exports = {
       return p.HP < 0;
     };
 
+
+    p.restart = function() {
+      p.socket.emit('id', p.socket.id)
+      p.socket.emit('map', p.map.map);
+      var spawnPoint = p.map.generateSpawnPoint();
+      p.position = spawnPoint;
+      p.initStatus();
+      p.notify();
+    }
+
     p.attacked = function(attacker) {
       roll = Math.random()*100;
       if (roll > p.dodge) {
@@ -97,7 +112,7 @@ module.exports = {
     p.delete = function() {
       var cid = p.clientId;
       allPlayer[cid].map.removeObject(allPlayer[cid].position);
-      delete allPlayer[cid];
+      //delete allPlayer[cid];
       p.socket.emit('message', 'dead');
     }
 

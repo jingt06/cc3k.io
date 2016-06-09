@@ -7,19 +7,23 @@ var space = 32;
 
 module.exports = function(player){
   var keyLeft = function(cid) {
-    if (player.getPlayer(cid)) player.getPlayer(cid).move(0, -1);
+    if (!player.getPlayer(cid).isDead()) player.getPlayer(cid).move(0, -1);
   }
   var keyDown = function(cid) {
-    if (player.getPlayer(cid)) player.getPlayer(cid).move(1, 0);
+    if (!player.getPlayer(cid).isDead()) player.getPlayer(cid).move(1, 0);
   }
   var keyRight = function(cid) {
-    if (player.getPlayer(cid)) player.getPlayer(cid).move(0, 1);
+    if (!player.getPlayer(cid).isDead()) player.getPlayer(cid).move(0, 1);
   }
   var keyUp = function(cid) {
-    if (player.getPlayer(cid)) player.getPlayer(cid).move(-1, 0);
+    if (!player.getPlayer(cid).isDead()) player.getPlayer(cid).move(-1, 0);
   }
   var keySpace = function(cid) {
-    if (player.getPlayer(cid)) player.getPlayer(cid).attack();
+    if (!player.getPlayer(cid).isDead()) {
+      player.getPlayer(cid).attack();
+    } else {
+      player.getPlayer(cid).restart();
+    }
   }
 
   var keyListener = function(cid, key){
