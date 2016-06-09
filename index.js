@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+var server = require('http').createServer(app),;
+var io = require('socket.io')(server);
 var map = require('./server/map')(io);
 var player = require('./server/player');
 
