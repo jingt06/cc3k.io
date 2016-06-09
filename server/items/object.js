@@ -1,4 +1,4 @@
-potion = require('./items/potion')
+potion = require('./potion')
 
 var allItem = [potion];
 

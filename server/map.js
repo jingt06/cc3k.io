@@ -2,7 +2,7 @@ var mapWidth = 136;
 var mapHeight = 50;
 var mapMargin = 10;
 var totalObjects = 10;
-var object = require('./object')();
+var object = require('./items/object')();
 var map = ['                                                                                                                                                            ',
        '                                                                                                                                                            ',
        '                                                                                                                                                            ',
