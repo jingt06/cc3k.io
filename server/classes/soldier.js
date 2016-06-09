@@ -1,4 +1,4 @@
-var attack = require('./attack')
+var attack = require('../attack')
 
 module.exports = {
 	create: function(player) {
