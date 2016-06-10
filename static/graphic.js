@@ -127,7 +127,7 @@ define(function(require, exports, module) {
           context.fillStyle = '#ff4500';
           a = x * cellWidth + cellWidth / 2;
           b = y * cellWidth + cellWidth / 4;
-          context.beginPath(); 
+          context.beginPath();
           context.beginPath();
           context.moveTo(a, b);
           context.lineTo(a - cellWidth / 6, b + cellWidth * 1 / 2);
@@ -291,7 +291,7 @@ define(function(require, exports, module) {
       context.fillText("You Dead!",6 * cellWidth,7 * cellWidth);
       context.fillStyle='white';
       context.font="50px Georgia";
-      context.fillText("space to restart",6 * cellWidth,10 * cellWidth);
+      context.fillText("R to restart",6 * cellWidth,10 * cellWidth);
       context.closePath();
     };
     graphics.addEffect = function(message) {

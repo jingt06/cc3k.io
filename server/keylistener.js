@@ -3,7 +3,7 @@ var up = 38;
 var right = 39;
 var down = 40;
 var space = 32;
-var restart = 82;
+var keyR= 82;
 
 
 module.exports = function(player){
@@ -47,7 +47,7 @@ module.exports = function(player){
       case space:
         keySpace(cid);
         break;
-      case restart:
+      case keyR:
         keyRestart(cid);
     }
   }
