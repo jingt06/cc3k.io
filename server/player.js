@@ -88,6 +88,7 @@ module.exports = {
       p.exp += expGain;
       while(p.exp >= p.expNextLevel){
         p.levelUp();
+        p.level ++;
         p.exp -= p.expNextLevel;
         p.expNextLevel = p.level * (p.level - 1) * 50;
       }
