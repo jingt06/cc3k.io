@@ -23,7 +23,7 @@ module.exports = {
 		};
 		goblin.action = function(floor, objects, io) {
 			++counter;
-			if (counter == 1) {
+			if (counter == 2) {
 				ai.basicAction(goblin, floor, objects, io);
 				counter = 0;
 			}
