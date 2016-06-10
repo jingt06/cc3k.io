@@ -1,9 +1,10 @@
 module.exports = {
-  basicAction: function(enemy, floor, objects) {
+  basicAction: function(enemy, floor, objects, io) {
     // this is for simple melee enemy, attack range: 1
     var x = enemy.location[0];
     var y = enemy.location[1];
     var playerInRange = []
+    // playerInRange is [player, location] where location is [x, y]
     for (var i = x - 1; i <= x + 1; i++) {
       for (var j = y - 1; j <= y + 1; j++) {
         if(objects[i][j] && objects[i][j].type == 'player'){
@@ -12,8 +13,10 @@ module.exports = {
       }
     }
     if (playerInRange.length > 0) {
+      // attack player
       var index = Math.floor(Math.random() * playerInRange.length);
       var attackedPlayer = playerInRange[index][0].attacked(enemy);
+      io.emit('effect' , {type: 'attack', duration: 5, location: playerInRange[index][1]});
     } else {
       // cannot attack anyone, search for near enemy
       for (var i = x - 5; i <= x + 5; i++) {
