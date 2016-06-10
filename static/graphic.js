@@ -127,7 +127,7 @@ define(function(require, exports, module) {
           context.fillStyle = '#ff4500';
           a = x * cellWidth + cellWidth / 2;
           b = y * cellWidth + cellWidth / 4;
-          context.beginPath(); 
+          context.beginPath();
           context.beginPath();
           context.moveTo(a, b);
           context.lineTo(a - cellWidth / 6, b + cellWidth * 1 / 2);
@@ -180,7 +180,7 @@ define(function(require, exports, module) {
       context.closePath();
       drawFace(face, x, y);
       drawHP(userInfo.HP, userInfo.maxHP,x ,y)
-    }
+    };
 
     var drawMiniMap = function() {
       context.beginPath();
@@ -200,7 +200,7 @@ define(function(require, exports, module) {
       context.font = "15px Arial";
       context.fillText(userInfo.numUsers + ' online players', 18 * cellWidth + 15, 2 * cellWidth - 10);
       context.closePath();
-    }
+    };
 
     var drawInfoPanel = function() {
       context.beginPath();
@@ -228,6 +228,14 @@ define(function(require, exports, module) {
       context.fillStyle = '#00bfff';
       context.rect(17, 19 * cellWidth + 12, length-1, cellWidth / 3 - 5);
       context.fill();
+      context.closePath();
+    };
+
+    var drawClassUpgradeInfo = function(upgradeClass) {
+      context.beginPath();
+      context.fillStyle =  'rgba(200, 200, 200, 0.7)';
+      context.fillRect(10, 10, 10 * cellWidth + 20, 2 *cellWidth - 10);
+      context.fillText(upgradeClass[0], 20, 20);
       context.closePath();
     }
 
@@ -272,6 +280,9 @@ define(function(require, exports, module) {
       var x = point[0];
       var y = point[1];
       graphics.redraw();
+      if (m.upgradeClass) {
+        drawClassUpgradeInfo(m.upgradeClass);
+      }
     };
     graphics.dead = function() {
       effect.stop();
@@ -291,7 +302,7 @@ define(function(require, exports, module) {
       context.fillText("You Dead!",6 * cellWidth,7 * cellWidth);
       context.fillStyle='white';
       context.font="50px Georgia";
-      context.fillText("space to restart",6 * cellWidth,10 * cellWidth);
+      context.fillText("R to restart",6 * cellWidth,10 * cellWidth);
       context.closePath();
     };
     graphics.addEffect = function(message) {
