@@ -64,6 +64,9 @@ module.exports = {
         nextLevel: p.expNextLevel,
         numUsers: p.map.onlineUser
       };
+      if (p.level >= 5 && p.class.tier == 0){
+        mapInfo.upgradeClass = p.class.upgrade;
+      }
       p.socket.emit('event', mapInfo);
     };
 
@@ -104,9 +107,14 @@ module.exports = {
     }
 
     p.attacked = function(attacker) {
-      roll = Math.random()*100;
-      if (roll > p.dodge) {
-        p.HP -= attacker.attackPoint * 100 / (100 + p.defencePoint);
+      var dodgeRoll = Math.random() * 100;
+      var critRoll = Math.random() * 100;
+      if (dodgeRoll > p.dodge) {
+        var factor = 1;
+        if (critRoll < attacker.critAtt) {
+          factor = 2;
+        }
+        p.HP -= factor * attacker.attackPoint * 100 / (100 + p.defencePoint);
         if (p.isDead()) {
           attacker.addExp(p.nextLevel * 4 / 5);
           p.delete();
@@ -127,7 +135,7 @@ module.exports = {
       allPlayer[cid].map.removeObject(allPlayer[cid].position);
       //delete allPlayer[cid];
       p.socket.emit('message', 'dead');
-    }
+    };
 
     p.map.addObject(pos, 'player', p);
     return p;

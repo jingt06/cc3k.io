@@ -11,7 +11,7 @@ module.exports = {
 			maxHP: 200,
 			attackPoint: 5,
 			defencePoint: 0,
-			exp: 50
+			exp: 300 // for test use , shoud be 50
 		};
 		goblin.getInfo = function() {
 			return {
