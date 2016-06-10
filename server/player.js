@@ -108,7 +108,7 @@ module.exports = {
       if (roll > p.dodge) {
         p.HP -= attacker.attackPoint * 100 / (100 + p.defencePoint);
         if (p.isDead()) {
-          attacker.addExp(p.exp * 4 / 5);
+          attacker.addExp(p.nextLevel * 4 / 5);
           p.delete();
         }
       }
