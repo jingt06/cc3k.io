@@ -13,6 +13,7 @@ module.exports = {
 					description: 'a health potion that restores 15% - 30% health',
 					use: function(player) {
 						var restore = Math.floor(Math.random() * 15 + 15);
+						player.addExp(2);
 						player.HP += player.HP * restore / 100;
 						if (player.HP > player.maxHP) player.HP = player.maxHP;
 						return 'restores ' +  restore + ' HP.'
@@ -26,10 +27,11 @@ module.exports = {
 				return {
 					type: 'potionA',
 					consumable: true,
-					description: 'a attack potion that add 5 attack point',
+					description: 'a attack potion that add 1 attack point',
 					use: function(player) {
-						player.attackPoint += 5;
-						return 'add 5 attack.'
+						player.attackPoint += 1;
+						player.addExp(2);
+						return 'add 1 attack.'
 					},
 					getInfo: function() {
 						return null;
@@ -40,10 +42,11 @@ module.exports = {
 				return {
 					type: 'potionD',
 					consumable: true,
-					description: 'a attack potion that add 5 defence point',
+					description: 'a attack potion that add 1 defence point',
 					use: function(player) {
-						player.defencePoint += 5;
-						return 'add 5 defence.'
+						player.defencePoint += 1;
+						player.addExp(2);
+						return 'add 1 defence.'
 					},
 					getInfo: function() {
 						return null;

@@ -26,17 +26,19 @@ run = function () {
 setInterval(run, 10);
 
 io.on('connection', function(socket){
+  map.onlineUser++;
   // when the new user connect to server
   // send initialization object to this user
   socket.emit('id', socket.id)
   socket.emit('map', map.map);
   var spawnPoint = map.generateSpawnPoint();
-  var newPlayer = player.createPlayer(socket.id, map, spawnPoint, socket); 
+  var newPlayer = player.createPlayer(socket.id, map, spawnPoint, socket);
   newPlayer.notify();
   // initialization done
 
   // when user disconnect
   socket.on('disconnect', function(){
+    map.onlineUser--;
     player.deletePlayer(socket.id);
   });
 

@@ -134,7 +134,17 @@ define(function(require, exports, module) {
           context.lineTo(a + cellWidth / 6, b + cellWidth * 1 / 2);
           context.fill();
           context.closePath();
-          break
+          break;
+        case 'enemy':
+          context.fillStyle = '#8000FF';
+          var a = x * cellWidth + cellWidth / 2
+          var b = y * cellWidth + cellWidth / 2
+          context.beginPath();
+          context.arc(a, b , cellWidth / 2, 0, 2 * Math.PI);
+          context.fill();
+          context.closePath();
+          drawHP(obj.info.HP, obj.info.maxHP, a, b);
+          break;
         default:
           return;
       }
@@ -185,17 +195,40 @@ define(function(require, exports, module) {
         10 + (2 * cellWidth - 20) * point[0] / height, cellWidth / 10, 0, 2 * Math.PI);
       context.fill();
       context.closePath();
+      context.beginPath();
+      context.fillStyle = '#acacac';
+      context.font = "15px Arial";
+      context.fillText(userInfo.numUsers + ' online players', 18 * cellWidth + 15, 2 * cellWidth - 10);
+      context.closePath();
     }
 
     var drawInfoPanel = function() {
       context.beginPath();
       context.fillStyle = 'rgba(200, 200, 200, 0.7)';
-      context.fillRect(10, 18 * cellWidth + 10, 8 * cellWidth - 20, 3 * cellWidth - 20);
+      context.fillRect(10, 18 * cellWidth + 10, 7 * cellWidth, 3 * cellWidth);
       context.closePath();
+      context.beginPath();
+      context.textBaseline="Bottom";
       context.font = "20px Arial";
       context.fillStyle = '#000000'
-      context.fillText('ATT: ' + userInfo.att + ' Critical Rate: ' + userInfo.cri, 15, 18 * cellWidth + cellWidth);
-      context.fillText('DEF: ' + userInfo.def + ' Dodge Rate: ' + userInfo.dog, 15, 18 * cellWidth + 2 * cellWidth);
+      context.fillText(userInfo.class + '-LV.' + userInfo.level, 15, 19 * cellWidth);
+      context.fillText('ATT: ' + userInfo.att, 15, 20 * cellWidth + 10);
+      context.fillText('Critical Rate: ' + userInfo.cri, 3 * cellWidth, 20 * cellWidth + 10)
+      context.fillText('DEF: ' + userInfo.def, 15, 20.5 * cellWidth + 10);
+      context.fillText('Dodge Rate: ' + userInfo.dog,  3 * cellWidth, 20.5 * cellWidth + 10);
+      context.closePath();
+      context.beginPath();
+      context.rect(15, 19 * cellWidth + 10, 6 * cellWidth, cellWidth / 3);
+      context.strokeStyle = '#000000'
+      context.lineWidth = 5;
+      context.stroke();
+      context.closePath();
+      context.beginPath();
+      var length = (6 * cellWidth - 3) * userInfo.exp / userInfo.nextLevel;
+      context.fillStyle = '#00bfff';
+      context.rect(17, 19 * cellWidth + 12, length-1, cellWidth / 3 - 5);
+      context.fill();
+      context.closePath();
     }
 
     graphics.draw = draw;

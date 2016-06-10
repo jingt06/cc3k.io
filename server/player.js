@@ -1,11 +1,11 @@
-var attack = require('./attack')
+var classes = require('./classes/classes');
 var east = 0;
 var south = 1;
 var west = 2;
 var north = 3;
 var allPlayer = {}
 
-determineFace = function(y, x){
+var determineFace = function(y, x){
   if (x > 0) {
     return east;
   } else if (x < 0) {
@@ -28,18 +28,26 @@ module.exports = {
     allPlayer[cid] = p;
     p.socket = skt;
 
+
     // player status info
-    p.point = 0;
     p.position = pos;
-    p.maxHP = 100;
-    p.HP = 100;
-    p.attackPoint = 20
-    p.defencePoint =20
-    p.regenHP = 0;
-    p.dodge = 0;
-    p.critAtt = 0;
 
     // player method
+    p.initStatus = function() {
+      p.maxHP = 100;
+      p.exp = 20;
+      p.level = 1;
+      p.expNextLevel = 50;
+      p.HP = p.maxHP;
+      p.attackPoint = 20;
+      p.defencePoint =20;
+      p.regenHP = 0;
+      p.dodge = 0;
+      p.critAtt = 0;
+      classes.createSoldier(p);
+    }
+    p.initStatus();
+
     p.notify = function() {
       var mapInfo = p.map.getSight(p.position);
       mapInfo.user = {
@@ -49,7 +57,12 @@ module.exports = {
         att: p.attackPoint,
         def: p.defencePoint,
         dog: p.dodge,
-        cri: p.critAtt
+        cri: p.critAtt,
+        class: p.class.name,
+        level: p.level,
+        exp: p.exp,
+        nextLevel: p.expNextLevel,
+        numUsers: p.map.onlineUser
       };
       p.socket.emit('event', mapInfo);
     };
@@ -67,20 +80,35 @@ module.exports = {
       }
     };
 
-    p.attack = function() {
-      attack.basicAttack(p.map, p.position, p.face, p.attackPoint, p);
-    };
-
     p.isDead = function() {
       return p.HP < 0;
     };
+
+    p.addExp = function (expGain) {
+      p.exp += expGain;
+      while(p.exp >= p.expNextLevel){
+        p.levelUp();
+        p.level ++;
+        p.exp -= p.expNextLevel;
+        p.expNextLevel = p.level * (p.level - 1) * 50;
+      }
+    }
+
+    p.restart = function() {
+      p.socket.emit('id', p.socket.id)
+      p.socket.emit('map', p.map.map);
+      var spawnPoint = p.map.generateSpawnPoint();
+      p.position = spawnPoint;
+      p.initStatus();
+      p.notify();
+    }
 
     p.attacked = function(attacker) {
       roll = Math.random()*100;
       if (roll > p.dodge) {
         p.HP -= attacker.attackPoint * 100 / (100 + p.defencePoint);
         if (p.isDead()) {
-          attacker.point += p.point * 4 / 5;
+          attacker.addExp(p.exp * 4 / 5);
           p.delete();
         }
       }
@@ -97,7 +125,7 @@ module.exports = {
     p.delete = function() {
       var cid = p.clientId;
       allPlayer[cid].map.removeObject(allPlayer[cid].position);
-      delete allPlayer[cid];
+      //delete allPlayer[cid];
       p.socket.emit('message', 'dead');
     }
 
