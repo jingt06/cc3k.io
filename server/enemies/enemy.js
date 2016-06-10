@@ -14,6 +14,12 @@ module.exports = function() {
 					enemy = allEnemies[index].create();
 					break;
 			}
+			enemy.isDead = function() {
+				return enemy.HP < 0;
+			}
+			enemy.attacked = function(attacker) {
+		        enemy.HP -= attacker.attackPoint * 100 / (100 + enemy.defencePoint);
+		    }
 			return enemy;
 		};
 	return {

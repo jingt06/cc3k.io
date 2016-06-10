@@ -1,5 +1,3 @@
-var attack = require('../attack');
-
 module.exports = {
 	create: function(){
 		var goblin = {
@@ -10,7 +8,8 @@ module.exports = {
 			HP: 200,
 			maxHP: 200,
 			attackPoint: 15,
-			defencePoint: 5
+			defencePoint: 5,
+			exp: 50
 		};
 		goblin.getInfo = function() {
 			return {
@@ -20,5 +19,6 @@ module.exports = {
 				maxHP: goblin.maxHP
 			};
 		};
+		return goblin;
 	}
 }

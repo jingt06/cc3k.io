@@ -2,7 +2,9 @@ var mapWidth = 136;
 var mapHeight = 50;
 var mapMargin = 10;
 var totalObjects = 10;
+var totalEnemies = 30;
 var object = require('./items/object')();
+var enemies = require('./enemies/enemy.js')();
 var map = ['                                                                                                                                                            ',
        '                                                                                                                                                            ',
        '                                                                                                                                                            ',
@@ -124,11 +126,19 @@ var generateObject = function() {
   var obj = object.createObject();
   addObject(point, obj.type, obj);
 }
-for (var i = totalObjects; i >= 0; i--) {
-    generateObject();
+
+
+
+var generateEnemy = function() {
+  var point = generateSpawnPoint();
+  var enemy = enemies.createEnemy();
+  addObject(point, enemy.type, enemy);
 }
 
-
+for (var i = totalObjects; i >= 0; i--) {
+    generateObject();
+    generateEnemy();
+}
 
 module.exports = function(io) {
   return {
@@ -181,10 +191,18 @@ module.exports = function(io) {
         case 'attack':
           io.emit('effect' , {type: 'attack', duration: 5, location: target});
           notify(target);
-          if(obj && obj.type == 'player'){
-            attackedPlayer = obj.object;
-            attackedPlayer.attacked(player)
+          if (obj && obj.type == 'player') {
+            var attackedPlayer = obj.object;
+            attackedPlayer.attacked(player);
             notify(target);
+          } else if (obj && obj.type == 'enemy') {
+            var attackedEnemy = obj.object;
+            attackedEnemy.attacked(player);
+            if (attackedEnemy.isDead()) {
+              objects[target[0]][target[1]] = null;
+              player.addExp(attackedEnemy.exp);
+              generateEnemy();
+            }
           }
           break;
       }

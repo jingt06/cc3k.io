@@ -134,7 +134,17 @@ define(function(require, exports, module) {
           context.lineTo(a + cellWidth / 6, b + cellWidth * 1 / 2);
           context.fill();
           context.closePath();
-          break
+          break;
+        case 'enemy':
+          context.fillStyle = '#8000FF';
+          var a = x * cellWidth + cellWidth / 2
+          var b = y * cellWidth + cellWidth / 2
+          context.beginPath();
+          context.arc(a, b , cellWidth / 2, 0, 2 * Math.PI);
+          context.fill();
+          context.closePath();
+          drawHP(obj.info.HP, obj.info.maxHP, a, b);
+          break;
         default:
           return;
       }
@@ -195,17 +205,17 @@ define(function(require, exports, module) {
     var drawInfoPanel = function() {
       context.beginPath();
       context.fillStyle = 'rgba(200, 200, 200, 0.7)';
-      context.fillRect(10, 18 * cellWidth + 10, 7 * cellWidth - 20, 3 * cellWidth - 20);
+      context.fillRect(10, 18 * cellWidth + 10, 7 * cellWidth, 3 * cellWidth);
       context.closePath();
       context.beginPath();
       context.textBaseline="Bottom";
       context.font = "20px Arial";
       context.fillStyle = '#000000'
       context.fillText(userInfo.class + '-LV.' + userInfo.level, 15, 19 * cellWidth);
-      context.fillText('ATT: ' + userInfo.att, 15, 20 * cellWidth);
-      context.fillText('Critical Rate: ' + userInfo.cri, 3 * cellWidth, 20 * cellWidth)
-      context.fillText('DEF: ' + userInfo.def, 15, 20.5 * cellWidth);
-      context.fillText('Dodge Rate: ' + userInfo.dog,  3 * cellWidth, 20.5 * cellWidth);
+      context.fillText('ATT: ' + userInfo.att, 15, 20 * cellWidth + 10);
+      context.fillText('Critical Rate: ' + userInfo.cri, 3 * cellWidth, 20 * cellWidth + 10)
+      context.fillText('DEF: ' + userInfo.def, 15, 20.5 * cellWidth + 10);
+      context.fillText('Dodge Rate: ' + userInfo.dog,  3 * cellWidth, 20.5 * cellWidth + 10);
       context.closePath();
       context.beginPath();
       context.rect(15, 19 * cellWidth + 10, 6 * cellWidth, cellWidth / 3);
