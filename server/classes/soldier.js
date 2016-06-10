@@ -11,10 +11,11 @@ module.exports = {
 			attack.basicAttack(player.map, player.position, player.face, player.attackPoint, player);
 		}
 		player.levelUp = function(){
+        	player.level ++;
 			player.attackPoint +=3;
 			player.defencePoint +=3;
 			player.maxHP += 20;
-			player.HP += 20;
+			player.HP = maxHP;
 		}
 	}
 }
