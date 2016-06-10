@@ -235,7 +235,14 @@ define(function(require, exports, module) {
       context.beginPath();
       context.fillStyle =  'rgba(200, 200, 200, 0.7)';
       context.fillRect(10, 10, 10 * cellWidth + 20, 2 *cellWidth - 10);
-      context.fillText(upgradeClass[0], 20, 20);
+      var classStr = '';
+      for (i in upgradeClass){
+        var index = parseInt(i) + 1;
+        classStr = classStr + '    ' + index + ': ' + upgradeClass[i];
+      }
+      context.fillStyle = 'black'
+      context.fillText('plese press num keys to upgrade', 20, cellWidth);
+      context.fillText(classStr, 20, cellWidth * 2);
       context.closePath();
     }
 
