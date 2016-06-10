@@ -20,6 +20,9 @@ module.exports = function() {
 			enemy.attacked = function(attacker) {
 		        enemy.HP -= attacker.attackPoint * 100 / (100 + enemy.defencePoint);
 		    };
+		    enemy.addExp = function(expGain){
+		    	enemy.exp += expGain;
+		    }
 		    enemy.location = point;
 			return enemy;
 		};

@@ -1,5 +1,6 @@
 module.exports = {
   basicAction: function(enemy, floor, objects) {
+    // this is for simple melee enemy, attack range: 1
     var x = enemy.location[0];
     var y = enemy.location[1];
     var playerInRange = []
@@ -12,7 +13,7 @@ module.exports = {
     }
     if (playerInRange.length > 0) {
       var index = Math.floor(Math.random() * playerInRange.length);
-      //attack playerInRange[index]
+      var attackedPlayer = playerInRange[index][0].attacked(enemy);
     } else {
       // cannot attack anyone, search for near enemy
       for (var i = x - 5; i <= x + 5; i++) {
