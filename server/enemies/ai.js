@@ -32,14 +32,41 @@ module.exports = {
         var targetPosition = playerInRange[index][1];
         var oldx = x;
         var oldy = y;
-        if (x > targetPosition[0]){
+        if (x > targetPosition[0] && !objects[x - 1][y]){
           x--;
-        } else if (x < targetPosition[0]){
+        } else if (x < targetPosition[0] && !objects[x + 1][y]){
           x++;
-        } else if (y > targetPosition[1]){
+        } else if (y > targetPosition[1]  && !objects[x][y - 1]){
           y--;
-        } else if (y < targetPosition[1]){
+        } else if (y < targetPosition[1]  && !objects[x][y + 1]){
           y++;
+        }
+        if(floor[x][y] == '.' && !objects[x][y]){
+          objects[oldx][oldy] = null;
+          enemy.location = [x, y];
+          objects[x][y] = {
+            type: 'enemy',
+            object: enemy
+          };
+        }
+      } else {
+        //just random move
+        var rand = Math.floor(Math.random() * 4);
+        var oldx = x;
+        var oldy = y;
+        switch (rand) {
+          case 0:
+            x++;
+            break;
+          case 1:
+            x--;
+            break;
+          case 2:
+            y++;
+            break;
+          case 3:
+            y--;
+            break;
         }
         if(floor[x][y] == '.' && !objects[x][y]){
           objects[oldx][oldy] = null;
