@@ -3,7 +3,7 @@ var attack = require('./attack');
 module.exports = {
 	transfer: function(player) {
 		if (player.class.tier == 0) {
-			player.dog += 5;
+			player.dodge += 5;
 			player.attackPoint += 5;
 			player.class =  {
 				name: 'Warrior',
