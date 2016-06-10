@@ -3,7 +3,7 @@ var goblin = require('./goblin')
 var allEnemies = [goblin];
 
 module.exports = function() {
-	var createEnemy = function(enemyStr) {
+	var createEnemy = function(point, enemyStr) {
 			var enemy;
 			switch (enemyStr) {
 				case 'goblin':
@@ -16,10 +16,11 @@ module.exports = function() {
 			}
 			enemy.isDead = function() {
 				return enemy.HP < 0;
-			}
+			};
 			enemy.attacked = function(attacker) {
 		        enemy.HP -= attacker.attackPoint * 100 / (100 + enemy.defencePoint);
-		    }
+		    };
+		    enemy.location = point;
 			return enemy;
 		};
 	return {

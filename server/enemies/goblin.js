@@ -1,3 +1,5 @@
+var ai = require('./ai')
+
 module.exports = {
 	create: function(){
 		var goblin = {
@@ -19,6 +21,9 @@ module.exports = {
 				maxHP: goblin.maxHP
 			};
 		};
+		goblin.action = function(floor, objects) {
+			ai.basicAction(goblin, floor, objects);
+		}
 		return goblin;
 	}
 }

@@ -27,5 +27,6 @@
 - [ ] Functional
    - [x] Move and comsume potion
    - [x] Attack and kill
-   - [x] space to restart (@b232wang)
+   - [x] Space to restart (@b232wang)
+   - [ ] Enemy's simple ai
    - [ ] ...

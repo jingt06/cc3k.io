@@ -78,6 +78,8 @@ var map = ['                                                                    
        '                                                                                                                                                            '
        ];
 
+var enemyList = [];
+
 // objects contains objects on the map,
 // which including items(ruins, potions...), enemies and players
 var objects = [];
@@ -129,9 +131,16 @@ var generateObject = function() {
 
 
 
-var generateEnemy = function() {
+var generateEnemy = function(id) {
   var point = generateSpawnPoint();
-  var enemy = enemies.createEnemy();
+  var enemy = enemies.createEnemy(point);
+  if (id) {
+    enemyList[id] = enemy;
+  } else {
+    var id = enemyList.length;
+    enemyList.push(enemy);
+    enemy.id = id;
+  }
   addObject(point, enemy.type, enemy);
 }
 
@@ -199,12 +208,18 @@ module.exports = function(io) {
             var attackedEnemy = obj.object;
             attackedEnemy.attacked(player);
             if (attackedEnemy.isDead()) {
+              var id = attackedEnemy.id;
               objects[target[0]][target[1]] = null;
               player.addExp(attackedEnemy.exp);
-              generateEnemy();
+              generateEnemy(id);
             }
           }
           break;
+      }
+    },
+    enemyMove: function(){
+      for (var i = enemyList.length - 1; i >= 0; i--) {
+        enemyList[i].action(map, objects);
       }
     }
   };
