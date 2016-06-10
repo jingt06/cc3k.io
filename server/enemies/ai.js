@@ -15,8 +15,8 @@ module.exports = {
       //attack playerInRange[index]
     } else {
       // cannot attack anyone, search for near enemy
-      for (var i = x - 3; i <= x + 3; i++) {
-        for (var j = y - 3; j <= y + 3; j++) {
+      for (var i = x - 5; i <= x + 5; i++) {
+        for (var j = y - 5; j <= y + 5; j++) {
           if(objects[i][j] && objects[i][j].type == 'player'){
             playerInRange.push([objects[i][j].object, [i, j]]);
           }

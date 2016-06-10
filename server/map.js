@@ -115,6 +115,18 @@ var notify = function(point) {
     }
 }
 
+var notifyAll = function() {
+    for(i in objects) {
+      for(j in objects[i]) {
+        if (objects[i][j]) {
+          if (objects[i][j].type == 'player') {
+            objects[i][j].object.notify();
+          }
+        }
+      }
+    }
+}
+
 var addObject = function(point, type, obj) {
       objects[point[0]][point[1]] = {
         type: type,
@@ -221,6 +233,7 @@ module.exports = function(io) {
       for (var i = enemyList.length - 1; i >= 0; i--) {
         enemyList[i].action(map, objects);
       }
+      notifyAll();
     }
   };
 }
