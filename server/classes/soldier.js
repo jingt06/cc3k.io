@@ -14,7 +14,7 @@ module.exports = {
 			player.attackPoint +=3;
 			player.defencePoint +=3;
 			player.maxHP += 20;
-			player.HP += 20;
+			player.HP = player.maxHP;
 		}
 	}
 }
