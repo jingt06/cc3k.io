@@ -27,7 +27,7 @@ module.exports = function(player){
       player.getPlayer(cid).attack();
     }
   }
-  var keyR = function(cid) {
+  var keyRestart = function(cid) {
     if (player.getPlayer(cid).isDead()) {
       player.getPlayer(cid).restart();
     }
@@ -69,7 +69,7 @@ module.exports = function(player){
         keyNum(cid, 4);
         break;
       case keyR:
-        keyR(cid);
+        keyRestart(cid);
     }
   }
   return keyListener;
