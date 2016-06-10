@@ -27,5 +27,8 @@
 - [ ] Functional
    - [x] Move and comsume potion
    - [x] Attack and kill
-   - [x] space to restart (@b232wang)
+   - [x] Space to restart (@b232wang)
+   - [x] Enemy's move
+   - [ ] Notify after enemy's move
+   - [ ] Enemy's attack
    - [ ] ...

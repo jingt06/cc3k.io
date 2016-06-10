@@ -5,7 +5,7 @@ var west = 2;
 var north = 3;
 var allPlayer = {}
 
-determineFace = function(y, x){
+var determineFace = function(y, x){
   if (x > 0) {
     return east;
   } else if (x < 0) {

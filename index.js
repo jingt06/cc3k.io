@@ -19,11 +19,11 @@ server.listen(process.env.PORT || 3000, function(){
 
 app.use(express.static(__dirname + '/static'));
 
-//this function runs for every 10 ms
+//this function runs for every 0.5s
 run = function () {
-  //running
+  map.enemyMove();
 }
-setInterval(run, 10);
+setInterval(run, 500);
 
 io.on('connection', function(socket){
   map.onlineUser++;
