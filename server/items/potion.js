@@ -14,7 +14,7 @@ module.exports = {
 					use: function(player) {
 						var restore = Math.floor(Math.random() * 15 + 15);
 						player.addExp(2);
-						player.HP += player.HP * restore / 100;
+						player.HP += player.maxHP * restore / 100;
 						if (player.HP > player.maxHP) player.HP = player.maxHP;
 						return 'restores ' +  restore + ' HP.'
 					},
