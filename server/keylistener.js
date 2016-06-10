@@ -7,6 +7,7 @@ var key1 = 49;
 var key2 = 50;
 var key3 = 51;
 var key4 = 52;
+var keyR= 82;
 
 module.exports = function(player){
   var keyLeft = function(cid) {
@@ -24,7 +25,10 @@ module.exports = function(player){
   var keySpace = function(cid) {
     if (!player.getPlayer(cid).isDead()) {
       player.getPlayer(cid).attack();
-    } else {
+    }
+  }
+  var keyR = function(cid) {
+    if (player.getPlayer(cid).isDead()) {
       player.getPlayer(cid).restart();
     }
   }
@@ -64,6 +68,8 @@ module.exports = function(player){
       case key4:
         keyNum(cid, 4);
         break;
+      case keyR:
+        keyR(cid);
     }
   }
   return keyListener;
