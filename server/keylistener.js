@@ -3,6 +3,7 @@ var up = 38;
 var right = 39;
 var down = 40;
 var space = 32;
+var restart = 82;
 
 
 module.exports = function(player){
@@ -21,7 +22,10 @@ module.exports = function(player){
   var keySpace = function(cid) {
     if (!player.getPlayer(cid).isDead()) {
       player.getPlayer(cid).attack();
-    } else {
+    }
+  }
+  var keyRestart = function(cid) {
+    if (player.getPlayer(cid).isDead()) {
       player.getPlayer(cid).restart();
     }
   }
@@ -42,6 +46,9 @@ module.exports = function(player){
         break;
       case space:
         keySpace(cid);
+        break;
+      case restart:
+        keyRestart(cid);
     }
   }
   return keyListener;
