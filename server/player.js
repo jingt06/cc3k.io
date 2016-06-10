@@ -116,7 +116,7 @@ module.exports = {
         }
         p.HP -= factor * attacker.attackPoint * 100 / (100 + p.defencePoint);
         if (p.isDead()) {
-          attacker.addExp(p.nextLevel * 4 / 5);
+          attacker.addExp(p.expNextLevel * 4 / 5);
           p.delete();
         }
       }
