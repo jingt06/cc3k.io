@@ -29,6 +29,6 @@
    - [x] Attack and kill
    - [x] Space to restart (@b232wang)
    - [x] Enemy's move
-   - [ ] Notify after enemy's move
-   - [ ] Enemy's attack
+   - [x] Notify after enemy's move
+   - [x] Enemy's attack
    - [ ] ...

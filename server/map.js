@@ -231,7 +231,7 @@ module.exports = function(io) {
     },
     enemyMove: function(){
       for (var i = enemyList.length - 1; i >= 0; i--) {
-        if(!enemyList[i].isDead()) enemyList[i].action(map, objects);
+        if(!enemyList[i].isDead()) enemyList[i].action(map, objects, io);
       }
       notifyAll();
     }
