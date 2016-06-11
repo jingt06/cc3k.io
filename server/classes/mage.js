@@ -11,7 +11,7 @@ module.exports = {
 				skills: []
 			};
 			player.attack = function() {
-				attack.basicAttack(player.map, player.position, player.face, player.attackPoint, player);
+				attack.coneAttack(player.map, player.position, player.face, player.attackPoint, player);
 			};
 			player.levelUp = function(){
 				player.attackPoint += 10;

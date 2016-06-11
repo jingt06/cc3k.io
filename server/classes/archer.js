@@ -12,7 +12,7 @@ module.exports = {
 				skills: []
 			};
 			player.attack = function() {
-				attack.RangeAttack(player.map, player.position, player.face, player.attackPoint, player);
+				attack.rangeAttack(player.map, player.position, player.face, player.attackPoint, player);
 			};
 			player.levelUp = function(){
 				player.attackPoint += 4;

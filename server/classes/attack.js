@@ -23,7 +23,7 @@ module.exports = {
   	  map.action(player, 'attack', [newPoint]);
 	},
 
-	RangeAttack: function(map, point, face, attack, player) {
+	rangeAttack: function(map, point, face, attack, player) {
 		var newPoints;
 		switch (face) {
 			case east:
@@ -40,5 +40,48 @@ module.exports = {
 				break;
 		}
     	map.action(player, 'attack', newPoints);
-	}
+	},
+
+	coneAttack: function(map, point, face, attack, player) {
+		var newPoints;
+		switch (face) {
+			case east:
+				newPoints = [[point[0], point[1] + 1], [point[0], point[1] + 2],[point[0] + 1, point[1] + 2], [point[0] - 1, point[1] + 2]];
+				break;
+			case west:
+				newPoints = [[point[0], point[1] - 1], [point[0], point[1] - 2], [point[0] - 1, point[1] - 2], [point[0] + 1, point[1] - 2]];
+				break;
+			case north:
+				newPoints = [[point[0] - 1, point[1]], [point[0] - 2, point[1]], [point[0] - 2, point[1] + 1], [point[0] - 2, point[1] - 1]];
+				break;
+			case south:
+				newPoints = [[point[0] + 1, point[1]], [point[0] + 2, point[1]], [point[0] + 2, point[1] + 1], [point[0] - 2, point[1] - 1]];
+				break;
+		}
+    	map.action(player, 'attack', newPoints);
+	},
+
+	adjacentAttack: function(map, point, face, attack, player) {
+		var newPoints = [[point[0], point[1] + 1], [point[0], point[1] - 1],[point[0] + 1, point[1]], [point[0] - 1, point[1]]];
+    	map.action(player, 'attack', newPoints);
+	},
+
+	rowAttack: function(map, point, face, attack, player) {
+		var newPoints;
+		switch (face) {
+			case east:
+				newPoints = [[point[0], point[1] + 1], [point[0] + 1, point[1] + 1],[point[0] - 1, point[1] + 1]];
+				break;
+			case west:
+				newPoints = [[point[0], point[1] - 1], [point[0] + 1, point[1] - 1], [point[0] - 1, point[1] - 1]];
+				break;
+			case north:
+				newPoints = [[point[0] - 1, point[1]], [point[0] - 1, point[1] - 1], [point[0] - 1, point[1] + 1]];
+				break;
+			case south:
+				newPoints = [[point[0] + 1, point[1]], [point[0] + 1, point[1] + 1], [point[0] + 1, point[1] - 1]];
+				break;
+		}
+    	map.action(player, 'attack', newPoints);
+	},
 }
