@@ -20,7 +20,7 @@ module.exports = {
 				newPoint = [point[0] + 1, point[1]];
 				break;
 		}
-  	  map.action(player, 'attack', newPoint);
+  	  map.action(player, 'attack', [newPoint]);
 	},
 
 	RangeAttack: function(map, point, face, attack, player) {
@@ -39,8 +39,6 @@ module.exports = {
 				newPoints = [[point[0] + 1, point[1]], [point[0] + 2, point[1]], [point[0] + 3, point[1]], [point[0] + 4, point[1]]];
 				break;
 		}
-		for(i in newPoints){
-    		map.action(player, 'attack', newPoints[i]);
-		}
+    	map.action(player, 'attack', newPoints);
 	}
 }

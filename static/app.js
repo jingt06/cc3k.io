@@ -31,8 +31,14 @@ requirejs(["helper/init", "graphic"], function(init, graphic) {
     }
   })
 
-  socket.on('effect', function(message) {
-    graphic.addEffect(message);
+  socket.on('effect', function(effect) {
+    graphic.addEffect(effect);
+  });
+
+  socket.on('effects', function(effects) {
+    for(i in effects.locations){
+      graphic.addEffect({type: effects.type, duration: effects.duration, location: effects.locations[i]});
+    }
   });
 });
 

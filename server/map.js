@@ -206,25 +206,27 @@ module.exports = function(io) {
       objects[point[0]][point[1]] = null;
       notify(point);
     },
-    action: function(player, action, target, options) {
-      var obj = objects[target[0]][target[1]];
+    action: function(player, action, targets, options) {
       switch (action) {
         case 'attack':
-          io.emit('effect' , {type: 'attack', duration: 5, location: target});
-          notify(target);
-          if (obj && obj.type == 'player') {
-            var attackedPlayer = obj.object;
-            attackedPlayer.attacked(player);
-            notify(target);
-          } else if (obj && obj.type == 'enemy') {
-            var attackedEnemy = obj.object;
-            attackedEnemy.attacked(player);
-            if (attackedEnemy.isDead()) {
-              var id = attackedEnemy.id;
-              objects[target[0]][target[1]] = null;
-              player.addExp(attackedEnemy.exp);
-              generateEnemy(id);
+          io.emit('effects' , {type: 'attack', duration: 5, locations: targets});
+          notify(player.position);
+          for (var i = targets.length - 1; i >= 0; i--) {
+            obj = objects[targets[i][0]][targets[i][1]];
+            if (obj && obj.type == 'player') {
+              var attackedPlayer = obj.object;
+              attackedPlayer.attacked(player);
+            } else if (obj && obj.type == 'enemy') {
+              var attackedEnemy = obj.object;
+              attackedEnemy.attacked(player);
+              if (attackedEnemy.isDead()) {
+                var id = attackedEnemy.id;
+                objects[targets[i][0]][targets[i][1]] = null;
+                player.addExp(attackedEnemy.exp);
+                generateEnemy(id);
+              }
             }
+            notify(player.position);
           }
           break;
       }
