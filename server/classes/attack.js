@@ -55,7 +55,7 @@ module.exports = {
 				newPoints = [[point[0] - 1, point[1]], [point[0] - 2, point[1]], [point[0] - 2, point[1] + 1], [point[0] - 2, point[1] - 1]];
 				break;
 			case south:
-				newPoints = [[point[0] + 1, point[1]], [point[0] + 2, point[1]], [point[0] + 2, point[1] + 1], [point[0] - 2, point[1] - 1]];
+				newPoints = [[point[0] + 1, point[1]], [point[0] + 2, point[1]], [point[0] + 2, point[1] + 1], [point[0] + 2, point[1] - 1]];
 				break;
 		}
     	map.action(player, 'attack', newPoints);
