@@ -193,13 +193,13 @@ define(function(require, exports, module) {
       context.fillStyle = 'yellow';
       context.arc(18 * cellWidth + 10 + (3 * cellWidth - 15) * point[1] / width,
                   10 + (2 * cellWidth - 20) * point[0] / height, cellWidth / 10, 0, 2 * Math.PI);
-                  context.fill();
-                  context.closePath();
-                  context.beginPath();
-                  context.fillStyle = '#acacac';
-                  context.font = "15px Arial";
-                  context.fillText(userInfo.numUsers + ' online players', 18 * cellWidth + 15, 2 * cellWidth - 10);
-                  context.closePath();
+      context.fill();
+      context.closePath();
+      context.beginPath();
+      context.fillStyle = '#acacac';
+      context.font = '15px Arial';
+      context.fillText(userInfo.numUsers + ' online players', 18 * cellWidth + 15, 2 * cellWidth - 10);
+      context.closePath();
     };
 
     var drawInfoPanel = function() {
@@ -208,10 +208,10 @@ define(function(require, exports, module) {
       context.fillRect(10, 18 * cellWidth + 10, 7 * cellWidth, 3 * cellWidth);
       context.closePath();
       context.beginPath();
-      context.textBaseline="Bottom";
-      context.font = "20px Arial";
+      context.textBaseline='Bottom';
+      context.font = '20px Arial';
       context.fillStyle = '#000000'
-      context.fillText(userInfo.class + '-LV.' + userInfo.level+ "  " + userInfo.name, 15, 19 * cellWidth);
+      context.fillText(userInfo.class + '-LV.' + userInfo.level+ '  ' + userInfo.name, 15, 19 * cellWidth);
       context.fillText('ATT: ' + userInfo.att, 15, 20 * cellWidth + 10);
       context.fillText('Critical Rate: ' + userInfo.cri, 3 * cellWidth, 20 * cellWidth + 10)
       context.fillText('DEF: ' + userInfo.def, 15, 20.5 * cellWidth + 10);
@@ -297,19 +297,19 @@ define(function(require, exports, module) {
       context.fillStyle = 'black';
       context.clearRect(0, 0, canvas.width, canvas.height);
       context.fillRect(0, 0, canvas.width, canvas.height);
-      context.font="30px Verdana";
+      context.font='30px Verdana';
       // Create gradient
       var gradient=context.createLinearGradient(0,0,canvas.width,0);
-      gradient.addColorStop("0","yellow");
-      gradient.addColorStop("0.5","red");
-      gradient.addColorStop("1.0","blue");
+      gradient.addColorStop('0','yellow');
+      gradient.addColorStop('0.5','red');
+      gradient.addColorStop('1.0','blue');
       // Fill with gradient
       context.fillStyle=gradient;
-      context.font="70px Georgia";
-      context.fillText("You Dead!",6 * cellWidth,7 * cellWidth);
+      context.font='70px Georgia';
+      context.fillText('You Dead!',6 * cellWidth,7 * cellWidth);
       context.fillStyle='white';
-      context.font="50px Georgia";
-      context.fillText("R to restart",6 * cellWidth,10 * cellWidth);
+      context.font='50px Georgia';
+      context.fillText('R to restart',6 * cellWidth,10 * cellWidth);
       context.closePath();
     };
     graphics.login= function() {
@@ -318,33 +318,40 @@ define(function(require, exports, module) {
       context.fillStyle = 'black';
       context.clearRect(0, 0, canvas.width, canvas.height);
       context.fillRect(0, 0, canvas.width, canvas.height);
-      context.font="30px Verdana";
+      context.font='30px Verdana';
 
-      iDiv = document.getElementById("map");
+      iDiv = document.getElementById('map');
 
       //Create input box
       var inputName= document.createElement('input');
       inputName.type = 'text';
-      inputName.style="border:2px solid groove;position:absolute;left:250px;top:350px;opacity:.5"
+      inputName.style['border'] = '2px solid groove';
+      inputName.style['position'] = 'absolute';
+      inputName.style['left'] = 8 * cellWidth + 'px';
+      inputName.style['top'] = 13 * cellWidth + 'px';
+      inputName.style['top'] = .5;
       iDiv.appendChild(inputName);
       var wText= document.createElement('text');
-      wText.style="color:red;position:absolute;left:250px;top:370px;opacity:.5"
+      wText.style='color:red;position:absolute;left:250px;top:370px;opacity:.5'
       iDiv.appendChild(wText);
 
       //Create button
       var buttonGo= document.createElement('button');
-      buttonGo.innerHTML= "GO";
-      buttonGo.style="position:absolute;left:400px;top:350px;opacity:.5"
+      buttonGo.innerHTML= 'GO';
+      buttonGo.style['position']='absolute';
+      buttonGo.style['left'] = 10 * cellWidth + 'px';
+      buttonGo.style['top'] = 14 * cellWidth + 'px';
+      buttonGo.style['opacity'] = .5;
       buttonGo.onclick = function() {
         var value = inputName.value;
-        if(value == ""){
-          wText.innerHTML = "Name cannot be empty!";
+        if(value == ''){
+          wText.innerHTML = 'Name cannot be empty!';
         }else if(value.length > 10){
-          wText.innerHTML = "The length of Name cannot greater than 10!";
-        }else if(value == "cc3k"){
-          wText.innerHTML = "Name cannot be same as 'cc3k'!";
+          wText.innerHTML = 'The length of Name cannot greater than 10!';
+        }else if(value == 'cc3k'){
+          wText.innerHTML = 'Name cannot be same as \'cc3k\'!';
         }else{
-          socket.emit("begin",value);
+          socket.emit('begin',value);
           iDiv.removeChild(inputName);
           iDiv.removeChild(buttonGo);
           iDiv.removeChild(wText);
@@ -354,16 +361,16 @@ define(function(require, exports, module) {
 
       // Create gradient
       var gradient=context.createLinearGradient(0,0,canvas.width,0);
-      gradient.addColorStop("0","yellow");
-      gradient.addColorStop("0.5","red");
-      gradient.addColorStop("1.0","blue");
+      gradient.addColorStop('0','yellow');
+      gradient.addColorStop('0.5','red');
+      gradient.addColorStop('1.0','blue');
       // Fill with gradient
       context.fillStyle=gradient;
-      context.font="50px Georgia";
-      context.fillText("Welcome to CC3K! ",4 * cellWidth,7 * cellWidth);
+      context.font='50px Georgia';
+      context.fillText('Welcome to CC3K! ',4 * cellWidth,7 * cellWidth);
       context.fillStyle='white';
-      context.font="30px Georgia";
-      context.fillText("Enter your name please.",5 * cellWidth,9 * cellWidth);
+      context.font='30px Georgia';
+      context.fillText('Enter your name please.',5 * cellWidth,9 * cellWidth);
       context.closePath();
     };
     graphics.addEffect = function(message) {
