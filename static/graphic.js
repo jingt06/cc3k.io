@@ -211,7 +211,7 @@ define(function(require, exports, module) {
       context.textBaseline='Bottom';
       context.font = '20px Arial';
       context.fillStyle = '#000000'
-      context.fillText(userInfo.class + '-LV.' + userInfo.level+ '  ' + userInfo.name, 15, 19 * cellWidth);
+      context.fillText(userInfo.class + '-LV.' + userInfo.level+ '  ' + userInfo.name + ' ' + userInfo.race, 15, 19 * cellWidth);
       context.fillText('ATT: ' + userInfo.att, 15, 20 * cellWidth + 10);
       context.fillText('Critical Rate: ' + userInfo.cri, 3 * cellWidth, 20 * cellWidth + 10)
       context.fillText('DEF: ' + userInfo.def, 15, 20.5 * cellWidth + 10);
@@ -336,28 +336,43 @@ define(function(require, exports, module) {
       iDiv.appendChild(wText);
 
       //Create button
-      var buttonGo= document.createElement('button');
-      buttonGo.innerHTML= 'GO';
-      buttonGo.style['position']='absolute';
-      buttonGo.style['left'] = 10 * cellWidth + 'px';
-      buttonGo.style['top'] = 14 * cellWidth + 'px';
-      buttonGo.style['opacity'] = .5;
-      buttonGo.onclick = function() {
-        var value = inputName.value;
-        if(value == ''){
-          wText.innerHTML = 'Name cannot be empty!';
-        }else if(value.length > 10){
-          wText.innerHTML = 'The length of Name cannot greater than 10!';
-        }else if(value == 'cc3k'){
-          wText.innerHTML = 'Name cannot be same as \'cc3k\'!';
-        }else{
-          socket.emit('begin',value);
-          iDiv.removeChild(inputName);
-          iDiv.removeChild(buttonGo);
-          iDiv.removeChild(wText);
+      var createButton = function(name, pos) {
+        var button= document.createElement('button');
+        button.innerHTML= name;
+        button.style['position']='absolute';
+        button.style['left'] = 8 * cellWidth + pos.x + 'px';
+        button.style['top'] = 14 * cellWidth + pos.y +  'px';
+        button.style['opacity'] = .5;
+        button.onclick = function() {
+          var value = inputName.value;
+          if(value == ''){
+            wText.innerHTML = 'Name cannot be empty!';
+          }else if(value.length > 10){
+            wText.innerHTML = 'The length of Name cannot greater than 10!';
+          }else if(value == 'cc3k'){
+            wText.innerHTML = 'Name cannot be same as \'cc3k\'!';
+          }else{
+            var childList = iDiv.childNodes;
+            while(childList[2]){
+              iDiv.removeChild(childList[2]);
+            }
+            socket.emit('begin',value,name);
+          }
+        };
+        return button;
+      }
+
+      //create race
+      var raceList = ['ORC', 'HUMAN', 'ELF', 'TROLL', 'DRAWF'];
+      var buttonList = [];
+      var num = 0;
+      for(var i = 0;i < raceList.length;num++){
+        for(var j = 0; j < 3&& i<raceList.length; j++){
+          buttonList.push(createButton(raceList[i],{x:70*j,y:30*num}));
+          iDiv.appendChild(buttonList[i]);
+          i++;
         }
-      };
-      iDiv.appendChild(buttonGo);
+      }
 
       // Create gradient
       var gradient=context.createLinearGradient(0,0,canvas.width,0);
