@@ -130,7 +130,9 @@ module.exports = {
       return {
         face: p.face,
         HP: p.HP,
-        maxHP: p.maxHP
+        maxHP: p.maxHP,
+        name: p.name,
+        race: p.race
       }
     };
 

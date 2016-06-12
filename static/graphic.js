@@ -14,6 +14,16 @@ define(function(require, exports, module) {
   var objects;
   var userInfo;
   var graphics = {}
+
+  var drawStroked = function(context,text,x,y) {
+    context.font = "20px Sans-serif"
+    context.strokeStyle = "black"
+    context.lineWidth = 6;
+    context.strokeText(text, x, y);
+    context.fillStyle = 'white';
+    context.fillText(text, x, y);
+  }
+
   exports.init = function(map, canvas, context, cellWidth,socket){
     effect = require('effect').init(map, canvas, context, cellWidth, graphics);
     var draw = function(x, y, type){
@@ -71,9 +81,10 @@ define(function(require, exports, module) {
       var info = obj.info;
       switch (type) {
         case 'player':
-          context.fillStyle = '#ff0000'
           var x = x * cellWidth + cellWidth / 2
           var y = y * cellWidth + cellWidth / 2
+          drawStroked(context, info.name, x-info.name.length*5,y-30);
+          context.fillStyle = '#ff0000'
           context.beginPath();
           context.arc(x, y , cellWidth / 2, 0, 2 * Math.PI);
           context.fill();
@@ -173,10 +184,14 @@ define(function(require, exports, module) {
       var face = userInfo.face;
       var x = 10*cellWidth + cellWidth/2;
       var y = 10*cellWidth + cellWidth/2;
+
+      drawStroked(context, userInfo.name , x-userInfo.name.length*5, y-25);
+
       context.beginPath();
       context.fillStyle = 'blue';
       context.arc(x,y,cellWidth/2,0,2*Math.PI);
       context.fill();
+
       context.closePath();
       drawFace(face, x, y);
       drawHP(userInfo.HP, userInfo.maxHP,x ,y)
@@ -193,13 +208,13 @@ define(function(require, exports, module) {
       context.fillStyle = 'yellow';
       context.arc(18 * cellWidth + 10 + (3 * cellWidth - 15) * point[1] / width,
                   10 + (2 * cellWidth - 20) * point[0] / height, cellWidth / 10, 0, 2 * Math.PI);
-      context.fill();
-      context.closePath();
-      context.beginPath();
-      context.fillStyle = '#acacac';
-      context.font = '15px Arial';
-      context.fillText(userInfo.numUsers + ' online players', 18 * cellWidth + 15, 2 * cellWidth - 10);
-      context.closePath();
+                  context.fill();
+                  context.closePath();
+                  context.beginPath();
+                  context.fillStyle = '#acacac';
+                  context.font = '15px Arial';
+                  context.fillText(userInfo.numUsers + ' online players', 18 * cellWidth + 15, 2 * cellWidth - 10);
+                  context.closePath();
     };
 
     var drawInfoPanel = function() {
@@ -211,7 +226,7 @@ define(function(require, exports, module) {
       context.textBaseline='Bottom';
       context.font = '20px Arial';
       context.fillStyle = '#000000'
-      context.fillText(userInfo.class + '-LV.' + userInfo.level+ '  ' + userInfo.name + ' ' + userInfo.race, 15, 19 * cellWidth);
+      context.fillText(userInfo.class + '-LV.' + userInfo.level+ '  ' + userInfo.race, 15, 19 * cellWidth);
       context.fillText('ATT: ' + userInfo.att, 15, 20 * cellWidth + 10);
       context.fillText('Critical Rate: ' + userInfo.cri, 3 * cellWidth, 20 * cellWidth + 10)
       context.fillText('DEF: ' + userInfo.def, 15, 20.5 * cellWidth + 10);
@@ -332,7 +347,12 @@ define(function(require, exports, module) {
       inputName.style['top'] = .5;
       iDiv.appendChild(inputName);
       var wText= document.createElement('text');
-      wText.style='color:red;position:absolute;left:250px;top:370px;opacity:.5'
+      //wText.style='color:red;position:absolute;left:250px;top:370px;opacity:.5'
+      wText.style['color'] = 'red';
+      wText.style['position'] = 'absolute';
+      wText.style['left'] = '250px';
+      wText.style['top'] = '370px';
+      wText.style['opacity'] = '0.5';
       iDiv.appendChild(wText);
 
       //Create button
