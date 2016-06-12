@@ -32,9 +32,9 @@ io.on('connection', function(socket){
   socket.emit('id', socket.id)
   socket.emit('map', map.map);
   socket.emit('login');
-  socket.on("begin",function(name){
+  socket.on("begin",function(name, race){
     var spawnPoint = map.generateSpawnPoint();
-    var newPlayer = player.createPlayer(name, socket.id, map, spawnPoint, socket);
+    var newPlayer = player.createPlayer(name,race, socket.id, map, spawnPoint, socket);
     newPlayer.notify();
   })
   // initialization done

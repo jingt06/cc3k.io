@@ -14,6 +14,16 @@ define(function(require, exports, module) {
   var objects;
   var userInfo;
   var graphics = {}
+
+  var drawStroked = function(context,text,x,y) {
+    context.font = "20px Sans-serif"
+    context.strokeStyle = "black"
+    context.lineWidth = 6;
+    context.strokeText(text, x, y);
+    context.fillStyle = 'white';
+    context.fillText(text, x, y);
+  }
+
   exports.init = function(map, canvas, context, cellWidth,socket){
     effect = require('effect').init(map, canvas, context, cellWidth, graphics);
     var draw = function(x, y, type){
@@ -71,9 +81,10 @@ define(function(require, exports, module) {
       var info = obj.info;
       switch (type) {
         case 'player':
-          context.fillStyle = '#ff0000'
           var x = x * cellWidth + cellWidth / 2
           var y = y * cellWidth + cellWidth / 2
+          drawStroked(context, info.name, x-info.name.length*5,y-30);
+          context.fillStyle = '#ff0000'
           context.beginPath();
           context.arc(x, y , cellWidth / 2, 0, 2 * Math.PI);
           context.fill();
@@ -173,6 +184,7 @@ define(function(require, exports, module) {
       var face = userInfo.face;
       var x = 10*cellWidth + cellWidth/2;
       var y = 10*cellWidth + cellWidth/2;
+      drawStroked(context, userInfo.name , x-userInfo.name.length*5, y-25);
       context.beginPath();
       context.fillStyle = 'blue';
       context.arc(x,y,cellWidth/2,0,2*Math.PI);
@@ -211,7 +223,7 @@ define(function(require, exports, module) {
       context.textBaseline='Bottom';
       context.font = '20px Arial';
       context.fillStyle = '#000000'
-      context.fillText(userInfo.class + '-LV.' + userInfo.level+ '  ' + userInfo.name, 15, 19 * cellWidth);
+      context.fillText(userInfo.class + '-LV.' + userInfo.level+ '  ' + userInfo.race, 15, 19 * cellWidth);
       context.fillText('ATT: ' + userInfo.att, 15, 20 * cellWidth + 10);
       context.fillText('Critical Rate: ' + userInfo.cri, 3 * cellWidth, 20 * cellWidth + 10)
       context.fillText('DEF: ' + userInfo.def, 15, 20.5 * cellWidth + 10);
@@ -332,32 +344,52 @@ define(function(require, exports, module) {
       inputName.style['top'] = .5;
       iDiv.appendChild(inputName);
       var wText= document.createElement('text');
-      wText.style='color:red;position:absolute;left:250px;top:370px;opacity:.5'
+      //wText.style='color:red;position:absolute;left:250px;top:370px;opacity:.5'
+      wText.style['color'] = 'red';
+      wText.style['position'] = 'absolute';
+      wText.style['left'] = '250px';
+      wText.style['top'] = '370px';
+      wText.style['opacity'] = '0.5';
       iDiv.appendChild(wText);
 
       //Create button
-      var buttonGo= document.createElement('button');
-      buttonGo.innerHTML= 'GO';
-      buttonGo.style['position']='absolute';
-      buttonGo.style['left'] = 10 * cellWidth + 'px';
-      buttonGo.style['top'] = 14 * cellWidth + 'px';
-      buttonGo.style['opacity'] = .5;
-      buttonGo.onclick = function() {
-        var value = inputName.value;
-        if(value == ''){
-          wText.innerHTML = 'Name cannot be empty!';
-        }else if(value.length > 10){
-          wText.innerHTML = 'The length of Name cannot greater than 10!';
-        }else if(value == 'cc3k'){
-          wText.innerHTML = 'Name cannot be same as \'cc3k\'!';
-        }else{
-          socket.emit('begin',value);
-          iDiv.removeChild(inputName);
-          iDiv.removeChild(buttonGo);
-          iDiv.removeChild(wText);
+      var createButton = function(name, pos) {
+        var button= document.createElement('button');
+        button.innerHTML= name;
+        button.style['position']='absolute';
+        button.style['left'] = 8 * cellWidth + pos.x + 'px';
+        button.style['top'] = 14 * cellWidth + pos.y +  'px';
+        button.style['opacity'] = .5;
+        button.onclick = function() {
+          var value = inputName.value;
+          if(value == ''){
+            wText.innerHTML = 'Name cannot be empty!';
+          }else if(value.length > 10){
+            wText.innerHTML = 'The length of Name cannot greater than 10!';
+          }else if(value == 'cc3k'){
+            wText.innerHTML = 'Name cannot be same as \'cc3k\'!';
+          }else{
+            var childList = iDiv.childNodes;
+            while(childList[2]){
+              iDiv.removeChild(childList[2]);
+            }
+            socket.emit('begin',value,name);
+          }
+        };
+        return button;
+      }
+
+      //create race
+      var raceList = ['ORC', 'HUMAN', 'ELF', 'TROLL', 'DRAWF'];
+      var buttonList = [];
+      var num = 0;
+      for(var i = 0;i < raceList.length;num++){
+        for(var j = 0; j < 3&& i<raceList.length; j++){
+          buttonList.push(createButton(raceList[i],{x:70*j,y:30*num}));
+          iDiv.appendChild(buttonList[i]);
+          i++;
         }
-      };
-      iDiv.appendChild(buttonGo);
+      }
 
       // Create gradient
       var gradient=context.createLinearGradient(0,0,canvas.width,0);

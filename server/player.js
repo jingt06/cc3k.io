@@ -18,7 +18,7 @@ var determineFace = function(y, x){
 }
 
 module.exports = {
-  createPlayer: function(name, cid, m, pos, skt){
+  createPlayer: function(name,race, cid, m, pos, skt){
     var p = {};
 
     // player meta data and other object
@@ -28,6 +28,7 @@ module.exports = {
     allPlayer[cid] = p;
     p.socket = skt;
     p.name = name;
+    p.race = race;
 
 
     // player status info
@@ -62,6 +63,7 @@ module.exports = {
         class: p.class.name,
         level: p.level,
         name: p.name,
+        race: p.race,
         exp: p.exp,
         nextLevel: p.expNextLevel,
         numUsers: p.map.onlineUser
@@ -128,7 +130,9 @@ module.exports = {
       return {
         face: p.face,
         HP: p.HP,
-        maxHP: p.maxHP
+        maxHP: p.maxHP,
+        name: p.name,
+        race: p.race
       }
     };
 
