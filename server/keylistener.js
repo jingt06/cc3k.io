@@ -40,6 +40,7 @@ module.exports = function(player){
   }
 
   var keyListener = function(cid, key){
+    if(!player.getPlayer(cid)) return;
     switch(key) {
       case up:
         keyUp(cid);

@@ -31,9 +31,12 @@ io.on('connection', function(socket){
   // send initialization object to this user
   socket.emit('id', socket.id)
   socket.emit('map', map.map);
-  var spawnPoint = map.generateSpawnPoint();
-  var newPlayer = player.createPlayer(socket.id, map, spawnPoint, socket);
-  newPlayer.notify();
+  socket.emit('login');
+  socket.on("begin",function(name){
+    var spawnPoint = map.generateSpawnPoint();
+    var newPlayer = player.createPlayer(name, socket.id, map, spawnPoint, socket);
+    newPlayer.notify();
+  })
   // initialization done
 
   // when user disconnect

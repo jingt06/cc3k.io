@@ -18,7 +18,7 @@ var determineFace = function(y, x){
 }
 
 module.exports = {
-  createPlayer: function(cid, m, pos, skt){
+  createPlayer: function(name, cid, m, pos, skt){
     var p = {};
 
     // player meta data and other object
@@ -27,6 +27,7 @@ module.exports = {
     p.face = east;
     allPlayer[cid] = p;
     p.socket = skt;
+    p.name = name;
 
 
     // player status info
@@ -60,6 +61,7 @@ module.exports = {
         cri: p.critAtt,
         class: p.class.name,
         level: p.level,
+        name: p.name,
         exp: p.exp,
         nextLevel: p.expNextLevel,
         numUsers: p.map.onlineUser
