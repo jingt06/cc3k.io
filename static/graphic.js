@@ -184,14 +184,11 @@ define(function(require, exports, module) {
       var face = userInfo.face;
       var x = 10*cellWidth + cellWidth/2;
       var y = 10*cellWidth + cellWidth/2;
-
       drawStroked(context, userInfo.name , x-userInfo.name.length*5, y-25);
-
       context.beginPath();
       context.fillStyle = 'blue';
       context.arc(x,y,cellWidth/2,0,2*Math.PI);
       context.fill();
-
       context.closePath();
       drawFace(face, x, y);
       drawHP(userInfo.HP, userInfo.maxHP,x ,y)
@@ -208,13 +205,13 @@ define(function(require, exports, module) {
       context.fillStyle = 'yellow';
       context.arc(18 * cellWidth + 10 + (3 * cellWidth - 15) * point[1] / width,
                   10 + (2 * cellWidth - 20) * point[0] / height, cellWidth / 10, 0, 2 * Math.PI);
-                  context.fill();
-                  context.closePath();
-                  context.beginPath();
-                  context.fillStyle = '#acacac';
-                  context.font = '15px Arial';
-                  context.fillText(userInfo.numUsers + ' online players', 18 * cellWidth + 15, 2 * cellWidth - 10);
-                  context.closePath();
+      context.fill();
+      context.closePath();
+      context.beginPath();
+      context.fillStyle = '#acacac';
+      context.font = '15px Arial';
+      context.fillText(userInfo.numUsers + ' online players', 18 * cellWidth + 15, 2 * cellWidth - 10);
+      context.closePath();
     };
 
     var drawInfoPanel = function() {
