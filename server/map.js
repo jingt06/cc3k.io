@@ -2,7 +2,9 @@ var mapWidth = 136;
 var mapHeight = 50;
 var mapMargin = 10;
 var totalObjects = 10;
+var totalEnemies = 30;
 var object = require('./items/object')();
+var enemies = require('./enemies/enemy.js')();
 var map = ['                                                                                                                                                            ',
        '                                                                                                                                                            ',
        '                                                                                                                                                            ',
@@ -76,6 +78,8 @@ var map = ['                                                                    
        '                                                                                                                                                            '
        ];
 
+var enemyList = [];
+
 // objects contains objects on the map,
 // which including items(ruins, potions...), enemies and players
 var objects = [];
@@ -111,6 +115,18 @@ var notify = function(point) {
     }
 }
 
+var notifyAll = function() {
+    for(i in objects) {
+      for(j in objects[i]) {
+        if (objects[i][j]) {
+          if (objects[i][j].type == 'player') {
+            objects[i][j].object.notify();
+          }
+        }
+      }
+    }
+}
+
 var addObject = function(point, type, obj) {
       objects[point[0]][point[1]] = {
         type: type,
@@ -124,11 +140,26 @@ var generateObject = function() {
   var obj = object.createObject();
   addObject(point, obj.type, obj);
 }
-for (var i = totalObjects; i >= 0; i--) {
-    generateObject();
+
+
+
+var generateEnemy = function(id) {
+  var point = generateSpawnPoint();
+  var enemy = enemies.createEnemy(point);
+  if (id) {
+    enemyList[id] = enemy;
+  } else {
+    var id = enemyList.length;
+    enemyList.push(enemy);
+    enemy.id = id;
+  }
+  addObject(point, enemy.type, enemy);
 }
 
-
+for (var i = totalObjects; i >= 0; i--) {
+    generateObject();
+    generateEnemy();
+}
 
 module.exports = function(io) {
   return {
@@ -175,19 +206,36 @@ module.exports = function(io) {
       objects[point[0]][point[1]] = null;
       notify(point);
     },
-    action: function(player, action, target, options) {
-      var obj = objects[target[0]][target[1]];
+    action: function(player, action, targets, options) {
       switch (action) {
         case 'attack':
-          io.emit('effect' , {type: 'attack', duration: 5, location: target});
-          notify(target);
-          if(obj && obj.type == 'player'){
-            attackedPlayer = obj.object;
-            attackedPlayer.attacked(player)
-            notify(target);
+          io.emit('effects' , {type: 'attack', duration: 5, locations: targets});
+          notify(player.position);
+          for (var i = targets.length - 1; i >= 0; i--) {
+            obj = objects[targets[i][0]][targets[i][1]];
+            if (obj && obj.type == 'player') {
+              var attackedPlayer = obj.object;
+              attackedPlayer.attacked(player);
+            } else if (obj && obj.type == 'enemy') {
+              var attackedEnemy = obj.object;
+              attackedEnemy.attacked(player);
+              if (attackedEnemy.isDead()) {
+                var id = attackedEnemy.id;
+                objects[targets[i][0]][targets[i][1]] = null;
+                player.addExp(attackedEnemy.exp);
+                generateEnemy(id);
+              }
+            }
+            notify(player.position);
           }
           break;
       }
+    },
+    enemyMove: function(){
+      for (var i = enemyList.length - 1; i >= 0; i--) {
+        if(!enemyList[i].isDead()) enemyList[i].action(map, objects, io);
+      }
+      notifyAll();
     }
   };
 }

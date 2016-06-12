@@ -26,11 +26,11 @@ memwatch.on('stats', function(stats) {
 
 app.use(express.static(__dirname + '/static'));
 
-//this function runs for every 10 ms
+//this function runs for every 0.1s
 run = function () {
-  //running
+  map.enemyMove();
 }
-setInterval(run, 10);
+setInterval(run, 100);
 
 io.on('connection', function(socket){
   map.onlineUser++;
@@ -38,9 +38,12 @@ io.on('connection', function(socket){
   // send initialization object to this user
   socket.emit('id', socket.id)
   socket.emit('map', map.map);
-  var spawnPoint = map.generateSpawnPoint();
-  var newPlayer = player.createPlayer(socket.id, map, spawnPoint, socket);
-  newPlayer.notify();
+  socket.emit('login');
+  socket.on("begin",function(name){
+    var spawnPoint = map.generateSpawnPoint();
+    var newPlayer = player.createPlayer(name, socket.id, map, spawnPoint, socket);
+    newPlayer.notify();
+  })
   // initialization done
 
   // when user disconnect

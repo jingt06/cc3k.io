@@ -14,7 +14,7 @@ define(function(require, exports, module) {
   var objects;
   var userInfo;
   var graphics = {}
-  exports.init = function(map, canvas, context, cellWidth){
+  exports.init = function(map, canvas, context, cellWidth,socket){
     effect = require('effect').init(map, canvas, context, cellWidth, graphics);
     var draw = function(x, y, type){
       if(!type){
@@ -127,14 +127,24 @@ define(function(require, exports, module) {
           context.fillStyle = '#ff4500';
           a = x * cellWidth + cellWidth / 2;
           b = y * cellWidth + cellWidth / 4;
-          context.beginPath(); 
+          context.beginPath();
           context.beginPath();
           context.moveTo(a, b);
           context.lineTo(a - cellWidth / 6, b + cellWidth * 1 / 2);
           context.lineTo(a + cellWidth / 6, b + cellWidth * 1 / 2);
           context.fill();
           context.closePath();
-          break
+          break;
+        case 'enemy':
+          context.fillStyle = '#8000FF';
+          var a = x * cellWidth + cellWidth / 2
+          var b = y * cellWidth + cellWidth / 2
+          context.beginPath();
+          context.arc(a, b , cellWidth / 2, 0, 2 * Math.PI);
+          context.fill();
+          context.closePath();
+          drawHP(obj.info.HP, obj.info.maxHP, a, b);
+          break;
         default:
           return;
       }
@@ -170,7 +180,7 @@ define(function(require, exports, module) {
       context.closePath();
       drawFace(face, x, y);
       drawHP(userInfo.HP, userInfo.maxHP,x ,y)
-    }
+    };
 
     var drawMiniMap = function() {
       context.beginPath();
@@ -182,30 +192,30 @@ define(function(require, exports, module) {
       context.beginPath();
       context.fillStyle = 'yellow';
       context.arc(18 * cellWidth + 10 + (3 * cellWidth - 15) * point[1] / width,
-        10 + (2 * cellWidth - 20) * point[0] / height, cellWidth / 10, 0, 2 * Math.PI);
+                  10 + (2 * cellWidth - 20) * point[0] / height, cellWidth / 10, 0, 2 * Math.PI);
       context.fill();
       context.closePath();
       context.beginPath();
       context.fillStyle = '#acacac';
-      context.font = "15px Arial";
+      context.font = '15px Arial';
       context.fillText(userInfo.numUsers + ' online players', 18 * cellWidth + 15, 2 * cellWidth - 10);
       context.closePath();
-    }
+    };
 
     var drawInfoPanel = function() {
       context.beginPath();
       context.fillStyle = 'rgba(200, 200, 200, 0.7)';
-      context.fillRect(10, 18 * cellWidth + 10, 7 * cellWidth - 20, 3 * cellWidth - 20);
+      context.fillRect(10, 18 * cellWidth + 10, 7 * cellWidth, 3 * cellWidth);
       context.closePath();
       context.beginPath();
-      context.textBaseline="Bottom";
-      context.font = "20px Arial";
+      context.textBaseline='Bottom';
+      context.font = '20px Arial';
       context.fillStyle = '#000000'
-      context.fillText(userInfo.class + '-LV.' + userInfo.level, 15, 19 * cellWidth);
-      context.fillText('ATT: ' + userInfo.att, 15, 20 * cellWidth);
-      context.fillText('Critical Rate: ' + userInfo.cri, 3 * cellWidth, 20 * cellWidth)
-      context.fillText('DEF: ' + userInfo.def, 15, 20.5 * cellWidth);
-      context.fillText('Dodge Rate: ' + userInfo.dog,  3 * cellWidth, 20.5 * cellWidth);
+      context.fillText(userInfo.class + '-LV.' + userInfo.level+ '  ' + userInfo.name, 15, 19 * cellWidth);
+      context.fillText('ATT: ' + userInfo.att, 15, 20 * cellWidth + 10);
+      context.fillText('Critical Rate: ' + userInfo.cri, 3 * cellWidth, 20 * cellWidth + 10)
+      context.fillText('DEF: ' + userInfo.def, 15, 20.5 * cellWidth + 10);
+      context.fillText('Dodge Rate: ' + userInfo.dog,  3 * cellWidth, 20.5 * cellWidth + 10);
       context.closePath();
       context.beginPath();
       context.rect(15, 19 * cellWidth + 10, 6 * cellWidth, cellWidth / 3);
@@ -218,6 +228,21 @@ define(function(require, exports, module) {
       context.fillStyle = '#00bfff';
       context.rect(17, 19 * cellWidth + 12, length-1, cellWidth / 3 - 5);
       context.fill();
+      context.closePath();
+    };
+
+    var drawClassUpgradeInfo = function(upgradeClass) {
+      context.beginPath();
+      context.fillStyle =  'rgba(200, 200, 200, 0.7)';
+      context.fillRect(10, 10, 10 * cellWidth + 20, 2 *cellWidth - 10);
+      var classStr = '';
+      for (i in upgradeClass){
+        var index = parseInt(i) + 1;
+        classStr = classStr + '    ' + index + ': ' + upgradeClass[i];
+      }
+      context.fillStyle = 'black'
+      context.fillText('plese press num keys to upgrade', 20, cellWidth);
+      context.fillText(classStr, 20, cellWidth * 2);
       context.closePath();
     }
 
@@ -262,6 +287,9 @@ define(function(require, exports, module) {
       var x = point[0];
       var y = point[1];
       graphics.redraw();
+      if (m.upgradeClass) {
+        drawClassUpgradeInfo(m.upgradeClass);
+      }
     };
     graphics.dead = function() {
       effect.stop();
@@ -269,19 +297,80 @@ define(function(require, exports, module) {
       context.fillStyle = 'black';
       context.clearRect(0, 0, canvas.width, canvas.height);
       context.fillRect(0, 0, canvas.width, canvas.height);
-      context.font="30px Verdana";
+      context.font='30px Verdana';
       // Create gradient
       var gradient=context.createLinearGradient(0,0,canvas.width,0);
-      gradient.addColorStop("0","yellow");
-      gradient.addColorStop("0.5","red");
-      gradient.addColorStop("1.0","blue");
+      gradient.addColorStop('0','yellow');
+      gradient.addColorStop('0.5','red');
+      gradient.addColorStop('1.0','blue');
       // Fill with gradient
       context.fillStyle=gradient;
-      context.font="70px Georgia";
-      context.fillText("You Dead!",6 * cellWidth,7 * cellWidth);
+      context.font='70px Georgia';
+      context.fillText('You Dead!',6 * cellWidth,7 * cellWidth);
       context.fillStyle='white';
-      context.font="50px Georgia";
-      context.fillText("space to restart",6 * cellWidth,10 * cellWidth);
+      context.font='50px Georgia';
+      context.fillText('R to restart',6 * cellWidth,10 * cellWidth);
+      context.closePath();
+    };
+    graphics.login= function() {
+      effect.stop();
+      context.beginPath();
+      context.fillStyle = 'black';
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      context.font='30px Verdana';
+
+      iDiv = document.getElementById('map');
+
+      //Create input box
+      var inputName= document.createElement('input');
+      inputName.type = 'text';
+      inputName.style['border'] = '2px solid groove';
+      inputName.style['position'] = 'absolute';
+      inputName.style['left'] = 8 * cellWidth + 'px';
+      inputName.style['top'] = 13 * cellWidth + 'px';
+      inputName.style['top'] = .5;
+      iDiv.appendChild(inputName);
+      var wText= document.createElement('text');
+      wText.style='color:red;position:absolute;left:250px;top:370px;opacity:.5'
+      iDiv.appendChild(wText);
+
+      //Create button
+      var buttonGo= document.createElement('button');
+      buttonGo.innerHTML= 'GO';
+      buttonGo.style['position']='absolute';
+      buttonGo.style['left'] = 10 * cellWidth + 'px';
+      buttonGo.style['top'] = 14 * cellWidth + 'px';
+      buttonGo.style['opacity'] = .5;
+      buttonGo.onclick = function() {
+        var value = inputName.value;
+        if(value == ''){
+          wText.innerHTML = 'Name cannot be empty!';
+        }else if(value.length > 10){
+          wText.innerHTML = 'The length of Name cannot greater than 10!';
+        }else if(value == 'cc3k'){
+          wText.innerHTML = 'Name cannot be same as \'cc3k\'!';
+        }else{
+          socket.emit('begin',value);
+          iDiv.removeChild(inputName);
+          iDiv.removeChild(buttonGo);
+          iDiv.removeChild(wText);
+        }
+      };
+      iDiv.appendChild(buttonGo);
+
+      // Create gradient
+      var gradient=context.createLinearGradient(0,0,canvas.width,0);
+      gradient.addColorStop('0','yellow');
+      gradient.addColorStop('0.5','red');
+      gradient.addColorStop('1.0','blue');
+      // Fill with gradient
+      context.fillStyle=gradient;
+      context.font='50px Georgia';
+      context.fillText('Welcome to CC3K! ',4 * cellWidth,7 * cellWidth);
+      context.fillStyle='white';
+      context.font='30px Georgia';
+      context.fillText('Enter your name please.',5 * cellWidth,9 * cellWidth);
       context.closePath();
     };
     graphics.addEffect = function(message) {

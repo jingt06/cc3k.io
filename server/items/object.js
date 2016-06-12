@@ -1,4 +1,4 @@
-potion = require('./potion')
+var potion = require('./potion')
 
 var allItem = [potion];
 
@@ -18,5 +18,5 @@ module.exports = function() {
 		};
 	return {
 		createObject: createObject
-	}
+	};
 }
