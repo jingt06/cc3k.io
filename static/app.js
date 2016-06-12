@@ -9,10 +9,26 @@ requirejs(["helper/init", "graphic"], function(init, graphic) {
       socket.emit('k',key);
   }
 
+  function getMousePos(canvas, evt) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+      x: evt.clientX - rect.left,
+      y: evt.clientY - rect.top
+    }
+  }
+
+
   // this message will only recieved once
   socket.on('map', function(m){
     map = m;
     graphic = graphic.init(m, init.canvas, init.context, init.cellWidth, socket);
+    function getMousePosition(e) {
+        var pos = getMousePos(init.canvas, e);
+        posx = pos.x;
+        posy = pos.y;
+        console.log(posx+', ' +posy);
+    }
+    window.addEventListener('mousemove', getMousePosition, false);
   });
 
   socket.on('login', function(){
