@@ -6,7 +6,8 @@ var map = require('./server/map')(io);
 var player = require('./server/player');
 
 
-var keyListener = require('./server/keylistener')(player);
+var keyListener = require('./server/controlers/keylistener')(player);
+var MouseListener = require('./server/controlers/mouseListener')(player);
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
@@ -46,7 +47,7 @@ io.on('connection', function(socket){
   });
 
   socket.on('mousePos', function(pos) {
-    console.log(pos);
+    MouseListener(socket.id, pos);
   })
   // when user pressed some key
   socket.on('k', function(key){

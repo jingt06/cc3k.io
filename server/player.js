@@ -36,6 +36,8 @@ module.exports = {
 
     // player method
     p.initStatus = function() {
+      p.speed = {x:0, y:0}; // this is a point value
+      p.maxSpeed = 10; // this is a int value
       p.maxHP = 100;
       p.exp = 20;
       p.level = 1;
@@ -66,7 +68,8 @@ module.exports = {
         race: p.race,
         exp: p.exp,
         nextLevel: p.expNextLevel,
-        numUsers: p.map.onlineUser
+        numUsers: p.map.onlineUser,
+        cellPosition: p.cellPosition
       };
       if (p.level >= 5 && p.class.tier == 0){
         mapInfo.upgradeClass = p.class.upgrade;
@@ -106,6 +109,7 @@ module.exports = {
       p.socket.emit('map', p.map.map);
       var spawnPoint = p.map.generateSpawnPoint();
       p.position = spawnPoint;
+      p.cellPosition = [0, 0]; // position can be in range of -5 and 5
       p.initStatus();
       p.notify();
     }
@@ -132,7 +136,8 @@ module.exports = {
         HP: p.HP,
         maxHP: p.maxHP,
         name: p.name,
-        race: p.race
+        race: p.race,
+        cellPosition: p.cellPosition
       }
     };
 

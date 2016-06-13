@@ -92,20 +92,21 @@ for (var i = 0; i < mapHeight + mapMargin * 2; ++i) {
 }
 
 var generateSpawnPoint = function(){
-    var point = [Math.floor(Math.random()*mapHeight + mapMargin),
-             Math.floor(Math.random()*mapWidth + mapMargin)];
-    if (map[point[0]][point[1]] == '.' && !objects[point[0]][point[1]]) {
-      return point;
-    } else {
-      return generateSpawnPoint();
-    }
+    var point = {x: Math.random()*mapHeight + mapMargin,
+                 y: Math.random()*mapWidth + mapMargin};
+    // TODO: solve conflict problem
+    //if (map[point[0]][point[1]] == '.' && !objects[point[0]][point[1]]) {
+    //  return point;
+    //} else {
+    //  return generateSpawnPoint();
+    //}
 }
 
 var notify = function(point) {
     var y = point[0]
     var x = point[1]
-    for(var i = y - 10; i < y + 11; ++i) {
-      for(var j = x - 10; j < x + 11; ++j) {
+    for(var i = y - 3; i < y + 4; ++i) {
+      for(var j = x - 3; j < x + 4; ++j) {
         if (objects[i][j]) {
           if (objects[i][j].type == 'player') {
             objects[i][j].object.notify();
@@ -173,11 +174,11 @@ module.exports = function(io) {
     getSight: function(point){
       var y = point[0]
       var x = point[1]
-      var sliceObj = objects.slice(y-10, y + 11);
+      var sliceObj = objects.slice(y-3, y + 4);
       var floor = []
       var obj = []
       for (index in sliceObj) {
-        obj.push(sliceObj[index].slice(x-10, x+11).map(function(o) {
+        obj.push(sliceObj[index].slice(x - 3, x + 4).map(function(o) {
           if (o) {
             return {
               type: o.type,
@@ -188,6 +189,7 @@ module.exports = function(io) {
           }
         }));
       }
+      obj[]
       return {
         location: point,
         object: obj

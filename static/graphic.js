@@ -14,7 +14,8 @@ define(function(require, exports, module) {
   var objects;
   var userInfo;
   var graphics = {}
-
+  var numCells = 3;
+  var cellSize = 5;
   var drawStroked = function(context,text,x,y) {
     context.font = "20px Sans-serif"
     context.strokeStyle = "black"
@@ -79,17 +80,18 @@ define(function(require, exports, module) {
     var drawObject = function(x, y, obj){
       var type = obj.type;
       var info = obj.info;
+      var cellPosition = info.cellPosition;
       switch (type) {
         case 'player':
-          var x = x * cellWidth + cellWidth / 2
-          var y = y * cellWidth + cellWidth / 2
+          var x = x * cellWidth + cellPosition[0] * cellWidth / 5 ;
+          var y = y * cellWidth +cellPosition[1] *  cellWidth / 2;
           drawStroked(context, info.name, x-info.name.length*5,y-30);
           context.fillStyle = '#ff0000'
           context.beginPath();
-          context.arc(x, y , cellWidth / 2, 0, 2 * Math.PI);
+          context.arc(x, y , cellWidth / (2 * cellSize), 0, 2 * Math.PI);
           context.fill();
           context.closePath();
-          drawFace(info.face, x, y);
+          //drawFace(info.face, x, y);
           drawHP(info.HP, info.maxHP, x, y);
           break;
         case 'potionH':
@@ -182,15 +184,15 @@ define(function(require, exports, module) {
 
     var drawSelf = function(userInfo){
       var face = userInfo.face;
-      var x = 10*cellWidth + cellWidth/2;
-      var y = 10*cellWidth + cellWidth/2;
+      var x = cellWidth + userInfo.cellPosition[0] * cellWidth / numCells;
+      var y = cellWidth + userInfo.cellPosition[1] * cellWidth / numCells;
       drawStroked(context, userInfo.name , x-userInfo.name.length*5, y-25);
       context.beginPath();
       context.fillStyle = 'blue';
-      context.arc(x,y,cellWidth/2,0,2*Math.PI);
+      context.arc(x,y,cellWidth/ (2 * numCells),0,2*Math.PI);
       context.fill();
       context.closePath();
-      drawFace(face, x, y);
+      //drawFace(face, x, y);
       drawHP(userInfo.HP, userInfo.maxHP,x ,y)
     };
 
@@ -264,10 +266,10 @@ define(function(require, exports, module) {
       var y = point[1];
       context.clearRect(0, 0, canvas.width, canvas.height);
       // draw floor
-      for(var i = 0; i <= 20; ++i) {
-        for (var j = 0; j <= 20; ++j) {
-          var pointX = x - 10 + i;
-          var pointY = y - 10 + j;
+      for(var i = 0; i <= 2 * numCells + 1; ++i) {
+        for (var j = 0; j <= 2 * numCells + 1; ++j) {
+          var pointX = x - numCells + i;
+          var pointY = y - numCells + j;
           draw(j, i, map[pointX][pointY]);
         }
       }
@@ -275,7 +277,7 @@ define(function(require, exports, module) {
       for(i in objects) {
         for (j in objects[i]) {
           if (objects[i][j]){
-            if(i != 10 || j != 10) drawObject(j, i, objects[i][j])
+            drawObject(j, i, objects[i][j])
           }
         }
       }
@@ -318,10 +320,10 @@ define(function(require, exports, module) {
       // Fill with gradient
       context.fillStyle=gradient;
       context.font='70px Georgia';
-      context.fillText('You Dead!',6 * cellWidth,7 * cellWidth);
+      context.fillText('You Dead!',2 * cellWidth,2 * cellWidth);
       context.fillStyle='white';
       context.font='50px Georgia';
-      context.fillText('R to restart',6 * cellWidth,10 * cellWidth);
+      context.fillText('R to restart',2 * cellWidth,4 * cellWidth);
       context.closePath();
     };
     graphics.login= function() {
@@ -339,8 +341,8 @@ define(function(require, exports, module) {
       inputName.type = 'text';
       inputName.style['border'] = '2px solid groove';
       inputName.style['position'] = 'absolute';
-      inputName.style['left'] = 8 * cellWidth + 'px';
-      inputName.style['top'] = 13 * cellWidth + 'px';
+      inputName.style['left'] = 3 * cellWidth + 'px';
+      inputName.style['top'] = 3.5 * cellWidth + 'px';
       inputName.style['top'] = .5;
       iDiv.appendChild(inputName);
       var wText= document.createElement('text');
@@ -357,8 +359,8 @@ define(function(require, exports, module) {
         var button= document.createElement('button');
         button.innerHTML= name;
         button.style['position']='absolute';
-        button.style['left'] = 8 * cellWidth + pos.x + 'px';
-        button.style['top'] = 14 * cellWidth + pos.y +  'px';
+        button.style['left'] = 3 * cellWidth + pos.x + 'px';
+        button.style['top'] = 4 * cellWidth + pos.y +  'px';
         button.style['opacity'] = .5;
         button.onclick = function() {
           var value = inputName.value;
@@ -399,10 +401,10 @@ define(function(require, exports, module) {
       // Fill with gradient
       context.fillStyle=gradient;
       context.font='50px Georgia';
-      context.fillText('Welcome to CC3K! ',4 * cellWidth,7 * cellWidth);
+      context.fillText('Welcome to CC3K! ',2 * cellWidth,3 * cellWidth);
       context.fillStyle='white';
       context.font='30px Georgia';
-      context.fillText('Enter your name please.',5 * cellWidth,9 * cellWidth);
+      context.fillText('Enter your name please.',2 * cellWidth,5 * cellWidth);
       context.closePath();
     };
     graphics.addEffect = function(message) {
