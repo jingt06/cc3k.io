@@ -45,6 +45,9 @@ io.on('connection', function(socket){
     player.deletePlayer(socket.id);
   });
 
+  socket.on('mousePos', function(pos) {
+    console.log(pos);
+  })
   // when user pressed some key
   socket.on('k', function(key){
     keyListener(socket.id, key);
