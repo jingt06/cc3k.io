@@ -22,7 +22,7 @@ app.use(express.static(__dirname + '/static'));
 
 //this function runs for every 0.1s
 run = function () {
-  map.enemyMove();
+  //ap.enemyMove();
 }
 setInterval(run, 100);
 

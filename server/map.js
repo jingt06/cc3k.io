@@ -86,7 +86,7 @@ var objects = [];
 for (var i = 0; i < mapHeight + mapMargin * 2; ++i) {
   var row = [];
   for (var j = 0; j < mapWidth + mapMargin * 2; ++j) {
-    row.push(null);
+    row.push([]);
   }
   objects.push(row);
 }
@@ -100,6 +100,7 @@ var generateSpawnPoint = function(){
     //} else {
     //  return generateSpawnPoint();
     //}
+    return point;
 }
 
 var notify = function(point) {
@@ -107,9 +108,9 @@ var notify = function(point) {
     var x = point[1]
     for(var i = y - 3; i < y + 4; ++i) {
       for(var j = x - 3; j < x + 4; ++j) {
-        if (objects[i][j]) {
-          if (objects[i][j].type == 'player') {
-            objects[i][j].object.notify();
+        for(k in objects[i][j]){
+          if (objects[i][j][k].type == 'player') {
+            objects[i][j][k].object.notify();
           }
         }
       }
@@ -119,9 +120,9 @@ var notify = function(point) {
 var notifyAll = function() {
     for(i in objects) {
       for(j in objects[i]) {
-        if (objects[i][j]) {
-          if (objects[i][j].type == 'player') {
-            objects[i][j].object.notify();
+        for(k in objects[i][j]){
+          if (objects[i][j][k].type == 'player') {
+            objects[i][j][k].object.notify();
           }
         }
       }
@@ -129,11 +130,12 @@ var notifyAll = function() {
 }
 
 var addObject = function(point, type, obj) {
-      objects[point[0]][point[1]] = {
-        type: type,
-        object: obj
-      };
-      notify(point);
+  console.log(point)
+  objects[Math.floor(point.x)][Math.floor(point.y)].push({
+    type: type,
+    object: obj
+  });
+  notify(point);
 }
 
 var generateObject = function() {
@@ -158,8 +160,8 @@ var generateEnemy = function(id) {
 }
 
 for (var i = totalObjects; i >= 0; i--) {
-    generateObject();
-    generateEnemy();
+    //generateObject(); //TODO No enemy for now
+    //generateEnemy();
 }
 
 module.exports = function(io) {
@@ -172,42 +174,45 @@ module.exports = function(io) {
     margin:mapMargin,
     generateSpawnPoint: generateSpawnPoint,
     getSight: function(point){
-      var y = point[0]
-      var x = point[1]
+      var y = Math.floor(point[0]);
+      var x = Math.floor(point[1]);
       var sliceObj = objects.slice(y-3, y + 4);
       var floor = []
       var obj = []
       for (index in sliceObj) {
         obj.push(sliceObj[index].slice(x - 3, x + 4).map(function(o) {
-          if (o) {
-            return {
+          var returnList = []
+          for (index in o) {
+            returnList.push ({
               type: o.type,
               info: o.object.getInfo()
-            }
-          } else {
-            return null;
+            })
           }
-        }));
-      }
-      obj[]
+          return returnList;
+      }))};
       return {
         location: point,
         object: obj
       };
     },
-    available: function(point, player){
+    /*available: function(point, player){
       if(player && objects[point[0]][point[1]] && objects[point[0]][point[1]].object.consumable){
         objects[point[0]][point[1]].object.use(player);
         objects[point[0]][point[1]] = null;
         generateObject();
       }
       return (map[point[0]][point[1]] == '.' || map[point[0]][point[1]] == '#') && !objects[point[0]][point[1]];
-    },
+    },*/
     addObject: addObject,
     removeObject: function(point, player){
-      objects[point[0]][point[1]] = null;
+      console.log(point)
+      for (var i = objects[Math.floor(point.x)][Math.floor(point.y)].length - 1; i >= 0; i--) {
+        if (objects[Math.floor(point.x)][Math.floor(point.y)][i] == player) {
+          objects.slice(i, 1);
+        }
+      }
       notify(point);
-    },
+    },/*
     action: function(player, action, targets, options) {
       switch (action) {
         case 'attack':
@@ -232,7 +237,7 @@ module.exports = function(io) {
           }
           break;
       }
-    },
+    },*/
     enemyMove: function(){
       for (var i = enemyList.length - 1; i >= 0; i--) {
         if(!enemyList[i].isDead()) enemyList[i].action(map, objects, io);

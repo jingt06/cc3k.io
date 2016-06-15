@@ -55,16 +55,16 @@ define(function(require, exports, module) {
           break;
       }
       context.beginPath();
-      context.fillRect(x*cellWidth, y*cellWidth, cellWidth, cellWidth);
+      context.fillRect(x, y, cellWidth, cellWidth);
       context.closePath();
     };
 
     var drawHP = function(hp, maxHP, x, y){
-      startPointX = x - cellWidth;
-      startPointY = y + cellWidth;
-      totalLength = 2 * cellWidth;
+      startPointX = x - cellWidth / 3;
+      startPointY = y + cellWidth / 3;
+      totalLength = cellWidth * 2 / 3;
       context.beginPath();
-      context.rect(startPointX,startPointY, totalLength, cellWidth/5);
+      context.rect(startPointX,startPointY, totalLength, cellWidth/10);
       context.lineWidth = 5;
       context.strokeStyle = '#000000'
       context.stroke();
@@ -72,7 +72,7 @@ define(function(require, exports, module) {
       context.beginPath();
       hpLength = totalLength * hp / maxHP;
       context.fillStyle = '#ff0000'
-      context.rect(startPointX,startPointY, hpLength, cellWidth/5);
+      context.rect(startPointX,startPointY, hpLength, cellWidth/10);
       context.fill();
       context.closePath();
     };
@@ -184,8 +184,8 @@ define(function(require, exports, module) {
 
     var drawSelf = function(userInfo){
       var face = userInfo.face;
-      var x = cellWidth + userInfo.cellPosition[0] * cellWidth / numCells;
-      var y = cellWidth + userInfo.cellPosition[1] * cellWidth / numCells;
+      var x = cellWidth * (0.5 + numCells);
+      var y = cellWidth * (0.5 + numCells);
       drawStroked(context, userInfo.name , x-userInfo.name.length*5, y-25);
       context.beginPath();
       context.fillStyle = 'blue';
@@ -199,14 +199,15 @@ define(function(require, exports, module) {
     var drawMiniMap = function() {
       context.beginPath();
       context.fillStyle = 'rgba(200, 200, 200, 0.7)';
-      context.fillRect(18 * cellWidth + 10, 10, 3 * cellWidth - 20, 2 * cellWidth - 20);
+      context.fillRect(5.5 * cellWidth, 10, 1 * cellWidth, 0.6 * cellWidth);
       context.closePath();
       var height = map.length;
       var width = map[0].length;
       context.beginPath();
       context.fillStyle = 'yellow';
-      context.arc(18 * cellWidth + 10 + (3 * cellWidth - 15) * point[1] / width,
-                  10 + (2 * cellWidth - 20) * point[0] / height, cellWidth / 10, 0, 2 * Math.PI);
+      console.log(point)
+      context.arc(5.5 * cellWidth + cellWidth * point.y / width,
+                  + (0.6 * cellWidth) * point.x / height + 10, cellWidth / 30, 0, 2 * Math.PI);
       context.fill();
       context.closePath();
       context.beginPath();
@@ -262,17 +263,22 @@ define(function(require, exports, module) {
 
     graphics.draw = draw;
     graphics.redraw = function() {
-      var x = point[0];
-      var y = point[1];
+      var x = point.x;
+      var y = point.y;
+      var shiftX = Math.floor(point.x) - point[0] - 1;
+      var shiftY = Math.floor(point.y) - point[1] - 1;
       context.clearRect(0, 0, canvas.width, canvas.height);
       // draw floor
-      for(var i = 0; i <= 2 * numCells + 1; ++i) {
-        for (var j = 0; j <= 2 * numCells + 1; ++j) {
-          var pointX = x - numCells + i;
-          var pointY = y - numCells + j;
-          draw(j, i, map[pointX][pointY]);
+      for(var i = -1; i <= 2 * numCells + 1; ++i) {
+        for (var j = -1; j <= 2 * numCells + 1; ++j) {
+          var pointX = Math.floor(x) - numCells + i;
+          var pointY = Math.floor(y) - numCells + j;
+          var canvasX = cellWidth * (shiftX + i);
+          var canvasY = cellWidth * (shiftY + i);
+          draw(canvasX, canvasY, map[pointX][pointY]);
         }
       }
+      /* TODO: do later
       // draw objects
       for(i in objects) {
         for (j in objects[i]) {
@@ -280,7 +286,7 @@ define(function(require, exports, module) {
             drawObject(j, i, objects[i][j])
           }
         }
-      }
+      }*/
       drawSelf(userInfo);
       effects = effect.getEffect(point);
       // draw effects
@@ -298,8 +304,6 @@ define(function(require, exports, module) {
       objects = m.object;
       userInfo = m.user;
       point = m.location;
-      var x = point[0];
-      var y = point[1];
       graphics.redraw();
       if (m.upgradeClass) {
         drawClassUpgradeInfo(m.upgradeClass);

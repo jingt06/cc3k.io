@@ -78,7 +78,7 @@ module.exports = {
     };
 
     p.move = function (x, y) {
-      var newPos = [p.position[0] + x, p.position[1] + y];
+      /*var newPos = [p.position[0] + x, p.position[1] + y];
       var oldFace = p.face;
       p.face = determineFace(x, y);
       if (p.map.available(newPos, p)){
@@ -87,7 +87,7 @@ module.exports = {
         p.map.addObject(newPos, 'player', p);
       } else if (oldFace != p.face) {
         p.notify();
-      }
+      }*/
     };
 
     p.isDead = function() {
