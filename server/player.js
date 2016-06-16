@@ -181,9 +181,10 @@ module.exports = {
         } else if (p.map.available({x: newCoor.x, y: p.position.y}, p)) {
           p.position.x = newCoor.x;
         }
-        if (p.position.x > oldCoor.x + 1 || p.position.y > oldCoor.y + 1){
-          p.map.removeObject(oldCoor)
-          p.map.addObject({x: Math.floor(p.position.x), y: Math.floor(p.position.y)});
+        if (p.position.x > oldCoor.x + 1 || p.position.x < oldCoor.x ||
+            p.position.y > oldCoor.y + 1 || p.position.y < oldCoor.y){
+          p.map.removeObject(oldCoor, p)
+          p.map.addObject({x: Math.floor(p.position.x), y: Math.floor(p.position.y)}, 'player', p);
         }
       }
     }

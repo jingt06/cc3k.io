@@ -278,15 +278,12 @@ define(function(require, exports, module) {
           draw(canvasY, canvasX, map[pointX][pointY]);
         }
       }
-      /* TODO: do later
       // draw objects
       for(i in objects) {
         for (j in objects[i]) {
-          if (objects[i][j]){
-            drawObject(j, i, objects[i][j])
-          }
+            //drawObject(j, i, objects[i][j])
         }
-      }*/
+      }
       drawSelf(userInfo);
       effects = effect.getEffect(point);
       // draw effects
@@ -302,6 +299,7 @@ define(function(require, exports, module) {
     };
     graphics.drawMap = function(m) {
       objects = m.object;
+      console.log(objects)
       userInfo = m.user;
       point = m.location;
       graphics.redraw();

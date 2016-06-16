@@ -143,7 +143,7 @@ var generateObject = function() {
 }
 
 var distance = function(pointA, pointB) {
-  return Math.sqrt(Math.pow(pointA.x - pointA.x, 2) + Math.pow(pointA.y - pointA.y, 2));
+  return Math.sqrt(Math.pow(pointA.x - pointB.x, 2) + Math.pow(pointA.y - pointB.y, 2));
 }
 
 var generateEnemy = function(id) {
@@ -174,15 +174,19 @@ module.exports = function(io) {
     margin:mapMargin,
     generateSpawnPoint: generateSpawnPoint,
     getSight: function(point){
-      var y = Math.floor(point[0]);
-      var x = Math.floor(point[1]);
+      var y = Math.floor(point.x);
+      var x = Math.floor(point.y);
       var sliceObj = objects.slice(y-3, y + 4);
       var floor = []
       var obj = []
       for (index in sliceObj) {
-        obj.push(sliceObj[index].slice(x - 3, x + 4).map(function(o) {
+        obj.push(sliceObj[index].slice(x - 3, x + 4).map(function(objList) {
           var returnList = []
-          for (index in o) {
+          for (index in objList) {
+            o = objList[index];
+            if (o.position == point) {
+              continue;
+            }
             returnList.push ({
               type: o.type,
               info: o.object.getInfo()
@@ -202,9 +206,12 @@ module.exports = function(io) {
         generateObject();
       }*/
       if (map[Math.floor(point.x)][Math.floor(point.y)] == '.' || map[Math.floor(point.x)][Math.floor(point.y)] == '#') {
-        for (object in objects[Math.floor(point.x)][Math.floor(point.y)]) {
-          if (distance(player, object) < player.radius + object.radius){
-            return false;
+        for (index in objects[Math.floor(point.x)][Math.floor(point.y)]) {
+          obj = objects[Math.floor(point.x)][Math.floor(point.y)][index];
+          if (obj.object != player){
+            if (distance(point, obj.object.position) <= parseFloat(player.radius) + parseFloat(obj.object.radius)){
+              return false;
+            }
           }
         }
         return true;
@@ -214,11 +221,10 @@ module.exports = function(io) {
     addObject: addObject,
     removeObject: function(point, player){
       for (var i = objects[Math.floor(point.x)][Math.floor(point.y)].length - 1; i >= 0; i--) {
-        if (objects[Math.floor(point.x)][Math.floor(point.y)][i] == player) {
+        if (objects[Math.floor(point.x)][Math.floor(point.y)][i].object == player) {
           objects.slice(i, 1);
         }
       }
-      //notify(point);
     },/*
     action: function(player, action, targets, options) {
       switch (action) {
