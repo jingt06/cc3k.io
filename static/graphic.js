@@ -189,7 +189,7 @@ define(function(require, exports, module) {
       drawStroked(context, userInfo.name , x-userInfo.name.length*5, y-25);
       context.beginPath();
       context.fillStyle = 'blue';
-      context.arc(x,y,cellWidth/ (2 * numCells),0,2*Math.PI);
+      context.arc(x,y,cellWidth * userInfo.radius,0,2*Math.PI);
       context.fill();
       context.closePath();
       //drawFace(face, x, y);
@@ -264,19 +264,18 @@ define(function(require, exports, module) {
     graphics.redraw = function() {
       var x = point.x;
       var y = point.y;
-      var shiftX = Math.floor(point.x) - x - 1;
-      var shiftY = Math.floor(point.y) - y - 1;
+      var shiftX = Math.floor(point.x) - x - 0.5;
+      var shiftY = Math.floor(point.y) - y - 0.5;
       context.clearRect(0, 0, canvas.width, canvas.height);
       // draw floor
-      console.log('############################')
-      for(var i = -1; i <= 2 * (numCells + 1); ++i) {
-        for (var j = -1; j <= 2 * (numCells + 1); ++j) {
-          var pointX = Math.floor(x) - numCells + i;
-          var pointY = Math.floor(y) - numCells + j;
+      for(var i = 0; i <= 2 * (numCells + 1); ++i) {
+        for (var j = 0; j <= 2 * (numCells + 1); ++j) {
+          var pointX = Math.floor(x) - numCells + i - 1;
+          var pointY = Math.floor(y) - numCells + j - 1;
           var canvasX = cellWidth * (shiftX + i);
           var canvasY = cellWidth * (shiftY + j);
-          console.log('draw at: ' +canvasX +', '+ canvasY);
-          draw(canvasX, canvasY, map[pointX][pointY]);
+          // switch x and y since canvas's coordinate is opposite to array's
+          draw(canvasY, canvasX, map[pointX][pointY]);
         }
       }
       /* TODO: do later

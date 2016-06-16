@@ -94,12 +94,11 @@ for (var i = 0; i < mapHeight + mapMargin * 2; ++i) {
 var generateSpawnPoint = function(){
     var point = {x: Math.random()*mapHeight + mapMargin,
                  y: Math.random()*mapWidth + mapMargin};
-    // TODO: solve conflict problem
-    //if (map[point[0]][point[1]] == '.' && !objects[point[0]][point[1]]) {
-    //  return point;
-    //} else {
-    //  return generateSpawnPoint();
-    //}
+    if (map[Math.floor(point.x)][Math.floor(point.y)] == '.') {
+      return point;
+    } else {
+      return generateSpawnPoint();
+    }
     return point;
 }
 
@@ -109,9 +108,7 @@ var notify = function(point) {
     for(var i = y - 3; i < y + 4; ++i) {
       for(var j = x - 3; j < x + 4; ++j) {
         for(k in objects[i][j]){
-            console.log('try to notify')
           if (objects[i][j][k].type == 'player') {
-            console.log('notify player')
             objects[i][j][k].object.notify();
           }
         }
@@ -145,7 +142,9 @@ var generateObject = function() {
   addObject(point, obj.type, obj);
 }
 
-
+var distance = function(pointA, pointB) {
+  return Math.sqrt(Math.pow(pointA.x - pointA.x, 2) + Math.pow(pointA.y - pointA.y, 2));
+}
 
 var generateEnemy = function(id) {
   var point = generateSpawnPoint();
@@ -196,14 +195,22 @@ module.exports = function(io) {
         object: obj
       };
     },
-    /*available: function(point, player){
-      if(player && objects[point[0]][point[1]] && objects[point[0]][point[1]].object.consumable){
+    available: function(point, player){
+      /*if(player && objects[point[0]][point[1]] && objects[point[0]][point[1]].object.consumable){
         objects[point[0]][point[1]].object.use(player);
         objects[point[0]][point[1]] = null;
         generateObject();
+      }*/
+      if (map[Math.floor(point.x)][Math.floor(point.y)] == '.' || map[Math.floor(point.x)][Math.floor(point.y)] == '#') {
+        for (object in objects[Math.floor(point.x)][Math.floor(point.y)]) {
+          if (distance(player, object) < player.radius + object.radius){
+            return false;
+          }
+        }
+        return true;
       }
-      return (map[point[0]][point[1]] == '.' || map[point[0]][point[1]] == '#') && !objects[point[0]][point[1]];
-    },*/
+      return false;
+    },
     addObject: addObject,
     removeObject: function(point, player){
       for (var i = objects[Math.floor(point.x)][Math.floor(point.y)].length - 1; i >= 0; i--) {

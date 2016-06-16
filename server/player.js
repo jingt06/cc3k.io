@@ -29,6 +29,7 @@ module.exports = {
     p.socket = skt;
     p.name = name;
     p.race = race;
+    p.radius = 0.2;
 
 
     // player status info
@@ -69,7 +70,8 @@ module.exports = {
         exp: p.exp,
         nextLevel: p.expNextLevel,
         numUsers: p.map.onlineUser,
-        cellPosition: p.cellPosition
+        cellPosition: p.cellPosition,
+        radius: p.radius
       };
       if (p.level >= 5 && p.class.tier == 0){
         mapInfo.upgradeClass = p.class.upgrade;
@@ -166,13 +168,21 @@ module.exports = {
       p = allPlayer[cid];
       if (!p.isDead()) {
         p = allPlayer[cid];
-        var old = {};
-        old.x = Math.floor(p.position.x);
-        old.y = Math.floor(p.position.y);
-        p.position.x += p.speed.x;
-        p.position.y += p.speed.y;
-        if (p.position.x > old.x + 1 || p.position.y > old.y + 1){
-          p.map.removeObject(old)
+        var oldCoor = {};
+        var newCoor = {}
+        oldCoor.x = Math.floor(p.position.x);
+        oldCoor.y = Math.floor(p.position.y);
+        newCoor.x = p.position.x + p.speed.x;
+        newCoor.y = p.position.y + p.speed.y;
+        if (p.map.available(newCoor, p)) {
+          p.position = newCoor;
+        } else if (p.map.available({x: p.position.x, y: newCoor.y}, p)) {
+          p.position.y = newCoor.y;
+        } else if (p.map.available({x: newCoor.x, y: p.position.y}, p)) {
+          p.position.x = newCoor.x;
+        }
+        if (p.position.x > oldCoor.x + 1 || p.position.y > oldCoor.y + 1){
+          p.map.removeObject(oldCoor)
           p.map.addObject({x: Math.floor(p.position.x), y: Math.floor(p.position.y)});
         }
       }

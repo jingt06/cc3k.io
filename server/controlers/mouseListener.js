@@ -8,7 +8,9 @@ module.exports = function(player) {
     if (pos.y > p.maxSpeed) pos.y = p.maxSpeed;
     if (pos.x < -p.maxSpeed) pos.x = -p.maxSpeed;
     if (pos.y < -p.maxSpeed) pos.y = -p.maxSpeed;
-    p.speed = pos;
+    // switch x and y since canvas's coordinate is opposite to array's
+    p.speed.x = pos.y;
+    p.speed.y = pos.x;
   }
   return MouseListener;
 }
