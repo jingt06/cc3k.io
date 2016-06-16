@@ -37,7 +37,7 @@ module.exports = {
     // player method
     p.initStatus = function() {
       p.speed = {x:0, y:0}; // this is a point value
-      p.maxSpeed = 10; // this is a int value
+      p.maxSpeed = 0.2; // this is a int value
       p.maxHP = 100;
       p.exp = 20;
       p.level = 1;
@@ -159,6 +159,33 @@ module.exports = {
 
   getPlayer : function(cid) {
     return allPlayer[cid]
+  },
+
+  playerMove: function() {
+    for (cid in allPlayer) {
+      p = allPlayer[cid];
+      if (!p.isDead()) {
+        p = allPlayer[cid];
+        var old = {};
+        old.x = Math.floor(p.position.x);
+        old.y = Math.floor(p.position.y);
+        p.position.x += p.speed.x;
+        p.position.y += p.speed.y;
+        if (p.position.x > old.x + 1 || p.position.y > old.y + 1){
+          p.map.removeObject(old)
+          p.map.addObject({x: Math.floor(p.position.x), y: Math.floor(p.position.y)});
+        }
+      }
+    }
+  },
+
+  notifyAll: function() {
+    for (cid in allPlayer) {
+      p = allPlayer[cid];
+      if (!p.isDead()) {
+        p.notify();
+      }
+    }
   }
 
 

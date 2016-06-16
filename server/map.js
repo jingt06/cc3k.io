@@ -104,12 +104,14 @@ var generateSpawnPoint = function(){
 }
 
 var notify = function(point) {
-    var y = point[0]
-    var x = point[1]
+    var y = Math.floor(point.x);
+    var x = Math.floor(point.y);
     for(var i = y - 3; i < y + 4; ++i) {
       for(var j = x - 3; j < x + 4; ++j) {
         for(k in objects[i][j]){
+            console.log('try to notify')
           if (objects[i][j][k].type == 'player') {
+            console.log('notify player')
             objects[i][j][k].object.notify();
           }
         }
@@ -130,12 +132,11 @@ var notifyAll = function() {
 }
 
 var addObject = function(point, type, obj) {
-  console.log(point)
   objects[Math.floor(point.x)][Math.floor(point.y)].push({
     type: type,
     object: obj
   });
-  notify(point);
+  //notify(point);
 }
 
 var generateObject = function() {
@@ -205,13 +206,12 @@ module.exports = function(io) {
     },*/
     addObject: addObject,
     removeObject: function(point, player){
-      console.log(point)
       for (var i = objects[Math.floor(point.x)][Math.floor(point.y)].length - 1; i >= 0; i--) {
         if (objects[Math.floor(point.x)][Math.floor(point.y)][i] == player) {
           objects.slice(i, 1);
         }
       }
-      notify(point);
+      //notify(point);
     },/*
     action: function(player, action, targets, options) {
       switch (action) {
@@ -238,7 +238,7 @@ module.exports = function(io) {
           break;
       }
     },*/
-    enemyMove: function(){
+    enemyMove: function() {
       for (var i = enemyList.length - 1; i >= 0; i--) {
         if(!enemyList[i].isDead()) enemyList[i].action(map, objects, io);
       }

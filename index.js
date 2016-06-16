@@ -22,7 +22,9 @@ app.use(express.static(__dirname + '/static'));
 
 //this function runs for every 0.1s
 run = function () {
-  //ap.enemyMove();
+  //map.enemyMove();
+  player.playerMove();
+  player.notifyAll();
 }
 setInterval(run, 100);
 

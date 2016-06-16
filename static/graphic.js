@@ -205,7 +205,6 @@ define(function(require, exports, module) {
       var width = map[0].length;
       context.beginPath();
       context.fillStyle = 'yellow';
-      console.log(point)
       context.arc(5.5 * cellWidth + cellWidth * point.y / width,
                   + (0.6 * cellWidth) * point.x / height + 10, cellWidth / 30, 0, 2 * Math.PI);
       context.fill();
@@ -265,16 +264,18 @@ define(function(require, exports, module) {
     graphics.redraw = function() {
       var x = point.x;
       var y = point.y;
-      var shiftX = Math.floor(point.x) - point[0] - 1;
-      var shiftY = Math.floor(point.y) - point[1] - 1;
+      var shiftX = Math.floor(point.x) - x - 1;
+      var shiftY = Math.floor(point.y) - y - 1;
       context.clearRect(0, 0, canvas.width, canvas.height);
       // draw floor
-      for(var i = -1; i <= 2 * numCells + 1; ++i) {
-        for (var j = -1; j <= 2 * numCells + 1; ++j) {
+      console.log('############################')
+      for(var i = -1; i <= 2 * (numCells + 1); ++i) {
+        for (var j = -1; j <= 2 * (numCells + 1); ++j) {
           var pointX = Math.floor(x) - numCells + i;
           var pointY = Math.floor(y) - numCells + j;
           var canvasX = cellWidth * (shiftX + i);
-          var canvasY = cellWidth * (shiftY + i);
+          var canvasY = cellWidth * (shiftY + j);
+          console.log('draw at: ' +canvasX +', '+ canvasY);
           draw(canvasX, canvasY, map[pointX][pointY]);
         }
       }

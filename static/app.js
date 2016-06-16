@@ -46,6 +46,7 @@ requirejs(["helper/init", "graphic"], function(init, graphic) {
   })
 
   socket.on('event', function(m){
+    console.log('get event')
     graphic.drawMap(m);
   })
 
