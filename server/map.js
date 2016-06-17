@@ -180,22 +180,20 @@ module.exports = function(io) {
       var floor = []
       var obj = []
       for (index in sliceObj) {
-        obj.push(sliceObj[index].slice(x - 3, x + 4).map(function(objList) {
-          var returnList = []
-          for (index in objList) {
-            o = objList[index];
-            if (o.position == point) {
-              continue;
+        for (var i = y - 3; i <= y + 4; ++i) {
+          for (var j = x - 3; j <= x + 4; ++j) {
+            for(index in objects[i][j]) {
+              o = objects[i][j][index];
+              obj.push ({
+                type: o.type,
+                info: o.object.getInfo(),
+                position: o.object.position
+              })
             }
-            returnList.push ({
-              type: o.type,
-              info: o.object.getInfo()
-            })
           }
-          return returnList;
-      }))};
+        }
+      }
       return {
-        location: point,
         object: obj
       };
     },

@@ -77,18 +77,21 @@ define(function(require, exports, module) {
       context.closePath();
     };
 
-    var drawObject = function(x, y, obj){
+    var drawObject = function(startX, startY, shiftX, shiftY, obj){
       var type = obj.type;
       var info = obj.info;
-      var cellPosition = info.cellPosition;
+      var position = obj.position;
+      console.log(obj)
+      var x = position.x;
+      var y = position.y;
       switch (type) {
         case 'player':
-          var x = x * cellWidth + cellPosition[0] * cellWidth / 5 ;
-          var y = y * cellWidth +cellPosition[1] *  cellWidth / 2;
+          x = (x - startX) * cellWidth;
+          y = (y - startY) * cellWidth;
           drawStroked(context, info.name, x-info.name.length*5,y-30);
           context.fillStyle = '#ff0000'
           context.beginPath();
-          context.arc(x, y , cellWidth / (2 * cellSize), 0, 2 * Math.PI);
+          context.arc(x, y , info.radius, 0, 2 * Math.PI);
           context.fill();
           context.closePath();
           //drawFace(info.face, x, y);
@@ -187,6 +190,7 @@ define(function(require, exports, module) {
       var x = cellWidth * (0.5 + numCells);
       var y = cellWidth * (0.5 + numCells);
       drawStroked(context, userInfo.name , x-userInfo.name.length*5, y-25);
+      console.log('draw')
       context.beginPath();
       context.fillStyle = 'blue';
       context.arc(x,y,cellWidth * userInfo.radius,0,2*Math.PI);
@@ -266,12 +270,14 @@ define(function(require, exports, module) {
       var y = point.y;
       var shiftX = Math.floor(point.x) - x - 0.5;
       var shiftY = Math.floor(point.y) - y - 0.5;
+      var startX = Math.floor(x) - numCells;
+      var startY = Math.floor(y) - numCells;
       context.clearRect(0, 0, canvas.width, canvas.height);
       // draw floor
       for(var i = 0; i <= 2 * (numCells + 1); ++i) {
         for (var j = 0; j <= 2 * (numCells + 1); ++j) {
-          var pointX = Math.floor(x) - numCells + i - 1;
-          var pointY = Math.floor(y) - numCells + j - 1;
+          var pointX = startX + i - 1;
+          var pointY = startY + j - 1;
           var canvasX = cellWidth * (shiftX + i);
           var canvasY = cellWidth * (shiftY + j);
           // switch x and y since canvas's coordinate is opposite to array's
@@ -280,9 +286,7 @@ define(function(require, exports, module) {
       }
       // draw objects
       for(i in objects) {
-        for (j in objects[i]) {
-            //drawObject(j, i, objects[i][j])
-        }
+        drawObject(startX, startY, shiftX, shiftY, objects[i]);
       }
       drawSelf(userInfo);
       effects = effect.getEffect(point);
