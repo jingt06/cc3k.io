@@ -54,7 +54,7 @@ module.exports = {
     p.initStatus();
 
     p.notify = function() {
-      var mapInfo = p.map.getSight(p.position);
+      var mapInfo = p.map.getSight(p.position, p);
       mapInfo.user = {
         face: p.face,
         HP: p.HP,

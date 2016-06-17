@@ -173,17 +173,16 @@ module.exports = function(io) {
     width: mapWidth,
     margin:mapMargin,
     generateSpawnPoint: generateSpawnPoint,
-    getSight: function(point){
+    getSight: function(point, player){
       var y = Math.floor(point.x);
       var x = Math.floor(point.y);
-      var sliceObj = objects.slice(y-3, y + 4);
       var floor = []
       var obj = []
-      for (index in sliceObj) {
-        for (var i = y - 3; i <= y + 4; ++i) {
-          for (var j = x - 3; j <= x + 4; ++j) {
-            for(index in objects[i][j]) {
-              o = objects[i][j][index];
+      for (var i = y - 3; i <= y + 4; ++i) {
+        for (var j = x - 3; j <= x + 4; ++j) {
+          for(index in objects[i][j]) {
+            o = objects[i][j][index];
+            if (o.object != player) {
               obj.push ({
                 type: o.type,
                 info: o.object.getInfo(),
@@ -194,7 +193,8 @@ module.exports = function(io) {
         }
       }
       return {
-        object: obj
+        object: obj,
+        location: point
       };
     },
     available: function(point, player){
@@ -220,7 +220,7 @@ module.exports = function(io) {
     removeObject: function(point, player){
       for (var i = objects[Math.floor(point.x)][Math.floor(point.y)].length - 1; i >= 0; i--) {
         if (objects[Math.floor(point.x)][Math.floor(point.y)][i].object == player) {
-          objects.slice(i, 1);
+          objects[Math.floor(point.x)][Math.floor(point.y)].splice(i, 1);
         }
       }
     },/*
