@@ -85,9 +85,9 @@ define(function(require, exports, module) {
       var y = position.y;
       switch (type) {
         case 'player':
-          console.log('x: '+x+',y: '+y+'shiftX: '+shiftX +'shiftY: '+shiftY+' startX:' + startX+' startY' + startY);
-          b = (x - startX) * cellWidth + shiftX;
-          a = (y - startY) * cellWidth + shiftY;
+          b = (x - startX + shiftX) * cellWidth;
+          a = (y - startY + shiftY) * cellWidth;
+          console.log('x: '+x+',y: '+y+'shiftX: '+shiftX +'shiftY: '+shiftY+' startX:' + startX+' startY' + startY + 'a: ' + a+ 'b: '+ b);
           drawStroked(context, info.name, a-info.name.length*5,b-30);
           context.fillStyle = '#ff0000'
           context.beginPath();
