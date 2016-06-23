@@ -139,6 +139,8 @@ var addObject = function(point, type, obj) {
 var generateObject = function() {
   var point = generateSpawnPoint();
   var obj = object.createObject();
+  obj.position = point;
+  console.log('create object at' + point.x + ' ' +point.y)
   addObject(point, obj.type, obj);
 }
 
@@ -160,8 +162,8 @@ var generateEnemy = function(id) {
 }
 
 for (var i = totalObjects; i >= 0; i--) {
-    //generateObject(); //TODO No enemy for now
-    //generateEnemy();
+    generateObject();
+    //generateEnemy();//TODO No enemy for now
 }
 
 module.exports = function(io) {

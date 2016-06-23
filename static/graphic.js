@@ -83,15 +83,14 @@ define(function(require, exports, module) {
       var position = obj.position;
       var x = position.x;
       var y = position.y;
+      var b = (x - startX + shiftY) * cellWidth;
+      var a = (y - startY + shiftX) * cellWidth;
+      console.log(type)
       switch (type) {
         case 'player':
-          b = (x - startX + shiftY) * cellWidth;
-          a = (y - startY + shiftX) * cellWidth;
-          console.log('x: '+x+',y: '+y+'shiftX: '+shiftX +'shiftY: '+shiftY+' startX:' + startX+' startY' + startY + 'a: ' + a+ 'b: '+ b);
           drawStroked(context, info.name, a-info.name.length*5,b-30);
           context.beginPath();
           context.fillStyle = '#ff0000'
-          console.log(info.radius)
           context.arc(a, b , info.radius * cellWidth, 0, 2 * Math.PI);
           context.fill();
           context.closePath();
@@ -100,50 +99,44 @@ define(function(require, exports, module) {
           break;
         case 'potionH':
           context.fillStyle = '#FFFF66';
-          var a = x * cellWidth + cellWidth / 2
-          var b = y * cellWidth + cellWidth / 2
           context.beginPath();
           context.arc(a, b , cellWidth / 3, 0, 2 * Math.PI);
           context.fill();
           context.closePath();
           context.fillStyle = '#FF0000';
-          a = x * cellWidth + cellWidth / 4;
-          b = y * cellWidth + cellWidth * 2 / 5;
+          a = a * cellWidth + cellWidth / 4;
+          b = b * cellWidth + cellWidth * 2 / 5;
           context.beginPath();
           context.fillRect(a, b, cellWidth / 2, cellWidth / 5);
           context.closePath();
-          a = x * cellWidth + cellWidth * 2 / 5;
-          b = y * cellWidth + cellWidth / 4;
+          a = a * cellWidth + cellWidth * 2 / 5;
+          b = b * cellWidth + cellWidth / 4;
           context.beginPath();
           context.fillRect(a, b, cellWidth / 5, cellWidth / 2);
           context.closePath();
           break;
         case 'potionD':
           context.fillStyle = '#FFFF66';
-          var a = x * cellWidth + cellWidth / 2
-          var b = y * cellWidth + cellWidth / 2
           context.beginPath();
           context.arc(a, b , cellWidth / 3, 0, 2 * Math.PI);
           context.fill();
           context.closePath();
           context.fillStyle = '#00008b';
-          a = x * cellWidth + cellWidth / 3;
-          b = y * cellWidth + cellWidth / 3;
+          a = a * cellWidth + cellWidth / 3;
+          b = b * cellWidth + cellWidth / 3;
           context.beginPath();
           context.fillRect(a, b, cellWidth / 3, cellWidth / 3);
           context.closePath();
           break;
         case 'potionA':
           context.fillStyle = '#FFFF66';
-          var a = x * cellWidth + cellWidth / 2
-          var b = y * cellWidth + cellWidth / 2
           context.beginPath();
           context.arc(a, b , cellWidth / 3, 0, 2 * Math.PI);
           context.fill();
           context.closePath();
           context.fillStyle = '#ff4500';
-          a = x * cellWidth + cellWidth / 2;
-          b = y * cellWidth + cellWidth / 4;
+          a = a * cellWidth + cellWidth / 2;
+          b = b * cellWidth + cellWidth / 4;
           context.beginPath();
           context.beginPath();
           context.moveTo(a, b);
