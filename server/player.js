@@ -139,7 +139,8 @@ module.exports = {
         maxHP: p.maxHP,
         name: p.name,
         race: p.race,
-        cellPosition: p.cellPosition
+        cellPosition: p.cellPosition,
+        radius: p.radius
       }
     };
 
