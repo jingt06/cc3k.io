@@ -156,7 +156,7 @@ module.exports = {
   },
 
   deletePlayer: function(cid) {
-    if(allPlayer[cid]) allPlayer[cid].map.removeObject(allPlayer[cid].position);
+    if(allPlayer[cid]) allPlayer[cid].map.removeObject(allPlayer[cid].position, allPlayer[cid]);
     delete allPlayer[cid];
   },
 
