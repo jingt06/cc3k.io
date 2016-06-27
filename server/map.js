@@ -2,7 +2,7 @@ var mapWidth = 80;
 var mapHeight = 25;
 var mapMargin = 10;
 var totalObjects = 10;
-var totalEnemies = 30;
+var totalEnemies = 10;
 var object = require('./items/object')();
 var enemies = require('./enemies/enemy.js')();
 var map = ['                                                                                                                                                            ',
@@ -69,7 +69,7 @@ for (var i = 0; i < mapHeight + mapMargin * 2; ++i) {
 var generateSpawnPoint = function(){
     var point = {x: Math.random()*mapHeight + mapMargin,
                  y: Math.random()*mapWidth + mapMargin};
-    if (map[Math.floor(point.x)][Math.floor(point.y)] == '.') {
+    if (map[Math.floor(point.x)][Math.floor(point.y)] == '.' && objects[Math.floor(point.x)][Math.floor(point.y)].length == 0) {
       return point;
     } else {
       return generateSpawnPoint();
@@ -137,7 +137,7 @@ var generateEnemy = function(id) {
 
 for (var i = totalObjects; i >= 0; i--) {
     generateObject();
-    //generateEnemy();//TODO No enemy for now
+    generateEnemy();
 }
 
 module.exports = function(io) {
