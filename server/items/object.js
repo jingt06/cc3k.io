@@ -8,7 +8,6 @@ module.exports = function() {
 			switch (itemStr) {
 				case 'potion':
 					object = potion.create();
-					object.radius = 0.1;
 					break;
 				default:
 					var index = Math.floor(Math.random() * allItem.length);

@@ -100,7 +100,7 @@ define(function(require, exports, module) {
         case 'potionH':
           context.fillStyle = '#FFFF66';
           context.beginPath();
-          context.arc(a, b , cellWidth / 3, 0, 2 * Math.PI);
+          context.arc(a, b , info.radius * cellWidth, 0, 2 * Math.PI);
           context.fill();
           context.closePath();
           context.fillStyle = '#FF0000';
@@ -118,7 +118,7 @@ define(function(require, exports, module) {
         case 'potionD':
           context.fillStyle = '#FFFF66';
           context.beginPath();
-          context.arc(a, b , cellWidth / 3, 0, 2 * Math.PI);
+          context.arc(a, b , info.radius * cellWidth, 0, 2 * Math.PI);
           context.fill();
           context.closePath();
           context.fillStyle = '#00008b';
@@ -131,7 +131,7 @@ define(function(require, exports, module) {
         case 'potionA':
           context.fillStyle = '#FFFF66';
           context.beginPath();
-          context.arc(a, b , cellWidth / 3, 0, 2 * Math.PI);
+          context.arc(a, b , info.radius * cellWidth, 0, 2 * Math.PI);
           context.fill();
           context.closePath();
           context.fillStyle = '#ff4500';
