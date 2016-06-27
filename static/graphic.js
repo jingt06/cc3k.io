@@ -85,7 +85,7 @@ define(function(require, exports, module) {
       var y = position.y;
       var b = (x - startX + shiftY) * cellWidth;
       var a = (y - startY + shiftX) * cellWidth;
-      console.log(type)
+      // a and b is the center cordinator on canvas
       switch (type) {
         case 'player':
           drawStroked(context, info.name, a-info.name.length*5,b-30);
@@ -94,7 +94,6 @@ define(function(require, exports, module) {
           context.arc(a, b , info.radius * cellWidth, 0, 2 * Math.PI);
           context.fill();
           context.closePath();
-          //drawFace(info.face, x, y);
           drawHP(info.HP, info.maxHP, a, b);
           break;
         case 'potionH':
@@ -104,15 +103,15 @@ define(function(require, exports, module) {
           context.fill();
           context.closePath();
           context.fillStyle = '#FF0000';
-          a = a * cellWidth + cellWidth / 4;
-          b = b * cellWidth + cellWidth * 2 / 5;
+          var x = a - info.radius * cellWidth / 4;
+          var y  = b - info.radius * cellWidth * 3 / 5;
           context.beginPath();
-          context.fillRect(a, b, cellWidth / 2, cellWidth / 5);
+          context.fillRect(x, y, info.radius * cellWidth / 2, info.radius * cellWidth * 6 / 5);
           context.closePath();
-          a = a * cellWidth + cellWidth * 2 / 5;
-          b = b * cellWidth + cellWidth / 4;
+          x = a - info.radius * cellWidth * 3 / 5;
+          y = b - info.radius * cellWidth / 4;
           context.beginPath();
-          context.fillRect(a, b, cellWidth / 5, cellWidth / 2);
+          context.fillRect(x, y, info.radius * cellWidth * 6 / 5, info.radius * cellWidth / 2);
           context.closePath();
           break;
         case 'potionD':
@@ -122,10 +121,10 @@ define(function(require, exports, module) {
           context.fill();
           context.closePath();
           context.fillStyle = '#00008b';
-          a = a * cellWidth + cellWidth / 3;
-          b = b * cellWidth + cellWidth / 3;
+          var x = a - info.radius * cellWidth * 2 / 5;
+          var y = b - info.radius * cellWidth * 2 / 5;
           context.beginPath();
-          context.fillRect(a, b, cellWidth / 3, cellWidth / 3);
+          context.fillRect(x, y, info.radius * cellWidth * 4 / 5, info.radius * cellWidth * 4 / 5);
           context.closePath();
           break;
         case 'potionA':
@@ -135,13 +134,13 @@ define(function(require, exports, module) {
           context.fill();
           context.closePath();
           context.fillStyle = '#ff4500';
-          a = a * cellWidth + cellWidth / 2;
-          b = b * cellWidth + cellWidth / 4;
+          var x = a;
+          var y = b - info.radius * cellWidth / 2;
           context.beginPath();
           context.beginPath();
-          context.moveTo(a, b);
-          context.lineTo(a - cellWidth / 6, b + cellWidth * 1 / 2);
-          context.lineTo(a + cellWidth / 6, b + cellWidth * 1 / 2);
+          context.moveTo(x, y);
+          context.lineTo(x - info.radius * cellWidth / 2, y + info.radius * cellWidth);
+          context.lineTo(x + info.radius * cellWidth / 2, y + info.radius * cellWidth);
           context.fill();
           context.closePath();
           break;
