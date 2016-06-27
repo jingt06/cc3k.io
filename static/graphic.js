@@ -215,28 +215,27 @@ define(function(require, exports, module) {
     var drawInfoPanel = function() {
       context.beginPath();
       context.fillStyle = 'rgba(200, 200, 200, 0.7)';
-      context.fillRect(10, 18 * cellWidth + 10, 7 * cellWidth, 3 * cellWidth);
+      context.fillRect(10, 5.5 * cellWidth + 10, 2.1 * cellWidth, 1.2 * cellWidth);
       context.closePath();
       context.beginPath();
       context.textBaseline='Bottom';
       context.font = '20px Arial';
       context.fillStyle = '#000000'
-      context.fillText(userInfo.class + '-LV.' + userInfo.level+ '  ' + userInfo.race, 15, 19 * cellWidth);
-      context.fillText('ATT: ' + userInfo.att, 15, 20 * cellWidth + 10);
-      context.fillText('Critical Rate: ' + userInfo.cri, 3 * cellWidth, 20 * cellWidth + 10)
-      context.fillText('DEF: ' + userInfo.def, 15, 20.5 * cellWidth + 10);
-      context.fillText('Dodge Rate: ' + userInfo.dog,  3 * cellWidth, 20.5 * cellWidth + 10);
+      context.fillText(userInfo.race + ' ' + userInfo.class + '-LV.' + userInfo.level, 15, 5.8 * cellWidth);
+      context.fillText('ATT: ' + userInfo.att, 15, 6.3 * cellWidth);
+      context.fillText('Critical Rate: ' + userInfo.cri, 1 * cellWidth, 6.3 * cellWidth)
+      context.fillText('DEF: ' + userInfo.def, 15, 6.5 * cellWidth);
+      context.fillText('Dodge Rate: ' + userInfo.dog,  1 * cellWidth, 6.5 * cellWidth);
       context.closePath();
       context.beginPath();
-      context.rect(15, 19 * cellWidth + 10, 6 * cellWidth, cellWidth / 3);
-      context.strokeStyle = '#000000'
+      context.rect(15, 5.8 * cellWidth + 10, 2 * cellWidth, cellWidth / 6)
       context.lineWidth = 5;
       context.stroke();
       context.closePath();
       context.beginPath();
-      var length = (6 * cellWidth - 3) * userInfo.exp / userInfo.nextLevel;
+      var length = (2 * cellWidth) * userInfo.exp / userInfo.nextLevel;
       context.fillStyle = '#00bfff';
-      context.rect(17, 19 * cellWidth + 12, length-1, cellWidth / 3 - 5);
+      context.rect(17, 5.8 * cellWidth + 12, length-1, cellWidth / 6 - 5);
       context.fill();
       context.closePath();
     };
