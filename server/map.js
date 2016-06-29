@@ -69,7 +69,8 @@ for (var i = 0; i < mapHeight + mapMargin * 2; ++i) {
 var generateSpawnPoint = function(){
     var point = {x: Math.random()*mapHeight + mapMargin,
                  y: Math.random()*mapWidth + mapMargin};
-    if (map[Math.floor(point.x)][Math.floor(point.y)] == '.') {
+    if (map[Math.floor(point.x)][Math.floor(point.y)] == '.' &&
+        objects[Math.floor(point.x)][Math.floor(point.y)].length == 0) {
       return point;
     } else {
       return generateSpawnPoint();
@@ -137,7 +138,7 @@ var generateEnemy = function(id) {
 
 for (var i = totalObjects; i >= 0; i--) {
     generateObject();
-    //generateEnemy();//TODO No enemy for now
+    enerateEnemy();
 }
 
 module.exports = function(io) {
