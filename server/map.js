@@ -5,6 +5,7 @@ var totalObjects = 10;
 var totalEnemies = 10;
 var object = require('./items/object')();
 var enemies = require('./enemies/enemy.js')();
+var helper = require('./helper.js');
 var map = ['                                                                                                                                                            ',
        '                                                                                                    ',
        '                                                                                                    ',
@@ -57,6 +58,7 @@ var enemyList = [];
 
 // objects contains objects on the map,
 // which including items(ruins, potions...), enemies and players
+// each entry in objects is a lsit of objects, which is json of {type, object, position}
 var objects = [];
 for (var i = 0; i < mapHeight + mapMargin * 2; ++i) {
   var row = [];
@@ -118,10 +120,6 @@ var generateObject = function() {
   addObject(point, obj.type, obj);
 }
 
-var distance = function(pointA, pointB) {
-  return Math.sqrt(Math.pow(pointA.x - pointB.x, 2) + Math.pow(pointA.y - pointB.y, 2));
-}
-
 var generateEnemy = function(id) {
   var point = generateSpawnPoint();
   var enemy = enemies.createEnemy(point);
@@ -178,7 +176,7 @@ module.exports = function(io) {
         for (index in objects[Math.floor(point.x)][Math.floor(point.y)]) {
           obj = objects[Math.floor(point.x)][Math.floor(point.y)][index];
           if (obj.object != player){
-            if (distance(point, obj.object.position) <= parseFloat(player.radius) + parseFloat(obj.object.radius)){
+            if (helper.distance(point, obj.object.position) <= parseFloat(player.radius) + parseFloat(obj.object.radius)){
               if(player && obj.object.consumable) {
                 obj.object.use(player);
                 // remove object from map

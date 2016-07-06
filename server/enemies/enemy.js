@@ -1,3 +1,5 @@
+// an ememy have type 'ememy', and a name.
+// a subclass must implement HP, maxHP, radius, attackRange, ViewRange.
 var goblin = require('./goblin')
 
 var allEnemies = [goblin];
@@ -23,7 +25,7 @@ module.exports = function() {
 		    enemy.addExp = function(expGain){
 		    	enemy.exp += expGain;
 		    }
-		    enemy.location = point;
+		    enemy.position = point;
 			return enemy;
 		};
 	return {

@@ -146,10 +146,8 @@ define(function(require, exports, module) {
           break;
         case 'enemy':
           context.fillStyle = '#8000FF';
-          var a = x * cellWidth + cellWidth / 2
-          var b = y * cellWidth + cellWidth / 2
           context.beginPath();
-          context.arc(a, b , cellWidth / 2, 0, 2 * Math.PI);
+          context.arc(a, b , info.radius * cellWidth, 0, 2 * Math.PI);
           context.fill();
           context.closePath();
           drawHP(obj.info.HP, obj.info.maxHP, a, b);
