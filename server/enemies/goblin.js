@@ -14,7 +14,9 @@ module.exports = {
       exp: 500, // for test use , shoud be 50
       radius: 0.15,
       attackRange:0.5,
-      viewRange: 3
+      viewRange: 3,
+      speed: {x:0, y:0}, // speed is a point value
+      maxSpeed: 0.3
     };
     goblin.getInfo = function() {
       return {

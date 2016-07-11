@@ -8,7 +8,7 @@ module.exports = {
     var playerInRange = []
     // playerInRange is [player, position] where position is a point of x and y
     //check attack range first
-    attackRange = enemy.attackRange;
+    var attackRange = enemy.attackRange;
     for (var i = Math.ceil(x) - Math.ceil(attackRange); i <= Math.ceil(x) + Math.ceil(attackRange); i++) {
       for (var j = Math.ceil(y) - Math.ceil(attackRange); j <= Math.ceil(y) + Math.ceil(attackRange); j++) {
         if(objects[i][j].length != 0){
@@ -24,69 +24,39 @@ module.exports = {
     if (playerInRange.length > 0) {
       // attack player
       var index = Math.floor(Math.random() * playerInRange.length);
-      console.log('attack')
       var attackedPlayer = playerInRange[index][0].attacked(enemy);
-      io.emit('effect' , {type: 'attack', duration: 5, location: playerInRange[index][1]});
-    } /*else {
-      // cannot attack anyone, search for near enemy
-      for (var i = x - 5; i <= x + 5; i++) {
-        for (var j = y - 5; j <= y + 5; j++) {
-          if(objects[i][j] && objects[i][j].type == 'player'){
-            playerInRange.push([objects[i][j].object, [i, j]]);
+      //io.emit('effect' , {type: 'attack', duration: 5, location: playerInRange[index][1]});
+      return;
+    }
+    // cannot attack anyone, search for the nearest near enemy
+    var viewRange = enemy.viewRange;
+    var target = null
+    var minDistance = viewRange
+    for (var i = Math.ceil(x) - Math.ceil(viewRange); i <= Math.ceil(x) + Math.ceil(viewRange); i++) {
+      for (var j = Math.ceil(y) - Math.ceil(viewRange); j <= Math.ceil(y) + Math.ceil(viewRange); j++) {
+        for (index in objects[i][j]) {
+          var object = objects[i][j][index];
+          var dis = helper.distance(object.object.position, enemy.position);
+          if (object.type == 'player' &&  dis <= viewRange &&
+            dis < minDistance) {
+            target = object.object
+            minDistance = dis
           }
         }
       }
-      if (playerInRange.length > 0) {
-        var index = Math.floor(Math.random() * playerInRange.length);
-        var target = playerInRange[index][0];
-        var targetPosition = playerInRange[index][1];
-        var oldx = x;
-        var oldy = y;
-        if (x > targetPosition[0] && !objects[x - 1][y]){
-          x--;
-        } else if (x < targetPosition[0] && !objects[x + 1][y]){
-          x++;
-        } else if (y > targetPosition[1]  && !objects[x][y - 1]){
-          y--;
-        } else if (y < targetPosition[1]  && !objects[x][y + 1]){
-          y++;
-        }
-        if(floor[x][y] == '.' && !objects[x][y]){
-          objects[oldx][oldy] = null;
-          enemy.location = [x, y];
-          objects[x][y] = {
-            type: 'enemy',
-            object: enemy
-          };
-        }
-      } else {
-        //just random move
-        var rand = Math.floor(Math.random() * 4);
-        var oldx = x;
-        var oldy = y;
-        switch (rand) {
-          case 0:
-            x++;
-            break;
-          case 1:
-            x--;
-            break;
-          case 2:
-            y++;
-            break;
-          case 3:
-            y--;
-            break;
-        }
-        if(floor[x][y] == '.' && !objects[x][y]){
-          objects[oldx][oldy] = null;
-          enemy.location = [x, y];
-          objects[x][y] = {
-            type: 'enemy',
-            object: enemy
-          };
-        }
-      }
-    }*/
+    }
+    if (target != null) {
+      // there is player in version range
+      var targetPosition = target.position;
+      enemy.speed = {x: targetPosition.x - enemy.position.x > enemy.maxSpeed ?
+        enemy.maxSpeed : targetPosition.x - enemy.position.x,
+        y: targetPosition.y - enemy.position.y > enemy.maxSpeed ?
+        enemy.maxSpeed : targetPosition.y - enemy.position.y}
+      console.log(enemy.speed)
+    } else {
+      //just random move
+      enemy.speed.x = Math.random() * enemy.maxSpeed;
+      enemy.speed.y = Math.random() * enemy.maxSpeed;
+    }
   }
 }

@@ -69,28 +69,28 @@ for (var i = 0; i < mapHeight + mapMargin * 2; ++i) {
 }
 
 var generateSpawnPoint = function(){
-    var point = {x: Math.random()*mapHeight + mapMargin,
-                 y: Math.random()*mapWidth + mapMargin};
-    if (map[Math.floor(point.x)][Math.floor(point.y)] == '.' && objects[Math.floor(point.x)][Math.floor(point.y)].length == 0) {
-      return point;
-    } else {
-      return generateSpawnPoint();
-    }
+  var point = {x: Math.random()*mapHeight + mapMargin,
+               y: Math.random()*mapWidth + mapMargin};
+  if (map[Math.floor(point.x)][Math.floor(point.y)] == '.' && objects[Math.floor(point.x)][Math.floor(point.y)].length == 0) {
     return point;
+  } else {
+    return generateSpawnPoint();
+  }
+  return point;
 }
 
 var notify = function(point) {
-    var y = Math.floor(point.x);
-    var x = Math.floor(point.y);
-    for(var i = y - 3; i < y + 4; ++i) {
-      for(var j = x - 3; j < x + 4; ++j) {
-        for(k in objects[i][j]){
-          if (objects[i][j][k].type == 'player') {
-            objects[i][j][k].object.notify();
-          }
+  var y = Math.floor(point.x);
+  var x = Math.floor(point.y);
+  for(var i = y - 3; i < y + 4; ++i) {
+    for(var j = x - 3; j < x + 4; ++j) {
+      for(k in objects[i][j]){
+        if (objects[i][j][k].type == 'player') {
+          objects[i][j][k].object.notify();
         }
       }
     }
+  }
 }
 
 var notifyAll = function() {
@@ -110,7 +110,13 @@ var addObject = function(point, type, obj) {
     type: type,
     object: obj
   });
-  //notify(point);
+}
+var removeObject = function(point, obj){
+  for (var i = objects[Math.floor(point.x)][Math.floor(point.y)].length - 1; i >= 0; i--) {
+    if (objects[Math.floor(point.x)][Math.floor(point.y)][i].object == obj) {
+      objects[Math.floor(point.x)][Math.floor(point.y)].splice(i, 1);
+    }
+  }
 }
 
 var generateObject = function() {
@@ -131,6 +137,41 @@ var generateEnemy = function(id) {
     enemy.id = id;
   }
   addObject(point, enemy.type, enemy);
+}
+
+var available = function(point, player, isPlayer){
+  if (map[Math.floor(point.x)][Math.floor(point.y)] == '.' || map[Math.floor(point.x)][Math.floor(point.y)] == '#') {
+    // push nearest objects into one array
+    // each item in array is a json of {obj, point}
+    nearByPlayers = []
+    for (var i = Math.floor(point.x) - 1; i <= Math.floor(point.x) + 1; ++i) {
+      for (var j = Math.floor(point.y) - 1; j <= Math.floor(point.y) + 1; ++j) {
+        for(index in objects[i][j]){
+          nearByPlayers.push(objects[i][j][index]);
+        }
+      }
+    }
+    if(nearByPlayers.length == 0){
+      return true;
+    }
+    for (index in nearByPlayers) {
+      obj = nearByPlayers[index];
+      if (obj.object != player){
+        if (helper.distance(point, obj.object.position) <= parseFloat(player.radius) + parseFloat(obj.object.radius)){
+          if(isPlayer && obj.object.consumable) {
+            obj.object.use(player);
+            // remove object from map
+            objects[Math.floor(obj.object.position.x)][Math.floor(obj.object.position.y)].splice(index, 1);
+            generateObject();
+            return true;
+          }
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+  return false;
 }
 
 for (var i = totalObjects; i >= 0; i--) {
@@ -171,35 +212,9 @@ module.exports = function(io) {
         location: point
       };
     },
-    available: function(point, player){
-      if (map[Math.floor(point.x)][Math.floor(point.y)] == '.' || map[Math.floor(point.x)][Math.floor(point.y)] == '#') {
-        for (index in objects[Math.floor(point.x)][Math.floor(point.y)]) {
-          obj = objects[Math.floor(point.x)][Math.floor(point.y)][index];
-          if (obj.object != player){
-            if (helper.distance(point, obj.object.position) <= parseFloat(player.radius) + parseFloat(obj.object.radius)){
-              if(player && obj.object.consumable) {
-                obj.object.use(player);
-                // remove object from map
-                objects[Math.floor(point.x)][Math.floor(point.y)].splice(index, 1);
-                generateObject();
-                return true;
-              }
-              return false;
-            }
-          }
-        }
-        return true;
-      }
-      return false;
-    },
+    available: available,
     addObject: addObject,
-    removeObject: function(point, player){
-      for (var i = objects[Math.floor(point.x)][Math.floor(point.y)].length - 1; i >= 0; i--) {
-        if (objects[Math.floor(point.x)][Math.floor(point.y)][i].object == player) {
-          objects[Math.floor(point.x)][Math.floor(point.y)].splice(i, 1);
-        }
-      }
-    },/*
+    removeObject: removeObject,/*
     action: function(player, action, targets, options) {
       switch (action) {
         case 'attack':
@@ -227,9 +242,29 @@ module.exports = function(io) {
     },*/
     enemyMove: function() {
       for (var i = enemyList.length - 1; i >= 0; i--) {
-        if(!enemyList[i].isDead()) enemyList[i].action(map, objects, io);
+        if(!enemyList[i].isDead()){
+          e = enemyList[i];
+          e.action(map, objects, io);
+          var oldCoor = {};
+          var newCoor = {}
+          oldCoor.x = Math.floor(e.position.x);
+          oldCoor.y = Math.floor(e.position.y);
+          newCoor.x = e.position.x + e.speed.x;
+          newCoor.y = e.position.y + e.speed.y;
+          if (available(newCoor, e)) {
+            e.position = newCoor;
+          } else if (available({x: e.position.x, y: newCoor.y}, e)) {
+            e.position.y = newCoor.y;
+          } else if (available({x: newCoor.x, y: e.position.y}, e)) {
+            e.position.x = newCoor.x;
+          }
+          if (e.position.x > oldCoor.x + 1 || e.position.x < oldCoor.x ||
+            e.position.y > oldCoor.y + 1 || e.position.y < oldCoor.y){
+            removeObject(oldCoor, e)
+            addObject({x: Math.floor(e.position.x), y: Math.floor(e.position.y)}, 'enemy', e);
+          }
+        }
       }
-      notifyAll();
     }
   };
 }

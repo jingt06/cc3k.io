@@ -38,7 +38,7 @@ module.exports = {
     // player method
     p.initStatus = function() {
       p.speed = {x:0, y:0}; // this is a point value
-      p.maxSpeed = 0.2; // this is a int value
+      p.maxSpeed = 0.2; // this is a num value
       p.maxHP = 100;
       p.exp = 20;
       p.level = 1;
@@ -126,7 +126,9 @@ module.exports = {
         }
         p.HP -= factor * attacker.attackPoint * 100 / (100 + p.defencePoint);
         if (p.isDead()) {
+          // dead, delete
           attacker.addExp(p.expNextLevel * 4 / 5);
+
           p.delete();
         }
       }
@@ -146,8 +148,7 @@ module.exports = {
 
     p.delete = function() {
       var cid = p.clientId;
-      allPlayer[cid].map.removeObject(allPlayer[cid].position);
-      //delete allPlayer[cid];
+      allPlayer[cid].map.removeObject(allPlayer[cid].position, p);
       p.socket.emit('message', 'dead');
     };
 
@@ -175,11 +176,11 @@ module.exports = {
         oldCoor.y = Math.floor(p.position.y);
         newCoor.x = p.position.x + p.speed.x;
         newCoor.y = p.position.y + p.speed.y;
-        if (p.map.available(newCoor, p)) {
+        if (p.map.available(newCoor, p, true)) {
           p.position = newCoor;
-        } else if (p.map.available({x: p.position.x, y: newCoor.y}, p)) {
+        } else if (p.map.available({x: p.position.x, y: newCoor.y}, p, true)) {
           p.position.y = newCoor.y;
-        } else if (p.map.available({x: newCoor.x, y: p.position.y}, p)) {
+        } else if (p.map.available({x: newCoor.x, y: p.position.y}, p, true)) {
           p.position.x = newCoor.x;
         }
         if (p.position.x > oldCoor.x + 1 || p.position.x < oldCoor.x ||
