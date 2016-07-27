@@ -332,7 +332,7 @@ define(function(require, exports, module) {
       context.fillRect(0, 0, canvas.width, canvas.height);
       context.font='30px Verdana';
 
-      iDiv = document.getElementById('map');
+      var iDiv = document.getElementById('map');
 
       //Create input box
       var inputName= document.createElement('input');
@@ -351,9 +351,12 @@ define(function(require, exports, module) {
       wText.style['opacity'] = '0.5';
       iDiv.appendChild(wText);
 
+      var raceList = ['ORC', 'HUMAN', 'ELF', 'TROLL', 'DWARF'];
+
       //Create button
-      var createButton = function(name, pos) {
+      var createButton = function(raceIndex, pos) {
         var button= document.createElement('button');
+        name = raceList[raceIndex];
         button.innerHTML= name;
         button.style['position']='absolute';
         button.style['left'] = 6.5 * cellWidth + pos.x + 'px';
@@ -372,19 +375,18 @@ define(function(require, exports, module) {
             while(childList[2]){
               iDiv.removeChild(childList[2]);
             }
-            socket.emit('begin',value,name);
+            socket.emit('begin', value, raceIndex);
           }
         };
         return button;
       }
 
       //create race
-      var raceList = ['ORC', 'HUMAN', 'ELF', 'TROLL', 'DRAWF'];
       var buttonList = [];
       var num = 0;
       for(var i = 0;i < raceList.length;num++){
         for(var j = 0; j < 3&& i<raceList.length; j++){
-          buttonList.push(createButton(raceList[i],{x:70*j,y:30*num}));
+          buttonList.push(createButton(i,{x:70*j,y:30*num}));
           iDiv.appendChild(buttonList[i]);
           i++;
         }
