@@ -339,9 +339,8 @@ define(function(require, exports, module) {
       inputName.type = 'text';
       inputName.style['border'] = '2px solid groove';
       inputName.style['position'] = 'absolute';
-      inputName.style['left'] = 8 * cellWidth + 'px';
-      inputName.style['top'] = 13 * cellWidth + 'px';
-      inputName.style['top'] = .5;
+      inputName.style['left'] = 7 * cellWidth + 'px';
+      inputName.style['top'] = 10 * cellWidth + 'px';
       iDiv.appendChild(inputName);
       var wText= document.createElement('text');
       //wText.style='color:red;position:absolute;left:250px;top:370px;opacity:.5'
@@ -357,8 +356,8 @@ define(function(require, exports, module) {
         var button= document.createElement('button');
         button.innerHTML= name;
         button.style['position']='absolute';
-        button.style['left'] = 8 * cellWidth + pos.x + 'px';
-        button.style['top'] = 14 * cellWidth + pos.y +  'px';
+        button.style['left'] = 6.5 * cellWidth + pos.x + 'px';
+        button.style['top'] = 11 * cellWidth + pos.y +  'px';
         button.style['opacity'] = .5;
         button.onclick = function() {
           var value = inputName.value;
