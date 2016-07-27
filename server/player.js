@@ -29,7 +29,6 @@ module.exports = {
     p.socket = skt;
     p.name = name;
     p.race = race;
-    p.radius = 0.2;
 
 
     // player status info
@@ -37,8 +36,6 @@ module.exports = {
 
     // player method
     p.initStatus = function() {
-      p.speed = {x:0, y:0}; // this is a point value
-      p.maxSpeed = 0.2; // this is a num value
       p.maxHP = 100;
       p.exp = 20;
       p.level = 1;
@@ -54,7 +51,7 @@ module.exports = {
     p.initStatus();
 
     p.notify = function() {
-      var mapInfo = p.map.getSight(p.position, p);
+      var mapInfo = p.map.getSight(p.position);
       mapInfo.user = {
         face: p.face,
         HP: p.HP,
@@ -69,9 +66,7 @@ module.exports = {
         race: p.race,
         exp: p.exp,
         nextLevel: p.expNextLevel,
-        numUsers: p.map.onlineUser,
-        cellPosition: p.cellPosition,
-        radius: p.radius
+        numUsers: p.map.onlineUser
       };
       if (p.level >= 5 && p.class.tier == 0){
         mapInfo.upgradeClass = p.class.upgrade;
@@ -80,7 +75,7 @@ module.exports = {
     };
 
     p.move = function (x, y) {
-      /*var newPos = [p.position[0] + x, p.position[1] + y];
+      var newPos = [p.position[0] + x, p.position[1] + y];
       var oldFace = p.face;
       p.face = determineFace(x, y);
       if (p.map.available(newPos, p)){
@@ -89,7 +84,7 @@ module.exports = {
         p.map.addObject(newPos, 'player', p);
       } else if (oldFace != p.face) {
         p.notify();
-      }*/
+      }
     };
 
     p.isDead = function() {
@@ -111,7 +106,6 @@ module.exports = {
       p.socket.emit('map', p.map.map);
       var spawnPoint = p.map.generateSpawnPoint();
       p.position = spawnPoint;
-      p.cellPosition = [0, 0]; // position can be in range of -5 and 5
       p.initStatus();
       p.notify();
     }
@@ -126,9 +120,7 @@ module.exports = {
         }
         p.HP -= factor * attacker.attackPoint * 100 / (100 + p.defencePoint);
         if (p.isDead()) {
-          // dead, delete
           attacker.addExp(p.expNextLevel * 4 / 5);
-
           p.delete();
         }
       }
@@ -140,15 +132,14 @@ module.exports = {
         HP: p.HP,
         maxHP: p.maxHP,
         name: p.name,
-        race: p.race,
-        cellPosition: p.cellPosition,
-        radius: p.radius
+        race: p.race
       }
     };
 
     p.delete = function() {
       var cid = p.clientId;
-      allPlayer[cid].map.removeObject(allPlayer[cid].position, p);
+      allPlayer[cid].map.removeObject(allPlayer[cid].position);
+      //delete allPlayer[cid];
       p.socket.emit('message', 'dead');
     };
 
@@ -157,48 +148,12 @@ module.exports = {
   },
 
   deletePlayer: function(cid) {
-    if(allPlayer[cid]) allPlayer[cid].map.removeObject(allPlayer[cid].position, allPlayer[cid]);
+    if(allPlayer[cid]) allPlayer[cid].map.removeObject(allPlayer[cid].position);
     delete allPlayer[cid];
   },
 
   getPlayer : function(cid) {
     return allPlayer[cid]
-  },
-
-  playerMove: function() {
-    for (cid in allPlayer) {
-      p = allPlayer[cid];
-      if (!p.isDead()) {
-        p = allPlayer[cid];
-        var oldCoor = {};
-        var newCoor = {}
-        oldCoor.x = Math.floor(p.position.x);
-        oldCoor.y = Math.floor(p.position.y);
-        newCoor.x = p.position.x + p.speed.x;
-        newCoor.y = p.position.y + p.speed.y;
-        if (p.map.available(newCoor, p, true)) {
-          p.position = newCoor;
-        } else if (p.map.available({x: p.position.x, y: newCoor.y}, p, true)) {
-          p.position.y = newCoor.y;
-        } else if (p.map.available({x: newCoor.x, y: p.position.y}, p, true)) {
-          p.position.x = newCoor.x;
-        }
-        if (p.position.x > oldCoor.x + 1 || p.position.x < oldCoor.x ||
-            p.position.y > oldCoor.y + 1 || p.position.y < oldCoor.y){
-          p.map.removeObject(oldCoor, p)
-          p.map.addObject({x: Math.floor(p.position.x), y: Math.floor(p.position.y)}, 'player', p);
-        }
-      }
-    }
-  },
-
-  notifyAll: function() {
-    for (cid in allPlayer) {
-      p = allPlayer[cid];
-      if (!p.isDead()) {
-        p.notify();
-      }
-    }
   }
 
 

@@ -1,104 +1,126 @@
-var mapWidth = 80;
-var mapHeight = 25;
+var mapWidth = 136;
+var mapHeight = 50;
 var mapMargin = 10;
 var totalObjects = 10;
-var totalEnemies = 10;
+var totalEnemies = 30;
 var object = require('./items/object')();
 var enemies = require('./enemies/enemy.js')();
-var helper = require('./helper.js');
 var map = ['                                                                                                                                                            ',
-       '                                                                                                    ',
-       '                                                                                                    ',
-       '                                                                                                    ',
-       '                                                                                                    ',
-       '                                                                                                    ',
-       '                                                                                                    ',
-       '                                                                                                    ',
-       '                                                                                                    ',
-       '                                                                                                    ',
-       '                                                                                                    ',
-       '          |------------------------------------------------------------------------------|          ',
-       '          |                                                                              |          ',
-       '          | |--------------------------|        |------------------------|               |          ',
-       '          | |..........................|        |........................|               |          ',
-       '          | |..........................##########........................|-------|       |          ',
-       '          | |..........................|   #    |................................|--|    |          ',
-       '          | |..........................|   #    |...................................|--| |          ',
-       '          | |----------#---------------|   #    |-----#----------------|...............| |          ',
-       '          |            #                 ##############                |...............| |          ',
-       '          |            #                 #     |------#------|         |...............| |          ',
-       '          |            #                 #     |.............|         |...............| |          ',
-       '          |            ###################     |.............|   #######...............| |          ',
-       '          |            #                 #     |.............|   #     |...............| |          ',
-       '          |            #                 #     |------#------|   #     |--------#------| |          ',
-       '          |  |---------#-----------|     #            #          #              #        |          ',
-       '          |  |.....................|     #            #          #         |----#------| |          ',
-       '          |  |.....................|     #########################         |...........| |          ',
-       '          |  |.....................|     #            #                    |...........| |          ',
-       '          |  |.....................|     #    |-------#--------------------|...........| |          ',
-       '          |  |.....................|     #    |........................................| |          ',
-       '          |  |.....................############........................................| |          ',
-       '          |  |.....................|          |........................................| |          ',
-       '          |  |---------------------|          |----------------------------------------| |          ',
-       '          |                                                                              |          ',
-       '          |------------------------------------------------------------------------------|          ',
-       '                                                                                                    ',
-       '                                                                                                    ',
-       '                                                                                                    ',
-       '                                                                                                    ',
-       '                                                                                                    ',
-       '                                                                                                    ',
-       '                                                                                                    ',
-       '                                                                                                    ',
-       '                                                                                                    ',
-       '                                                                                                   '
+       '                                                                                                                                                            ',
+       '                                                                                                                                                            ',
+       '                                                                                                                                                            ',
+       '                                                                                                                                                            ',
+       '                                                                                                                                                            ',
+       '                                                                                                                                                            ',
+       '                                                                                                                                                            ',
+       '                                                                                                                                                            ',
+       '                                                                                                                                                            ',
+       '                                                                                                                                                            ',
+       '          |--------------------------------------------------------------------------------------------------------------------------------------|          ',
+       '          |                                                                                                                                      |          ',
+       '          |  |----------------------------------------------------|        |----------------------------------------------|                      |          ',
+       '          |  |....................................................|        |..............................................|                      |          ',
+       '          |  |....................................................|        |..............................................|                      |          ',
+       '          |  |....................................................##########..............................................|                      |          ',
+       '          |  |....................................................##########..............................................|--------------|       |          ',
+       '          |  |....................................................|   ##   |.............................................................|       |          ',
+       '          |  |....................................................|   ##   |.............................................................|       |          ',
+       '          |  |....................................................|   ##   |.............................................................|---|   |          ',
+       '          |  |....................................................|   ##   |.................................................................|-| |          ',
+       '          |  |---------------------###----------------------------|   ##   |-------------##-------------------|................................| |          ',
+       '          |                        ###                                ##                 ##                   |................................| |          ',
+       '          |                        ###                                #####################                   |................................| |          ',
+       '          |                        ###                                #####################                   |.........|-------|..............| |          ',
+       '          |                        ###                                ##              ##                      |.........|       |..............| |          ',
+       '          |                        ###                                ##              ##                      |.........|       |..............| |          ',
+       '          |                        ###                                ##         |----##----------------|     |.........|       |..............| |          ',
+       '          |                        ###                                ##         |......................|     |.........|       |..............| |          ',
+       '          |                        ###                                ##         |......................|     |.........|       |..............| |          ',
+       '          |                        #####################################         |......................| #####.........|       |..............| |          ',
+       '          |                        #####################################         |......................| #####.........|-------|..............| |          ',
+       '          |                        ##                                 ##         |......................| ##  |................................| |          ',
+       '          |                        ##                                 ##         |......................| ##  |................................| |          ',
+       '          |                        ##                                 ##         |......................| ##  |................................| |          ',
+       '          |                        ##                                 ##         |......................| ##  |................................| |          ',
+       '          |                        ##                                 ##         |......................| ##  |................................| |          ',
+       '          |                        ##                                 ##         |......................| ##  |................................| |          ',
+       '          |                        ##                                 ##         |---------##-----------| ##  |-------------##-----------------| |          ',
+       '          |   |--------------------##----------------------|          ##                   ##             ##                ##                   |          ',
+       '          |   |............................................|          ##                   ##             ##                ##                   |          ',
+       '          |   |............................................|          ##                   ##             ##      |---------##-----------------| |          ',
+       '          |   |............................................|          ##                   ##             ##      |............................| |          ',
+       '          |   |............................................|          ######################################      |............................| |          ',
+       '          |   |..............|----------|..................|          ######################################      |............................| |          ',
+       '          |   |..............|          |..................|          ##                   ##                     |............................| |          ',
+       '          |   |..............|          |..................|          ##                   ##                     |............................| |          ',
+       '          |   |..............|          |..................|          ##       |-----------##---------------------|............................| |          ',
+       '          |   |..............|          |..................|          ##       |...............................................................| |          ',
+       '          |   |..............|          |..................|          ##       |...............................................................| |          ',
+       '          |   |..............|          |..................|          ##       |...............................................................| |          ',
+       '          |   |..............|----------|..................|          ##       |............|---------------------------|......................| |          ',
+       '          |   |............................................#####################............|-----------------------|   |----------|...........| |          ',
+       '          |   |............................................#####################....................................|--------------|...........| |          ',
+       '          |   |............................................|                   |...............................................................| |          ',
+       '          |   |............................................|                   |...............................................................| |          ',
+       '          |   |............................................|                   |...............................................................| |          ',
+       '          |   |--------------------------------------------|                   |---------------------------------------------------------------| |          ',
+       '          |                                                                                                                                      |          ',
+       '          |--------------------------------------------------------------------------------------------------------------------------------------|          ',
+       '                                                                                                                                                            ',
+       '                                                                                                                                                            ',
+       '                                                                                                                                                            ',
+       '                                                                                                                                                            ',
+       '                                                                                                                                                            ',
+       '                                                                                                                                                            ',
+       '                                                                                                                                                            ',
+       '                                                                                                                                                            ',
+       '                                                                                                                                                            ',
+       '                                                                                                                                                            '
        ];
 
 var enemyList = [];
 
 // objects contains objects on the map,
 // which including items(ruins, potions...), enemies and players
-// each entry in objects is a lsit of objects, which is json of {type, object, position}
 var objects = [];
 for (var i = 0; i < mapHeight + mapMargin * 2; ++i) {
   var row = [];
   for (var j = 0; j < mapWidth + mapMargin * 2; ++j) {
-    row.push([]);
+    row.push(null);
   }
   objects.push(row);
 }
 
 var generateSpawnPoint = function(){
-  var point = {x: Math.random()*mapHeight + mapMargin,
-               y: Math.random()*mapWidth + mapMargin};
-  if (map[Math.floor(point.x)][Math.floor(point.y)] == '.' && objects[Math.floor(point.x)][Math.floor(point.y)].length == 0) {
-    return point;
-  } else {
-    return generateSpawnPoint();
-  }
-  return point;
+    var point = [Math.floor(Math.random()*mapHeight + mapMargin),
+             Math.floor(Math.random()*mapWidth + mapMargin)];
+    if (map[point[0]][point[1]] == '.' && !objects[point[0]][point[1]]) {
+      return point;
+    } else {
+      return generateSpawnPoint();
+    }
 }
 
 var notify = function(point) {
-  var y = Math.floor(point.x);
-  var x = Math.floor(point.y);
-  for(var i = y - 3; i < y + 4; ++i) {
-    for(var j = x - 3; j < x + 4; ++j) {
-      for(k in objects[i][j]){
-        if (objects[i][j][k].type == 'player') {
-          objects[i][j][k].object.notify();
+    var y = point[0]
+    var x = point[1]
+    for(var i = y - 10; i < y + 11; ++i) {
+      for(var j = x - 10; j < x + 11; ++j) {
+        if (objects[i][j]) {
+          if (objects[i][j].type == 'player') {
+            objects[i][j].object.notify();
+          }
         }
       }
     }
-  }
 }
 
 var notifyAll = function() {
     for(i in objects) {
       for(j in objects[i]) {
-        for(k in objects[i][j]){
-          if (objects[i][j][k].type == 'player') {
-            objects[i][j][k].object.notify();
+        if (objects[i][j]) {
+          if (objects[i][j].type == 'player') {
+            objects[i][j].object.notify();
           }
         }
       }
@@ -106,25 +128,20 @@ var notifyAll = function() {
 }
 
 var addObject = function(point, type, obj) {
-  objects[Math.floor(point.x)][Math.floor(point.y)].push({
-    type: type,
-    object: obj
-  });
-}
-var removeObject = function(point, obj){
-  for (var i = objects[Math.floor(point.x)][Math.floor(point.y)].length - 1; i >= 0; i--) {
-    if (objects[Math.floor(point.x)][Math.floor(point.y)][i].object == obj) {
-      objects[Math.floor(point.x)][Math.floor(point.y)].splice(i, 1);
-    }
-  }
+      objects[point[0]][point[1]] = {
+        type: type,
+        object: obj
+      };
+      notify(point);
 }
 
 var generateObject = function() {
   var point = generateSpawnPoint();
   var obj = object.createObject();
-  obj.position = point;
   addObject(point, obj.type, obj);
 }
+
+
 
 var generateEnemy = function(id) {
   var point = generateSpawnPoint();
@@ -137,41 +154,6 @@ var generateEnemy = function(id) {
     enemy.id = id;
   }
   addObject(point, enemy.type, enemy);
-}
-
-var available = function(point, player, isPlayer){
-  if (map[Math.floor(point.x)][Math.floor(point.y)] == '.' || map[Math.floor(point.x)][Math.floor(point.y)] == '#') {
-    // push nearest objects into one array
-    // each item in array is a json of {obj, point}
-    nearByPlayers = []
-    for (var i = Math.floor(point.x) - 1; i <= Math.floor(point.x) + 1; ++i) {
-      for (var j = Math.floor(point.y) - 1; j <= Math.floor(point.y) + 1; ++j) {
-        for(index in objects[i][j]){
-          nearByPlayers.push(objects[i][j][index]);
-        }
-      }
-    }
-    if(nearByPlayers.length == 0){
-      return true;
-    }
-    for (index in nearByPlayers) {
-      obj = nearByPlayers[index];
-      if (obj.object != player){
-        if (helper.distance(point, obj.object.position) <= parseFloat(player.radius) + parseFloat(obj.object.radius)){
-          if(isPlayer && obj.object.consumable) {
-            obj.object.use(player);
-            // remove object from map
-            objects[Math.floor(obj.object.position.x)][Math.floor(obj.object.position.y)].splice(index, 1);
-            generateObject();
-            return true;
-          }
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-  return false;
 }
 
 for (var i = totalObjects; i >= 0; i--) {
@@ -188,33 +170,42 @@ module.exports = function(io) {
     width: mapWidth,
     margin:mapMargin,
     generateSpawnPoint: generateSpawnPoint,
-    getSight: function(point, player){
-      var y = Math.floor(point.x);
-      var x = Math.floor(point.y);
+    getSight: function(point){
+      var y = point[0]
+      var x = point[1]
+      var sliceObj = objects.slice(y-10, y + 11);
       var floor = []
       var obj = []
-      for (var i = y - 3; i <= y + 4; ++i) {
-        for (var j = x - 3; j <= x + 4; ++j) {
-          for(index in objects[i][j]) {
-            o = objects[i][j][index];
-            if (o.object != player) {
-              obj.push ({
-                type: o.type,
-                info: o.object.getInfo(),
-                position: o.object.position
-              })
+      for (index in sliceObj) {
+        obj.push(sliceObj[index].slice(x-10, x+11).map(function(o) {
+          if (o) {
+            return {
+              type: o.type,
+              info: o.object.getInfo()
             }
+          } else {
+            return null;
           }
-        }
+        }));
       }
       return {
-        object: obj,
-        location: point
+        location: point,
+        object: obj
       };
     },
-    available: available,
+    available: function(point, player){
+      if(player && objects[point[0]][point[1]] && objects[point[0]][point[1]].object.consumable){
+        objects[point[0]][point[1]].object.use(player);
+        objects[point[0]][point[1]] = null;
+        generateObject();
+      }
+      return (map[point[0]][point[1]] == '.' || map[point[0]][point[1]] == '#') && !objects[point[0]][point[1]];
+    },
     addObject: addObject,
-    removeObject: removeObject,/*
+    removeObject: function(point, player){
+      objects[point[0]][point[1]] = null;
+      notify(point);
+    },
     action: function(player, action, targets, options) {
       switch (action) {
         case 'attack':
@@ -239,32 +230,12 @@ module.exports = function(io) {
           }
           break;
       }
-    },*/
-    enemyMove: function() {
+    },
+    enemyMove: function(){
       for (var i = enemyList.length - 1; i >= 0; i--) {
-        if(!enemyList[i].isDead()){
-          e = enemyList[i];
-          e.action(map, objects, io);
-          var oldCoor = {};
-          var newCoor = {}
-          oldCoor.x = Math.floor(e.position.x);
-          oldCoor.y = Math.floor(e.position.y);
-          newCoor.x = e.position.x + e.speed.x;
-          newCoor.y = e.position.y + e.speed.y;
-          if (available(newCoor, e)) {
-            e.position = newCoor;
-          } else if (available({x: e.position.x, y: newCoor.y}, e)) {
-            e.position.y = newCoor.y;
-          } else if (available({x: newCoor.x, y: e.position.y}, e)) {
-            e.position.x = newCoor.x;
-          }
-          if (e.position.x > oldCoor.x + 1 || e.position.x < oldCoor.x ||
-            e.position.y > oldCoor.y + 1 || e.position.y < oldCoor.y){
-            removeObject(oldCoor, e)
-            addObject({x: Math.floor(e.position.x), y: Math.floor(e.position.y)}, 'enemy', e);
-          }
-        }
+        if(!enemyList[i].isDead()) enemyList[i].action(map, objects, io);
       }
+      notifyAll();
     }
   };
 }

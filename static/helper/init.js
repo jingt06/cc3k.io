@@ -10,7 +10,7 @@ define(function(require, exports, module) {
 	canvas.width = width;
 	canvas.height = width;
 	exports.width = width;
-	exports.cellWidth = width / 7;
+	exports.cellWidth = width/21;
 	exports.canvas = canvas;
 	exports.context = context;
 });

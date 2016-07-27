@@ -5,14 +5,12 @@ var defPotion = 2;
 module.exports = {
 	create: function(){
 		var randomPotion = Math.floor(Math.random() * 3);
-		var radius = 0.1;
 		switch (randomPotion) {
 			case healthPotion:
 				return {
 					type: 'potionH',
 					consumable: true,
 					description: 'a health potion that restores 15% - 30% health',
-					radius: radius,
 					use: function(player) {
 						var restore = Math.floor(Math.random() * 15 + 15);
 						player.addExp(2);
@@ -21,9 +19,7 @@ module.exports = {
 						return 'restores ' +  restore + ' HP.'
 					},
 					getInfo: function() {
-						return {
-							radius: radius
-						};
+						return null;
 					}
 				};
 				break;
@@ -32,16 +28,13 @@ module.exports = {
 					type: 'potionA',
 					consumable: true,
 					description: 'a attack potion that add 1 attack point',
-					radius: radius,
 					use: function(player) {
 						player.attackPoint += 1;
 						player.addExp(2);
 						return 'add 1 attack.'
 					},
 					getInfo: function() {
-						return {
-							radius: radius
-						};
+						return null;
 					}
 				};
 				break;
@@ -50,16 +43,13 @@ module.exports = {
 					type: 'potionD',
 					consumable: true,
 					description: 'a attack potion that add 1 defence point',
-					radius: radius,
 					use: function(player) {
 						player.defencePoint += 1;
 						player.addExp(2);
 						return 'add 1 defence.'
 					},
 					getInfo: function() {
-						return {
-							radius: radius
-						};
+						return null;
 					}
 				};
 				break;

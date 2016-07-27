@@ -20,7 +20,7 @@ module.exports = {
 				newPoint = [point[0] + 1, point[1]];
 				break;
 		}
-  	  //map.action(player, 'attack', [newPoint]);
+  	  map.action(player, 'attack', [newPoint]);
 	},
 
 	rangeAttack: function(map, point, face, attack, player) {
@@ -39,7 +39,7 @@ module.exports = {
 				newPoints = [[point[0] + 1, point[1]], [point[0] + 2, point[1]], [point[0] + 3, point[1]], [point[0] + 4, point[1]]];
 				break;
 		}
-    	//map.action(player, 'attack', newPoints);
+    	map.action(player, 'attack', newPoints);
 	},
 
 	coneAttack: function(map, point, face, attack, player) {
@@ -58,12 +58,12 @@ module.exports = {
 				newPoints = [[point[0] + 1, point[1]], [point[0] + 2, point[1]], [point[0] + 2, point[1] + 1], [point[0] + 2, point[1] - 1]];
 				break;
 		}
-    	//map.action(player, 'attack', newPoints);
+    	map.action(player, 'attack', newPoints);
 	},
 
 	adjacentAttack: function(map, point, face, attack, player) {
 		var newPoints = [[point[0], point[1] + 1], [point[0], point[1] - 1],[point[0] + 1, point[1]], [point[0] - 1, point[1]]];
-    	//map.action(player, 'attack', newPoints);
+    	map.action(player, 'attack', newPoints);
 	},
 
 	rowAttack: function(map, point, face, attack, player) {
@@ -82,6 +82,6 @@ module.exports = {
 				newPoints = [[point[0] + 1, point[1]], [point[0] + 1, point[1] + 1], [point[0] + 1, point[1] - 1]];
 				break;
 		}
-    	//map.action(player, 'attack', newPoints);
+    	map.action(player, 'attack', newPoints);
 	},
 }

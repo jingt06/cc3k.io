@@ -14,8 +14,7 @@ define(function(require, exports, module) {
   var objects;
   var userInfo;
   var graphics = {}
-  var numCells = 3;
-  var cellSize = 5;
+
   var drawStroked = function(context,text,x,y) {
     context.font = "20px Sans-serif"
     context.strokeStyle = "black"
@@ -55,16 +54,16 @@ define(function(require, exports, module) {
           break;
       }
       context.beginPath();
-      context.fillRect(x, y, cellWidth, cellWidth);
+      context.fillRect(x*cellWidth, y*cellWidth, cellWidth, cellWidth);
       context.closePath();
     };
 
     var drawHP = function(hp, maxHP, x, y){
-      startPointX = x - cellWidth / 3;
-      startPointY = y + cellWidth / 3;
-      totalLength = cellWidth * 2 / 3;
+      startPointX = x - cellWidth;
+      startPointY = y + cellWidth;
+      totalLength = 2 * cellWidth;
       context.beginPath();
-      context.rect(startPointX,startPointY, totalLength, cellWidth/10);
+      context.rect(startPointX,startPointY, totalLength, cellWidth/5);
       context.lineWidth = 5;
       context.strokeStyle = '#000000'
       context.stroke();
@@ -72,82 +71,87 @@ define(function(require, exports, module) {
       context.beginPath();
       hpLength = totalLength * hp / maxHP;
       context.fillStyle = '#ff0000'
-      context.rect(startPointX,startPointY, hpLength, cellWidth/10);
+      context.rect(startPointX,startPointY, hpLength, cellWidth/5);
       context.fill();
       context.closePath();
     };
 
-    var drawObject = function(startX, startY, shiftX, shiftY, obj){
+    var drawObject = function(x, y, obj){
       var type = obj.type;
       var info = obj.info;
-      var position = obj.position;
-      var x = position.x;
-      var y = position.y;
-      var b = (x - startX + shiftY) * cellWidth;
-      var a = (y - startY + shiftX) * cellWidth;
-      // a and b is the center cordinator on canvas
       switch (type) {
         case 'player':
-          drawStroked(context, info.name, a-info.name.length*5,b-30);
-          context.beginPath();
+          var x = x * cellWidth + cellWidth / 2
+          var y = y * cellWidth + cellWidth / 2
+          drawStroked(context, info.name, x-info.name.length*5,y-30);
           context.fillStyle = '#ff0000'
-          context.arc(a, b , info.radius * cellWidth, 0, 2 * Math.PI);
+          context.beginPath();
+          context.arc(x, y , cellWidth / 2, 0, 2 * Math.PI);
           context.fill();
           context.closePath();
-          drawHP(info.HP, info.maxHP, a, b);
+          drawFace(info.face, x, y);
+          drawHP(info.HP, info.maxHP, x, y);
           break;
         case 'potionH':
           context.fillStyle = '#FFFF66';
+          var a = x * cellWidth + cellWidth / 2
+          var b = y * cellWidth + cellWidth / 2
           context.beginPath();
-          context.arc(a, b , info.radius * cellWidth, 0, 2 * Math.PI);
+          context.arc(a, b , cellWidth / 3, 0, 2 * Math.PI);
           context.fill();
           context.closePath();
           context.fillStyle = '#FF0000';
-          var x = a - info.radius * cellWidth / 4;
-          var y  = b - info.radius * cellWidth * 3 / 5;
+          a = x * cellWidth + cellWidth / 4;
+          b = y * cellWidth + cellWidth * 2 / 5;
           context.beginPath();
-          context.fillRect(x, y, info.radius * cellWidth / 2, info.radius * cellWidth * 6 / 5);
+          context.fillRect(a, b, cellWidth / 2, cellWidth / 5);
           context.closePath();
-          x = a - info.radius * cellWidth * 3 / 5;
-          y = b - info.radius * cellWidth / 4;
+          a = x * cellWidth + cellWidth * 2 / 5;
+          b = y * cellWidth + cellWidth / 4;
           context.beginPath();
-          context.fillRect(x, y, info.radius * cellWidth * 6 / 5, info.radius * cellWidth / 2);
+          context.fillRect(a, b, cellWidth / 5, cellWidth / 2);
           context.closePath();
           break;
         case 'potionD':
           context.fillStyle = '#FFFF66';
+          var a = x * cellWidth + cellWidth / 2
+          var b = y * cellWidth + cellWidth / 2
           context.beginPath();
-          context.arc(a, b , info.radius * cellWidth, 0, 2 * Math.PI);
+          context.arc(a, b , cellWidth / 3, 0, 2 * Math.PI);
           context.fill();
           context.closePath();
           context.fillStyle = '#00008b';
-          var x = a - info.radius * cellWidth * 2 / 5;
-          var y = b - info.radius * cellWidth * 2 / 5;
+          a = x * cellWidth + cellWidth / 3;
+          b = y * cellWidth + cellWidth / 3;
           context.beginPath();
-          context.fillRect(x, y, info.radius * cellWidth * 4 / 5, info.radius * cellWidth * 4 / 5);
+          context.fillRect(a, b, cellWidth / 3, cellWidth / 3);
           context.closePath();
           break;
         case 'potionA':
           context.fillStyle = '#FFFF66';
+          var a = x * cellWidth + cellWidth / 2
+          var b = y * cellWidth + cellWidth / 2
           context.beginPath();
-          context.arc(a, b , info.radius * cellWidth, 0, 2 * Math.PI);
+          context.arc(a, b , cellWidth / 3, 0, 2 * Math.PI);
           context.fill();
           context.closePath();
           context.fillStyle = '#ff4500';
-          var x = a;
-          var y = b - info.radius * cellWidth / 2;
+          a = x * cellWidth + cellWidth / 2;
+          b = y * cellWidth + cellWidth / 4;
           context.beginPath();
           context.beginPath();
-          context.moveTo(x, y);
-          context.lineTo(x - info.radius * cellWidth / 2, y + info.radius * cellWidth);
-          context.lineTo(x + info.radius * cellWidth / 2, y + info.radius * cellWidth);
+          context.moveTo(a, b);
+          context.lineTo(a - cellWidth / 6, b + cellWidth * 1 / 2);
+          context.lineTo(a + cellWidth / 6, b + cellWidth * 1 / 2);
           context.fill();
           context.closePath();
           break;
         case 'enemy':
           context.fillStyle = '#8000FF';
+          var a = x * cellWidth + cellWidth / 2
+          var b = y * cellWidth + cellWidth / 2
           context.beginPath();
-          context.arc(a, b , info.radius * cellWidth, 0, 2 * Math.PI);
+          context.arc(a, b , cellWidth / 2, 0, 2 * Math.PI);
           context.fill();
           context.closePath();
           drawHP(obj.info.HP, obj.info.maxHP, a, b);
@@ -178,29 +182,29 @@ define(function(require, exports, module) {
 
     var drawSelf = function(userInfo){
       var face = userInfo.face;
-      var x = cellWidth * (0.5 + numCells);
-      var y = cellWidth * (0.5 + numCells);
+      var x = 10*cellWidth + cellWidth/2;
+      var y = 10*cellWidth + cellWidth/2;
       drawStroked(context, userInfo.name , x-userInfo.name.length*5, y-25);
       context.beginPath();
       context.fillStyle = 'blue';
-      context.arc(x,y,cellWidth * userInfo.radius,0,2*Math.PI);
+      context.arc(x,y,cellWidth/2,0,2*Math.PI);
       context.fill();
       context.closePath();
-      //drawFace(face, x, y);
+      drawFace(face, x, y);
       drawHP(userInfo.HP, userInfo.maxHP,x ,y)
     };
 
     var drawMiniMap = function() {
       context.beginPath();
       context.fillStyle = 'rgba(200, 200, 200, 0.7)';
-      context.fillRect(5.5 * cellWidth, 10, 1 * cellWidth, 0.6 * cellWidth);
+      context.fillRect(18 * cellWidth + 10, 10, 3 * cellWidth - 20, 2 * cellWidth - 20);
       context.closePath();
       var height = map.length;
       var width = map[0].length;
       context.beginPath();
       context.fillStyle = 'yellow';
-      context.arc(5.5 * cellWidth + cellWidth * point.y / width,
-                  + (0.6 * cellWidth) * point.x / height + 10, cellWidth / 30, 0, 2 * Math.PI);
+      context.arc(18 * cellWidth + 10 + (3 * cellWidth - 15) * point[1] / width,
+                  10 + (2 * cellWidth - 20) * point[0] / height, cellWidth / 10, 0, 2 * Math.PI);
       context.fill();
       context.closePath();
       context.beginPath();
@@ -213,27 +217,28 @@ define(function(require, exports, module) {
     var drawInfoPanel = function() {
       context.beginPath();
       context.fillStyle = 'rgba(200, 200, 200, 0.7)';
-      context.fillRect(10, 5.5 * cellWidth + 10, 2.1 * cellWidth, 1.2 * cellWidth);
+      context.fillRect(10, 18 * cellWidth + 10, 7 * cellWidth, 3 * cellWidth);
       context.closePath();
       context.beginPath();
       context.textBaseline='Bottom';
       context.font = '20px Arial';
       context.fillStyle = '#000000'
-      context.fillText(userInfo.race + ' ' + userInfo.class + '-LV.' + userInfo.level, 15, 5.8 * cellWidth);
-      context.fillText('ATT: ' + userInfo.att, 15, 6.3 * cellWidth);
-      context.fillText('Critical Rate: ' + userInfo.cri, 1 * cellWidth, 6.3 * cellWidth)
-      context.fillText('DEF: ' + userInfo.def, 15, 6.5 * cellWidth);
-      context.fillText('Dodge Rate: ' + userInfo.dog,  1 * cellWidth, 6.5 * cellWidth);
+      context.fillText(userInfo.class + '-LV.' + userInfo.level+ '  ' + userInfo.race, 15, 19 * cellWidth);
+      context.fillText('ATT: ' + userInfo.att, 15, 20 * cellWidth + 10);
+      context.fillText('Critical Rate: ' + userInfo.cri, 3 * cellWidth, 20 * cellWidth + 10)
+      context.fillText('DEF: ' + userInfo.def, 15, 20.5 * cellWidth + 10);
+      context.fillText('Dodge Rate: ' + userInfo.dog,  3 * cellWidth, 20.5 * cellWidth + 10);
       context.closePath();
       context.beginPath();
-      context.rect(15, 5.8 * cellWidth + 10, 2 * cellWidth, cellWidth / 6)
+      context.rect(15, 19 * cellWidth + 10, 6 * cellWidth, cellWidth / 3);
+      context.strokeStyle = '#000000'
       context.lineWidth = 5;
       context.stroke();
       context.closePath();
       context.beginPath();
-      var length = (2 * cellWidth) * userInfo.exp / userInfo.nextLevel;
+      var length = (6 * cellWidth - 3) * userInfo.exp / userInfo.nextLevel;
       context.fillStyle = '#00bfff';
-      context.rect(17, 5.8 * cellWidth + 12, length-1, cellWidth / 6 - 5);
+      context.rect(17, 19 * cellWidth + 12, length-1, cellWidth / 3 - 5);
       context.fill();
       context.closePath();
     };
@@ -255,27 +260,24 @@ define(function(require, exports, module) {
 
     graphics.draw = draw;
     graphics.redraw = function() {
-      var x = point.x;
-      var y = point.y;
-      var shiftX = Math.floor(point.x) - x - 0.5;
-      var shiftY = Math.floor(point.y) - y - 0.5;
-      var startX = Math.floor(x) - numCells - 1;
-      var startY = Math.floor(y) - numCells - 1;
+      var x = point[0];
+      var y = point[1];
       context.clearRect(0, 0, canvas.width, canvas.height);
       // draw floor
-      for(var i = 0; i <= 2 * (numCells + 1); ++i) {
-        for (var j = 0; j <= 2 * (numCells + 1); ++j) {
-          var pointX = startX + i;
-          var pointY = startY + j;
-          var canvasX = cellWidth * (shiftX + i);
-          var canvasY = cellWidth * (shiftY + j);
-          // switch x and y since canvas's coordinate is opposite to array's
-          draw(canvasY, canvasX, map[pointX][pointY]);
+      for(var i = 0; i <= 20; ++i) {
+        for (var j = 0; j <= 20; ++j) {
+          var pointX = x - 10 + i;
+          var pointY = y - 10 + j;
+          draw(j, i, map[pointX][pointY]);
         }
       }
       // draw objects
       for(i in objects) {
-        drawObject(startX, startY, shiftY, shiftX, objects[i]);
+        for (j in objects[i]) {
+          if (objects[i][j]){
+            if(i != 10 || j != 10) drawObject(j, i, objects[i][j])
+          }
+        }
       }
       drawSelf(userInfo);
       effects = effect.getEffect(point);
@@ -294,6 +296,8 @@ define(function(require, exports, module) {
       objects = m.object;
       userInfo = m.user;
       point = m.location;
+      var x = point[0];
+      var y = point[1];
       graphics.redraw();
       if (m.upgradeClass) {
         drawClassUpgradeInfo(m.upgradeClass);
@@ -314,10 +318,10 @@ define(function(require, exports, module) {
       // Fill with gradient
       context.fillStyle=gradient;
       context.font='70px Georgia';
-      context.fillText('You Dead!',2 * cellWidth,2 * cellWidth);
+      context.fillText('You Dead!',6 * cellWidth,7 * cellWidth);
       context.fillStyle='white';
       context.font='50px Georgia';
-      context.fillText('R to restart',2 * cellWidth,4 * cellWidth);
+      context.fillText('R to restart',6 * cellWidth,10 * cellWidth);
       context.closePath();
     };
     graphics.login= function() {
@@ -335,8 +339,8 @@ define(function(require, exports, module) {
       inputName.type = 'text';
       inputName.style['border'] = '2px solid groove';
       inputName.style['position'] = 'absolute';
-      inputName.style['left'] = 3 * cellWidth + 'px';
-      inputName.style['top'] = 3.5 * cellWidth + 'px';
+      inputName.style['left'] = 8 * cellWidth + 'px';
+      inputName.style['top'] = 13 * cellWidth + 'px';
       inputName.style['top'] = .5;
       iDiv.appendChild(inputName);
       var wText= document.createElement('text');
@@ -353,8 +357,8 @@ define(function(require, exports, module) {
         var button= document.createElement('button');
         button.innerHTML= name;
         button.style['position']='absolute';
-        button.style['left'] = 3 * cellWidth + pos.x + 'px';
-        button.style['top'] = 4 * cellWidth + pos.y +  'px';
+        button.style['left'] = 8 * cellWidth + pos.x + 'px';
+        button.style['top'] = 14 * cellWidth + pos.y +  'px';
         button.style['opacity'] = .5;
         button.onclick = function() {
           var value = inputName.value;
@@ -395,10 +399,10 @@ define(function(require, exports, module) {
       // Fill with gradient
       context.fillStyle=gradient;
       context.font='50px Georgia';
-      context.fillText('Welcome to CC3K! ',2 * cellWidth,3 * cellWidth);
+      context.fillText('Welcome to CC3K! ',4 * cellWidth,7 * cellWidth);
       context.fillStyle='white';
       context.font='30px Georgia';
-      context.fillText('Enter your name please.',2 * cellWidth,5 * cellWidth);
+      context.fillText('Enter your name please.',5 * cellWidth,9 * cellWidth);
       context.closePath();
     };
     graphics.addEffect = function(message) {

@@ -6,8 +6,7 @@ var map = require('./server/map')(io);
 var player = require('./server/player');
 
 
-var keyListener = require('./server/controlers/keylistener')(player);
-var MouseListener = require('./server/controlers/mouseListener')(player);
+var keyListener = require('./server/keylistener')(player);
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
@@ -23,8 +22,6 @@ app.use(express.static(__dirname + '/static'));
 //this function runs for every 0.1s
 run = function () {
   map.enemyMove();
-  player.playerMove();
-  player.notifyAll();
 }
 setInterval(run, 100);
 
@@ -48,9 +45,6 @@ io.on('connection', function(socket){
     player.deletePlayer(socket.id);
   });
 
-  socket.on('mousePos', function(pos) {
-    MouseListener(socket.id, pos);
-  })
   // when user pressed some key
   socket.on('k', function(key){
     keyListener(socket.id, key);
