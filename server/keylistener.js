@@ -7,7 +7,8 @@ var key1 = 49;
 var key2 = 50;
 var key3 = 51;
 var key4 = 52;
-var keyR= 82;
+var keyR = 82;
+var keyQ = 81;
 
 module.exports = function(player){
   var keyLeft = function(cid) {
@@ -36,6 +37,12 @@ module.exports = function(player){
     var p = player.getPlayer(cid);
     if (!p.isDead() && p.level >= 5 && p.class.tier == 0) {
       p.upgradeClass(num - 1);
+    }
+  }
+  var useRaceSkill = function(cid) {
+    var p = player.getPlayer(cid);
+    if (!p.isDead() && p.raceSkill!=null) {
+      p.raceSkill.use(p);
     }
   }
 
@@ -71,6 +78,10 @@ module.exports = function(player){
         break;
       case keyR:
         keyRestart(cid);
+        break;
+      case keyQ:
+        useRaceSkill(cid);
+        break;
     }
   }
   return keyListener;

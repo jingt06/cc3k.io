@@ -33,7 +33,7 @@ module.exports = {
 
     race = raceList[raceIndex]
     p.race = race;
-    p.classSkill = addRaceSkill(race);
+    p.raceSkill = skill.addRaceSkill(race);
 
     // player status info
     p.position = pos;
