@@ -38,7 +38,11 @@ define(function(require, exports, module) {
             hpPotion: './image/hpPotion.png',
             defPotion: './image/defPotion.png',
             attPotion: './image/attPotion.png',
-            skill1: './image/theHumanSpirit.jpg'
+            skill1: './image/theHumanSpirit.jpg',
+            skill2: './image/rage.jpg',
+            skill3: './image/dodge.jpg',
+            skill4: './image/regeneration.jpg',
+            skill5: './image/stoneSkin.jpg'
             }
 
   function loader(sources, callback) {
@@ -50,7 +54,6 @@ define(function(require, exports, module) {
       numImages++;
     }
     for(var src in sources) {
-      console.log(src)
       images[src] = new Image();
       images[src].onload = function() {
         if(++loadedImages >= numImages) {
@@ -363,7 +366,7 @@ define(function(require, exports, module) {
       context.font = "30px Comic Sans MS";
       context.fillStyle = "#ffffff";
       context.textAlign = "center";
-      context.fillText("Loading", canvas.width/2, canvas.height/2);
+      context.fillText("Loading. . .", canvas.width/2, canvas.height/2);
       loader(ImgSrc, (images) => {
         Images = images;
         callback();
