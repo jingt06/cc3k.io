@@ -13,6 +13,7 @@ define(function(require, exports, module) {
   var point;
   var objects;
   var userInfo;
+  var skills;
   var graphics = {}
   var Images;
 
@@ -36,7 +37,8 @@ define(function(require, exports, module) {
             wall: './image/wall.png',
             hpPotion: './image/hpPotion.png',
             defPotion: './image/defPotion.png',
-            attPotion: './image/attPotion.png'
+            attPotion: './image/attPotion.png',
+            skill1: './image/theHumanSpirit.jpg'
             }
 
   function loader(sources, callback) {
@@ -193,6 +195,7 @@ define(function(require, exports, module) {
       drawHP(userInfo.HP, userInfo.maxHP,x + cellWidth/2 ,y + cellWidth/2)
     };
 
+    // draw mini map
     var drawMiniMap = function() {
       context.beginPath();
       context.fillStyle = 'rgba(200, 200, 200, 0.7)';
@@ -213,6 +216,7 @@ define(function(require, exports, module) {
       context.closePath();
     };
 
+    // draw info panel
     var drawInfoPanel = function() {
       context.textAlign = 'start'
       context.beginPath();
@@ -243,6 +247,22 @@ define(function(require, exports, module) {
       context.closePath();
     };
 
+    // draw skill list
+    var drawSkills = function () {
+      if(skills.raceSkill){
+        context.drawImage(Images['skill'+skills.raceSkill.sid], 15*cellWidth, 19*cellWidth, cellWidth, cellWidth);
+        context.textAlign = 'center';
+        context.fillStyle = 'rgba(200, 200, 200, 0.8)';
+        context.font = '10px Verdana';
+        context.fillText('Q:' + skills.raceSkill.name,15.5*cellWidth,20*cellWidth);
+        if(!skills.raceSkill.cd) {
+          context.beginPath();
+        context.fillStyle = 'rgba(200, 200, 200, 0.6)';
+          context.fillRect(15*cellWidth, 19*cellWidth, cellWidth, cellWidth)
+          context.closePath();
+        }
+      }
+    }
     var drawClassUpgradeInfo = function(upgradeClass) {
       context.beginPath();
       context.fillStyle =  'rgba(200, 200, 200, 0.7)';
@@ -289,12 +309,21 @@ define(function(require, exports, module) {
           }
         }
       }
+
+      // draw mini map
       drawMiniMap();
+
+      // draw info panel
       drawInfoPanel();
+
+      // draw skills list
+      drawSkills();
     };
+
     graphics.drawMap = function(m) {
       objects = m.object;
       userInfo = m.user;
+      skills = userInfo.skills;
       point = m.location;
       var x = point[0];
       var y = point[1];
@@ -303,6 +332,8 @@ define(function(require, exports, module) {
         drawClassUpgradeInfo(m.upgradeClass);
       }
     };
+
+    // game over page, able to restart
     graphics.dead = function () {
       effect.stop();
       context.beginPath();
@@ -324,6 +355,8 @@ define(function(require, exports, module) {
       context.fillText('R to restart',6 * cellWidth,10 * cellWidth);
       context.closePath();
     };
+
+    // loading page and load images
     graphics.loadImages = function (callback) {
       context.fillStyle="#000000";
       context.fillRect(0, 0, canvas.width, canvas.height);
@@ -336,6 +369,8 @@ define(function(require, exports, module) {
         callback();
       })
     }
+
+    // login page to input name and selecte race
     graphics.login = function() {
       effect.stop();
       context.beginPath();

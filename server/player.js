@@ -50,12 +50,49 @@ module.exports = {
       p.regenHP = 0;
       p.dodge = 0;
       p.critAtt = 0;
+
+      // rest player skill cooldown
+      p.raceSkillCoolDown = true;
+      p.classSkillCoolDown = true;
+      p.classAdvancedSkillCoolDown = true;
+      p.ultimateSkillCoolDown = true;
       classes.createSoldier(p);
     }
     p.initStatus();
 
     p.notify = function() {
       var mapInfo = p.map.getSight(p.position);
+
+      // player skills
+      skills = {}
+      skills.raceSkill = {
+            name: p.raceSkill.name,
+            sid: p.raceSkill.sid,
+            cd: p.raceSkillCoolDown
+          }
+      if (p.classSkill != null) {
+        skills.classSkill = {
+            name: p.classSkill.name,
+            sid: p.classSkill.sid,
+            cd: p.classSkillCoolDown
+          }
+      }
+      if (p.classAdvancedSkill != null) {
+        skills.classAdvancedSkill = {
+            name: p.classAdvancedSkill.name,
+            sid: p.classAdvancedSkill.sid,
+            cd: p.classAdvancedSkillCoolDown
+          }
+      }
+      if (p.ultimateSkill != null) {
+        skills.ultimateSkill = {
+            name: p.ultimateSkill.name,
+            sid: p.ultimateSkill.sid,
+            cd: p.ultimateSkillCoolDown
+          }
+      }
+
+      // player info
       mapInfo.user = {
         face: p.face,
         HP: p.HP,
@@ -70,7 +107,8 @@ module.exports = {
         race: p.race,
         exp: p.exp,
         nextLevel: p.expNextLevel,
-        numUsers: p.map.onlineUser
+        numUsers: p.map.onlineUser,
+        skills: skills
       };
       if (p.level >= 5 && p.class.tier == 0){
         mapInfo.upgradeClass = p.class.upgrade;
