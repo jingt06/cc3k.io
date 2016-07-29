@@ -31,6 +31,12 @@ define(function(require, exports, module) {
             playerNorth: './image/playerNorth.png',
             playerSouth: './image/playerSouth.png',
             goblin: './image/goblin.png',
+            empty: './image/empty.png',
+            floor: './image/floor.png',
+            wall: './image/wall.png',
+            hpPotion: './image/hpPotion.png',
+            defPotion: './image/defPotion.png',
+            attPotion: './image/attPotion.png'
             }
 
   function loader(sources, callback) {
@@ -61,31 +67,32 @@ define(function(require, exports, module) {
       if(!type){
         type = empty;
       }
+      var img;
       switch (type) {
         case empty:
-          context.fillStyle = '#00003f'
+          img = Images.empty;
           break;
         case floor:
-          context.fillStyle = '#ebebeb'
+          img = Images.floor;
           break;
         case wallH:
-          context.fillStyle = '#000000'
+          img = Images.wall;
           break;
         case wallV:
-          context.fillStyle = '#000000'
+          img = Images.wall;
           break;
         case corr:
-          context.fillStyle = '#bbbbbb'
+          img = Images.floor;
           break;
         case door:
-          context.fillStyle = '#bbbbbb'
+          img = Images.floor;
           break;
         default:
-          context.fillStyle = '#000000'
+          img = Images.empty;
           break;
       }
       context.beginPath();
-      context.fillRect(x*cellWidth, y*cellWidth, cellWidth, cellWidth);
+      context.drawImage(img, x*cellWidth, y*cellWidth, cellWidth, cellWidth);
       context.closePath();
     };
 
@@ -124,58 +131,13 @@ define(function(require, exports, module) {
           drawHP(info.HP, info.maxHP, x, y);
           break;
         case 'potionH':
-          context.fillStyle = '#FFFF66';
-          var a = x * cellWidth + cellWidth / 2
-          var b = y * cellWidth + cellWidth / 2
-          context.beginPath();
-          context.arc(a, b , cellWidth / 3, 0, 2 * Math.PI);
-          context.fill();
-          context.closePath();
-          context.fillStyle = '#FF0000';
-          a = x * cellWidth + cellWidth / 4;
-          b = y * cellWidth + cellWidth * 2 / 5;
-          context.beginPath();
-          context.fillRect(a, b, cellWidth / 2, cellWidth / 5);
-          context.closePath();
-          a = x * cellWidth + cellWidth * 2 / 5;
-          b = y * cellWidth + cellWidth / 4;
-          context.beginPath();
-          context.fillRect(a, b, cellWidth / 5, cellWidth / 2);
-          context.closePath();
+          context.drawImage(Images.hpPotion,x*cellWidth,y*cellWidth,cellWidth,cellWidth);
           break;
         case 'potionD':
-          context.fillStyle = '#FFFF66';
-          var a = x * cellWidth + cellWidth / 2
-          var b = y * cellWidth + cellWidth / 2
-          context.beginPath();
-          context.arc(a, b , cellWidth / 3, 0, 2 * Math.PI);
-          context.fill();
-          context.closePath();
-          context.fillStyle = '#00008b';
-          a = x * cellWidth + cellWidth / 3;
-          b = y * cellWidth + cellWidth / 3;
-          context.beginPath();
-          context.fillRect(a, b, cellWidth / 3, cellWidth / 3);
-          context.closePath();
+          context.drawImage(Images.defPotion,x*cellWidth,y*cellWidth,cellWidth,cellWidth);
           break;
         case 'potionA':
-          context.fillStyle = '#FFFF66';
-          var a = x * cellWidth + cellWidth / 2
-          var b = y * cellWidth + cellWidth / 2
-          context.beginPath();
-          context.arc(a, b , cellWidth / 3, 0, 2 * Math.PI);
-          context.fill();
-          context.closePath();
-          context.fillStyle = '#ff4500';
-          a = x * cellWidth + cellWidth / 2;
-          b = y * cellWidth + cellWidth / 4;
-          context.beginPath();
-          context.beginPath();
-          context.moveTo(a, b);
-          context.lineTo(a - cellWidth / 6, b + cellWidth * 1 / 2);
-          context.lineTo(a + cellWidth / 6, b + cellWidth * 1 / 2);
-          context.fill();
-          context.closePath();
+          context.drawImage(Images.attPotion,x*cellWidth,y*cellWidth,cellWidth,cellWidth);
           break;
         case 'enemy':
           switch (info.name) {
