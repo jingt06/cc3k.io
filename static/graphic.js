@@ -349,10 +349,10 @@ define(function(require, exports, module) {
       // Fill with gradient
       context.fillStyle=gradient;
       context.font='70px Georgia';
-      context.fillText('You Dead!',6 * cellWidth,7 * cellWidth);
+      context.fillText('You Dead!',10.5 * cellWidth,7 * cellWidth);
       context.fillStyle='white';
       context.font='50px Georgia';
-      context.fillText('R to restart',6 * cellWidth,10 * cellWidth);
+      context.fillText('R to restart',10.5 * cellWidth,10 * cellWidth);
       context.closePath();
     };
 
