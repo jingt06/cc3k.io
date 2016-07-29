@@ -31,6 +31,12 @@ define(function(require, exports, module) {
             playerNorth: './image/playerNorth.png',
             playerSouth: './image/playerSouth.png',
             goblin: './image/goblin.png',
+            empty: './image/empty.png',
+            floor: './image/floor.png',
+            wall: './image/wall.png',
+            hpPotion: './image/hpPotion.png',
+            defPotion: './image/defPotion.png',
+            attPotion: './image/attPotion.png'
             }
 
   function loader(sources, callback) {
@@ -61,31 +67,32 @@ define(function(require, exports, module) {
       if(!type){
         type = empty;
       }
+      var img;
       switch (type) {
         case empty:
-          context.fillStyle = '#00003f'
+          img = Images.empty;
           break;
         case floor:
-          context.fillStyle = '#ebebeb'
+          img = Images.floor;
           break;
         case wallH:
-          context.fillStyle = '#000000'
+          img = Images.wall;
           break;
         case wallV:
-          context.fillStyle = '#000000'
+          img = Images.wall;
           break;
         case corr:
-          context.fillStyle = '#bbbbbb'
+          img = Images.floor;
           break;
         case door:
-          context.fillStyle = '#bbbbbb'
+          img = Images.floor;
           break;
         default:
-          context.fillStyle = '#000000'
+          img = Images.empty;
           break;
       }
       context.beginPath();
-      context.fillRect(x*cellWidth, y*cellWidth, cellWidth, cellWidth);
+      context.drawImage(img, x*cellWidth, y*cellWidth, cellWidth, cellWidth);
       context.closePath();
     };
 
