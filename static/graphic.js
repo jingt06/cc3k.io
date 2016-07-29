@@ -30,6 +30,7 @@ define(function(require, exports, module) {
             playerWest: './image/playerWest.png',
             playerNorth: './image/playerNorth.png',
             playerSouth: './image/playerSouth.png',
+            goblin: './image/goblin.png',
             }
 
   function loader(sources, callback) {
@@ -177,14 +178,14 @@ define(function(require, exports, module) {
           context.closePath();
           break;
         case 'enemy':
-          context.fillStyle = '#8000FF';
-          var a = x * cellWidth + cellWidth / 2
-          var b = y * cellWidth + cellWidth / 2
-          context.beginPath();
-          context.arc(a, b , cellWidth / 2, 0, 2 * Math.PI);
-          context.fill();
-          context.closePath();
-          drawHP(obj.info.HP, obj.info.maxHP, a, b);
+          switch (info.name) {
+            case 'Goblin':
+            var a = x * cellWidth;
+            var b = y * cellWidth;
+            context.drawImage(Images.goblin, a, b, cellWidth, cellWidth);
+            break;
+          }
+          drawHP(obj.info.HP, obj.info.maxHP, a+cellWidth/2, b+cellWidth/2);
           break;
         default:
           return;
@@ -253,6 +254,7 @@ define(function(require, exports, module) {
     };
 
     var drawInfoPanel = function() {
+      context.textAlign = 'start'
       context.beginPath();
       context.fillStyle = 'rgba(200, 200, 200, 0.7)';
       context.fillRect(10, 18 * cellWidth + 10, 7 * cellWidth, 3 * cellWidth);
