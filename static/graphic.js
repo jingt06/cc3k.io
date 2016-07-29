@@ -14,6 +14,7 @@ define(function(require, exports, module) {
   var objects;
   var userInfo;
   var graphics = {}
+  var Images;
 
   var drawStroked = function(context,text,x,y) {
     context.font = "20px Sans-serif"
@@ -22,6 +23,35 @@ define(function(require, exports, module) {
     context.strokeText(text, x, y);
     context.fillStyle = 'white';
     context.fillText(text, x, y);
+  }
+
+  ImgSrc = {attack: './image/attack.png',
+            playerEast: './image/playerEast.png',
+            playerWest: './image/playerWest.png',
+            playerNorth: './image/playerNorth.png',
+            playerSouth: './image/playerSouth.png',
+            }
+
+  function loader(sources, callback) {
+    var images = {};
+    var loadedImages = 0;
+    var numImages = 0;
+    // get num of sources
+    for(var src in sources) {
+      numImages++;
+    }
+    for(var src in sources) {
+      console.log(src)
+      images[src] = new Image();
+      images[src].onload = function() {
+        console.log('loaded')
+        if(++loadedImages >= numImages) {
+          console.log('done')
+          callback(images);
+        }
+      };
+      images[src].src = sources[src];
+    }
   }
 
   exports.init = function(map, canvas, context, cellWidth,socket){
@@ -182,16 +212,24 @@ define(function(require, exports, module) {
 
     var drawSelf = function(userInfo){
       var face = userInfo.face;
-      var x = 10*cellWidth + cellWidth/2;
-      var y = 10*cellWidth + cellWidth/2;
-      drawStroked(context, userInfo.name , x-userInfo.name.length*5, y-25);
-      context.beginPath();
-      context.fillStyle = 'blue';
-      context.arc(x,y,cellWidth/2,0,2*Math.PI);
-      context.fill();
-      context.closePath();
-      drawFace(face, x, y);
-      drawHP(userInfo.HP, userInfo.maxHP,x ,y)
+      var x = 10*cellWidth;
+      var y = 10*cellWidth;
+      drawStroked(context, userInfo.name , x-userInfo.name.length * 5 + cellWidth / 2, y - 25 + cellWidth/2);
+      switch (face) {
+        case east:
+          context.drawImage(Images.playerEast,x, y, cellWidth, cellWidth)
+          break;
+        case west:
+          context.drawImage(Images.playerWest,x, y, cellWidth, cellWidth)
+          break;
+        case north:
+          context.drawImage(Images.playerNorth,x, y, cellWidth, cellWidth)
+          break;
+        case south:
+          context.drawImage(Images.playerSouth,x, y, cellWidth, cellWidth)
+          break;
+      }
+      drawHP(userInfo.HP, userInfo.maxHP,x + cellWidth/2 ,y + cellWidth/2)
     };
 
     var drawMiniMap = function() {
@@ -303,7 +341,7 @@ define(function(require, exports, module) {
         drawClassUpgradeInfo(m.upgradeClass);
       }
     };
-    graphics.dead = function() {
+    graphics.dead = function () {
       effect.stop();
       context.beginPath();
       context.fillStyle = 'black';
@@ -324,7 +362,19 @@ define(function(require, exports, module) {
       context.fillText('R to restart',6 * cellWidth,10 * cellWidth);
       context.closePath();
     };
-    graphics.login= function() {
+    graphics.loadImages = function (callback) {
+      context.fillStyle="#000000";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      context.font = "30px Comic Sans MS";
+      context.fillStyle = "#ffffff";
+      context.textAlign = "center";
+      context.fillText("Loading", canvas.width/2, canvas.height/2);
+      loader(ImgSrc, (images) => {
+        Images = images;
+        callback();
+      })
+    }
+    graphics.login = function() {
       effect.stop();
       context.beginPath();
       context.fillStyle = 'black';
@@ -400,10 +450,10 @@ define(function(require, exports, module) {
       // Fill with gradient
       context.fillStyle=gradient;
       context.font='50px Georgia';
-      context.fillText('Welcome to CC3K! ',4 * cellWidth,7 * cellWidth);
+      context.fillText('Welcome to CC3K! ',canvas.width/2, 7 * cellWidth);
       context.fillStyle='white';
       context.font='30px Georgia';
-      context.fillText('Enter your name please.',5 * cellWidth,9 * cellWidth);
+      context.fillText('Enter your name please.',canvas.width/2, 9 * cellWidth);
       context.closePath();
     };
     graphics.addEffect = function(message) {
