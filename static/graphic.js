@@ -14,6 +14,7 @@ define(function(require, exports, module) {
   var objects;
   var userInfo;
   var graphics = {}
+  var Images;
 
   var drawStroked = function(context,text,x,y) {
     context.font = "20px Sans-serif"
@@ -22,6 +23,36 @@ define(function(require, exports, module) {
     context.strokeText(text, x, y);
     context.fillStyle = 'white';
     context.fillText(text, x, y);
+  }
+
+  ImgSrc = {attack: './image/attack.png',
+            playerEast: './image/playerEast.png',
+            playerWest: './image/playerWest.png',
+            playerNorth: './image/playerNorth.png',
+            playerSouth: './image/playerSouth.png',
+            goblin: './image/goblin.png',
+            }
+
+  function loader(sources, callback) {
+    var images = {};
+    var loadedImages = 0;
+    var numImages = 0;
+    // get num of sources
+    for(var src in sources) {
+      numImages++;
+    }
+    for(var src in sources) {
+      console.log(src)
+      images[src] = new Image();
+      images[src].onload = function() {
+        console.log('loaded')
+        if(++loadedImages >= numImages) {
+          console.log('done')
+          callback(images);
+        }
+      };
+      images[src].src = sources[src];
+    }
   }
 
   exports.init = function(map, canvas, context, cellWidth,socket){
@@ -147,14 +178,14 @@ define(function(require, exports, module) {
           context.closePath();
           break;
         case 'enemy':
-          context.fillStyle = '#8000FF';
-          var a = x * cellWidth + cellWidth / 2
-          var b = y * cellWidth + cellWidth / 2
-          context.beginPath();
-          context.arc(a, b , cellWidth / 2, 0, 2 * Math.PI);
-          context.fill();
-          context.closePath();
-          drawHP(obj.info.HP, obj.info.maxHP, a, b);
+          switch (info.name) {
+            case 'Goblin':
+            var a = x * cellWidth;
+            var b = y * cellWidth;
+            context.drawImage(Images.goblin, a, b, cellWidth, cellWidth);
+            break;
+          }
+          drawHP(obj.info.HP, obj.info.maxHP, a+cellWidth/2, b+cellWidth/2);
           break;
         default:
           return;
@@ -182,16 +213,24 @@ define(function(require, exports, module) {
 
     var drawSelf = function(userInfo){
       var face = userInfo.face;
-      var x = 10*cellWidth + cellWidth/2;
-      var y = 10*cellWidth + cellWidth/2;
-      drawStroked(context, userInfo.name , x-userInfo.name.length*5, y-25);
-      context.beginPath();
-      context.fillStyle = 'blue';
-      context.arc(x,y,cellWidth/2,0,2*Math.PI);
-      context.fill();
-      context.closePath();
-      drawFace(face, x, y);
-      drawHP(userInfo.HP, userInfo.maxHP,x ,y)
+      var x = 10*cellWidth;
+      var y = 10*cellWidth;
+      drawStroked(context, userInfo.name , x-userInfo.name.length * 5 + cellWidth / 2, y - 25 + cellWidth/2);
+      switch (face) {
+        case east:
+          context.drawImage(Images.playerEast,x, y, cellWidth, cellWidth)
+          break;
+        case west:
+          context.drawImage(Images.playerWest,x, y, cellWidth, cellWidth)
+          break;
+        case north:
+          context.drawImage(Images.playerNorth,x, y, cellWidth, cellWidth)
+          break;
+        case south:
+          context.drawImage(Images.playerSouth,x, y, cellWidth, cellWidth)
+          break;
+      }
+      drawHP(userInfo.HP, userInfo.maxHP,x + cellWidth/2 ,y + cellWidth/2)
     };
 
     var drawMiniMap = function() {
@@ -215,6 +254,7 @@ define(function(require, exports, module) {
     };
 
     var drawInfoPanel = function() {
+      context.textAlign = 'start'
       context.beginPath();
       context.fillStyle = 'rgba(200, 200, 200, 0.7)';
       context.fillRect(10, 18 * cellWidth + 10, 7 * cellWidth, 3 * cellWidth);
@@ -303,7 +343,7 @@ define(function(require, exports, module) {
         drawClassUpgradeInfo(m.upgradeClass);
       }
     };
-    graphics.dead = function() {
+    graphics.dead = function () {
       effect.stop();
       context.beginPath();
       context.fillStyle = 'black';
@@ -324,7 +364,19 @@ define(function(require, exports, module) {
       context.fillText('R to restart',6 * cellWidth,10 * cellWidth);
       context.closePath();
     };
-    graphics.login= function() {
+    graphics.loadImages = function (callback) {
+      context.fillStyle="#000000";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      context.font = "30px Comic Sans MS";
+      context.fillStyle = "#ffffff";
+      context.textAlign = "center";
+      context.fillText("Loading", canvas.width/2, canvas.height/2);
+      loader(ImgSrc, (images) => {
+        Images = images;
+        callback();
+      })
+    }
+    graphics.login = function() {
       effect.stop();
       context.beginPath();
       context.fillStyle = 'black';
@@ -332,16 +384,15 @@ define(function(require, exports, module) {
       context.fillRect(0, 0, canvas.width, canvas.height);
       context.font='30px Verdana';
 
-      iDiv = document.getElementById('map');
+      var iDiv = document.getElementById('map');
 
       //Create input box
       var inputName= document.createElement('input');
       inputName.type = 'text';
       inputName.style['border'] = '2px solid groove';
       inputName.style['position'] = 'absolute';
-      inputName.style['left'] = 8 * cellWidth + 'px';
-      inputName.style['top'] = 13 * cellWidth + 'px';
-      inputName.style['top'] = .5;
+      inputName.style['left'] = 7 * cellWidth + 'px';
+      inputName.style['top'] = 10 * cellWidth + 'px';
       iDiv.appendChild(inputName);
       var wText= document.createElement('text');
       //wText.style='color:red;position:absolute;left:250px;top:370px;opacity:.5'
@@ -352,13 +403,16 @@ define(function(require, exports, module) {
       wText.style['opacity'] = '0.5';
       iDiv.appendChild(wText);
 
+      var raceList = ['ORC', 'HUMAN', 'ELF', 'TROLL', 'DWARF'];
+
       //Create button
-      var createButton = function(name, pos) {
+      var createButton = function(raceIndex, pos) {
         var button= document.createElement('button');
+        name = raceList[raceIndex];
         button.innerHTML= name;
         button.style['position']='absolute';
-        button.style['left'] = 8 * cellWidth + pos.x + 'px';
-        button.style['top'] = 14 * cellWidth + pos.y +  'px';
+        button.style['left'] = 6.5 * cellWidth + pos.x + 'px';
+        button.style['top'] = 11 * cellWidth + pos.y +  'px';
         button.style['opacity'] = .5;
         button.onclick = function() {
           var value = inputName.value;
@@ -373,19 +427,18 @@ define(function(require, exports, module) {
             while(childList[2]){
               iDiv.removeChild(childList[2]);
             }
-            socket.emit('begin',value,name);
+            socket.emit('begin', value, raceIndex);
           }
         };
         return button;
       }
 
       //create race
-      var raceList = ['ORC', 'HUMAN', 'ELF', 'TROLL', 'DRAWF'];
       var buttonList = [];
       var num = 0;
       for(var i = 0;i < raceList.length;num++){
         for(var j = 0; j < 3&& i<raceList.length; j++){
-          buttonList.push(createButton(raceList[i],{x:70*j,y:30*num}));
+          buttonList.push(createButton(i,{x:70*j,y:30*num}));
           iDiv.appendChild(buttonList[i]);
           i++;
         }
@@ -399,10 +452,10 @@ define(function(require, exports, module) {
       // Fill with gradient
       context.fillStyle=gradient;
       context.font='50px Georgia';
-      context.fillText('Welcome to CC3K! ',4 * cellWidth,7 * cellWidth);
+      context.fillText('Welcome to CC3K! ',canvas.width/2, 7 * cellWidth);
       context.fillStyle='white';
       context.font='30px Georgia';
-      context.fillText('Enter your name please.',5 * cellWidth,9 * cellWidth);
+      context.fillText('Enter your name please.',canvas.width/2, 9 * cellWidth);
       context.closePath();
     };
     graphics.addEffect = function(message) {

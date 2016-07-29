@@ -1,9 +1,11 @@
 var classes = require('./classes/classes');
+var skill = require('./skills/skills')
 var east = 0;
 var south = 1;
 var west = 2;
 var north = 3;
 var allPlayer = {}
+var raceList = ['ORC', 'HUMAN', 'ELF', 'TROLL', 'DWARF'];
 
 var determineFace = function(y, x){
   if (x > 0) {
@@ -18,7 +20,7 @@ var determineFace = function(y, x){
 }
 
 module.exports = {
-  createPlayer: function(name,race, cid, m, pos, skt){
+  createPlayer: function(name,raceIndex, cid, m, pos, skt){
     var p = {};
 
     // player meta data and other object
@@ -28,8 +30,10 @@ module.exports = {
     allPlayer[cid] = p;
     p.socket = skt;
     p.name = name;
-    p.race = race;
 
+    race = raceList[raceIndex]
+    p.race = race;
+    p.raceSkill = skill.addRaceSkill(race);
 
     // player status info
     p.position = pos;

@@ -16,7 +16,7 @@ requirejs(["helper/init", "graphic"], function(init, graphic) {
   });
 
   socket.on('login', function(){
-    graphic.login();
+    graphic.loadImages(()=>{graphic.login();});
   })
 
   socket.on('event', function(m){
