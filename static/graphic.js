@@ -51,9 +51,7 @@ define(function(require, exports, module) {
       console.log(src)
       images[src] = new Image();
       images[src].onload = function() {
-        console.log('loaded')
         if(++loadedImages >= numImages) {
-          console.log('done')
           callback(images);
         }
       };
