@@ -52,10 +52,10 @@ module.exports = {
       p.critAtt = 0;
 
       // rest player skill cooldown
-      p.raceSkillCoolDown = true;
-      p.classSkillCoolDown = true;
-      p.classAdvancedSkillCoolDown = true;
-      p.ultimateSkillCoolDown = true;
+      p.raceSkillCoolDown = 0;
+      p.classSkillCoolDown = 0;
+      p.classAdvancedSkillCoolDown = 0;
+      p.ultimateSkillCoolDown = 0;
       classes.createSoldier(p);
     }
     p.initStatus();

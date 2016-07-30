@@ -1,7 +1,10 @@
 coolDown = function (p, s) {
+  if (s == 0) return;
   setTimeout(function(){
-    p.raceSkillCoolDown = true;
-  }, s*1000)
+    s--;
+    p.raceSkillCoolDown = s;
+    coolDown(p, s);
+  }, 1000)
 }
 
 module.exports = {
@@ -13,9 +16,10 @@ module.exports = {
           name: 'The Human Spirit',
           sid: 1,
           description: 'Restore player 10% hp and temporally increase attack and defence',
+          cd: 10,
           use: function(p){
-            if(p.raceSkillCoolDown == null || p.raceSkillCoolDown){
-              p.raceSkillCoolDown = false;
+            if(p.raceSkillCoolDown == 0){
+              p.raceSkillCoolDown = this.cd;
               p.HP += p.maxHP*10/100;
               if (p.HP >= p.maxHP) p.HP = p.maxHP;
               p.attackPoint += 5;
@@ -24,7 +28,7 @@ module.exports = {
                 p.attackPoint -= 5;
                 p.defencePoint -= 5;
               }, 5000);
-              coolDown(p, 10)
+              coolDown(p, this.cd)
             }
           }
         }
@@ -34,16 +38,17 @@ module.exports = {
           name: 'Rage',
           sid: 2,
           description: 'comsume HP, temporally increase attack',
+          cd: 10,
           use: function(p){
-            if(p.raceSkillCoolDown == null || p.raceSkillCoolDown){
-              p.raceSkillCoolDown = false;
+            if(p.raceSkillCoolDown == 0){
+              p.raceSkillCoolDown = this.cd;
               p.HP -= p.maxHP*20/100;
               if (p.HP <= 0) p.HP = 1;
               p.attackPoint += 25;
               setTimeout(function(){
                 p.attackPoint -= 25;
               }, 3000);
-              coolDown(p, 10)
+              coolDown(p, this.cd)
             }
           }
         }
@@ -53,14 +58,15 @@ module.exports = {
           name: 'Super Dodge',
           sid: 3,
           description: 'temporally increase dodge rate',
+          cd: 10,
           use: function(p){
-            if(p.raceSkillCoolDown == null || p.raceSkillCoolDown){
-              p.raceSkillCoolDown = false;
+            if(p.raceSkillCoolDown == 0){
+              p.raceSkillCoolDown = this.cd;
               p.dodge += 20;
               setTimeout(function(){
                 p.dodge -= 20;
               }, 3000);
-              coolDown(p, 10)
+              coolDown(p, this.cd)
             }
           }
         }
@@ -70,12 +76,13 @@ module.exports = {
           name: 'Regeneration',
           sid: 4,
           description: 'increase 25% HP',
+          cd: 20,
           use: function(p){
-            if(p.raceSkillCoolDown == null || p.raceSkillCoolDown){
-              p.raceSkillCoolDown = false;
+            if(p.raceSkillCoolDown == 0){
+              p.raceSkillCoolDown = this.cd;
               p.HP += p.maxHP*25/100;
               if (p.HP >= p.maxHP) p.HP = p.maxHP;
-              coolDown(p, 20)
+              coolDown(p, this.cd)
             }
           }
         }
@@ -85,14 +92,15 @@ module.exports = {
           name: 'Stone Skin',
           sid: 5,
           description: 'temporally increase 50 defence',
+          cd: 15,
           use: function(p){
             if(p.raceSkillCoolDown == null || p.raceSkillCoolDown){
-              p.raceSkillCoolDown = false;
+              p.raceSkillCoolDown = this.cd;
               p.defencePoint += 50;
               setTimeout(function(){
                 p.defencePoint -= 50;
               }, 3000);
-              coolDown(p, 15)
+              coolDown(p, this.cd)
             }
           }
         }

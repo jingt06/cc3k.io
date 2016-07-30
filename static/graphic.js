@@ -215,7 +215,8 @@ define(function(require, exports, module) {
       context.beginPath();
       context.fillStyle = '#acacac';
       context.font = '15px Arial';
-      context.fillText(userInfo.numUsers + ' online players', 18 * cellWidth + 15, 2 * cellWidth - 10);
+      context.textAlign = 'center'
+      context.fillText(userInfo.numUsers + ' online players', 19 * cellWidth + 15, 2 * cellWidth - 10);
       context.closePath();
     };
 
@@ -253,15 +254,18 @@ define(function(require, exports, module) {
     // draw skill list
     var drawSkills = function () {
       if(skills.raceSkill){
-        context.drawImage(Images['skill'+skills.raceSkill.sid], 15*cellWidth, 19*cellWidth, cellWidth, cellWidth);
+        context.drawImage(Images['skill'+skills.raceSkill.sid], 10*cellWidth, 19*cellWidth, cellWidth, cellWidth);
         context.textAlign = 'center';
-        context.fillStyle = 'rgba(200, 200, 200, 0.8)';
+        context.fillStyle = 'rgba(250, 250, 250, 0.8)';
         context.font = '10px Verdana';
-        context.fillText('Q:' + skills.raceSkill.name,15.5*cellWidth,20*cellWidth);
-        if(!skills.raceSkill.cd) {
+        context.fillText('Q:' + skills.raceSkill.name,10.5*cellWidth,20.5*cellWidth);
+        if(skills.raceSkill.cd > 0) {
           context.beginPath();
-        context.fillStyle = 'rgba(200, 200, 200, 0.6)';
-          context.fillRect(15*cellWidth, 19*cellWidth, cellWidth, cellWidth)
+          context.fillStyle = 'rgba(200, 200, 200, 0.6)';
+          context.fillRect(10*cellWidth, 19*cellWidth, cellWidth, cellWidth)
+          context.font = '30px Verdana';
+          context.fillStyle = '#ffffff';
+          context.fillText(skills.raceSkill.cd, 10.5*cellWidth, 20*cellWidth);
           context.closePath();
         }
       }
