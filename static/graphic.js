@@ -13,6 +13,7 @@ define(function(require, exports, module) {
   var point;
   var objects;
   var userInfo;
+  var skills;
   var graphics = {}
   var Images;
 
@@ -36,7 +37,12 @@ define(function(require, exports, module) {
             wall: './image/wall.png',
             hpPotion: './image/hpPotion.png',
             defPotion: './image/defPotion.png',
-            attPotion: './image/attPotion.png'
+            attPotion: './image/attPotion.png',
+            skill1: './image/theHumanSpirit.jpg',
+            skill2: './image/rage.jpg',
+            skill3: './image/dodge.jpg',
+            skill4: './image/regeneration.jpg',
+            skill5: './image/stoneSkin.jpg'
             }
 
   function loader(sources, callback) {
@@ -48,12 +54,9 @@ define(function(require, exports, module) {
       numImages++;
     }
     for(var src in sources) {
-      console.log(src)
       images[src] = new Image();
       images[src].onload = function() {
-        console.log('loaded')
         if(++loadedImages >= numImages) {
-          console.log('done')
           callback(images);
         }
       };
@@ -195,6 +198,7 @@ define(function(require, exports, module) {
       drawHP(userInfo.HP, userInfo.maxHP,x + cellWidth/2 ,y + cellWidth/2)
     };
 
+    // draw mini map
     var drawMiniMap = function() {
       context.beginPath();
       context.fillStyle = 'rgba(200, 200, 200, 0.7)';
@@ -211,10 +215,12 @@ define(function(require, exports, module) {
       context.beginPath();
       context.fillStyle = '#acacac';
       context.font = '15px Arial';
-      context.fillText(userInfo.numUsers + ' online players', 18 * cellWidth + 15, 2 * cellWidth - 10);
+      context.textAlign = 'center'
+      context.fillText(userInfo.numUsers + ' online players', 19 * cellWidth + 15, 2 * cellWidth - 10);
       context.closePath();
     };
 
+    // draw info panel
     var drawInfoPanel = function() {
       context.textAlign = 'start'
       context.beginPath();
@@ -245,6 +251,25 @@ define(function(require, exports, module) {
       context.closePath();
     };
 
+    // draw skill list
+    var drawSkills = function () {
+      if(skills.raceSkill){
+        context.drawImage(Images['skill'+skills.raceSkill.sid], 10*cellWidth, 19*cellWidth, cellWidth, cellWidth);
+        context.textAlign = 'center';
+        context.fillStyle = 'rgba(250, 250, 250, 0.8)';
+        context.font = '10px Verdana';
+        context.fillText('Q:' + skills.raceSkill.name,10.5*cellWidth,20.5*cellWidth);
+        if(skills.raceSkill.cd > 0) {
+          context.beginPath();
+          context.fillStyle = 'rgba(200, 200, 200, 0.6)';
+          context.fillRect(10*cellWidth, 19*cellWidth, cellWidth, cellWidth)
+          context.font = '30px Verdana';
+          context.fillStyle = '#ffffff';
+          context.fillText(skills.raceSkill.cd, 10.5*cellWidth, 20*cellWidth);
+          context.closePath();
+        }
+      }
+    }
     var drawClassUpgradeInfo = function(upgradeClass) {
       context.beginPath();
       context.fillStyle =  'rgba(200, 200, 200, 0.7)';
@@ -291,12 +316,21 @@ define(function(require, exports, module) {
           }
         }
       }
+
+      // draw mini map
       drawMiniMap();
+
+      // draw info panel
       drawInfoPanel();
+
+      // draw skills list
+      drawSkills();
     };
+
     graphics.drawMap = function(m) {
       objects = m.object;
       userInfo = m.user;
+      skills = userInfo.skills;
       point = m.location;
       var x = point[0];
       var y = point[1];
@@ -305,6 +339,8 @@ define(function(require, exports, module) {
         drawClassUpgradeInfo(m.upgradeClass);
       }
     };
+
+    // game over page, able to restart
     graphics.dead = function () {
       effect.stop();
       context.beginPath();
@@ -320,24 +356,28 @@ define(function(require, exports, module) {
       // Fill with gradient
       context.fillStyle=gradient;
       context.font='70px Georgia';
-      context.fillText('You Dead!',6 * cellWidth,7 * cellWidth);
+      context.fillText('You Dead!',10.5 * cellWidth,7 * cellWidth);
       context.fillStyle='white';
       context.font='50px Georgia';
-      context.fillText('R to restart',6 * cellWidth,10 * cellWidth);
+      context.fillText('R to restart',10.5 * cellWidth,10 * cellWidth);
       context.closePath();
     };
+
+    // loading page and load images
     graphics.loadImages = function (callback) {
       context.fillStyle="#000000";
       context.fillRect(0, 0, canvas.width, canvas.height);
       context.font = "30px Comic Sans MS";
       context.fillStyle = "#ffffff";
       context.textAlign = "center";
-      context.fillText("Loading", canvas.width/2, canvas.height/2);
+      context.fillText("Loading. . .", canvas.width/2, canvas.height/2);
       loader(ImgSrc, (images) => {
         Images = images;
         callback();
       })
     }
+
+    // login page to input name and selecte race
     graphics.login = function() {
       effect.stop();
       context.beginPath();
