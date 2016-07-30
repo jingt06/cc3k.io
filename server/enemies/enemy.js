@@ -1,6 +1,7 @@
 var goblin = require('./goblin')
+var imp = require('./imp')
 
-var allEnemies = [goblin];
+var allEnemies = [goblin, imp];
 
 module.exports = function() {
 	var createEnemy = function(point, enemyStr) {
@@ -8,6 +9,9 @@ module.exports = function() {
 			switch (enemyStr) {
 				case 'goblin':
 					enemy = goblin.create();
+					break;
+				case 'imp':
+					enemy = imp.create();
 					break;
 				default:
 					var index = Math.floor(Math.random() * allEnemies.length);

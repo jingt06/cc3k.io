@@ -3,10 +3,12 @@ module.exports = {
     // this is for simple melee enemy, attack range: 1
     var x = enemy.location[0];
     var y = enemy.location[1];
+    var attackRange = enemy.attackRange;
+    var visionRange = enemy.visionRange;
     var playerInRange = []
     // playerInRange is [player, location] where location is [x, y]
-    for (var i = x - 1; i <= x + 1; i++) {
-      for (var j = y - 1; j <= y + 1; j++) {
+    for (var i = x - attackRange; i <= x + attackRange; i++) {
+      for (var j = y - attackRange; j <= y + attackRange; j++) {
         if(objects[i][j] && objects[i][j].type == 'player'){
           playerInRange.push([objects[i][j].object, [i, j]]);
         }
@@ -19,8 +21,8 @@ module.exports = {
       io.emit('effect' , {type: 'attack', duration: 5, location: playerInRange[index][1]});
     } else {
       // cannot attack anyone, search for near enemy
-      for (var i = x - 5; i <= x + 5; i++) {
-        for (var j = y - 5; j <= y + 5; j++) {
+      for (var i = x - visionRange; i <= x + visionRange; i++) {
+        for (var j = y - visionRange; j <= y + visionRange; j++) {
           if(objects[i][j] && objects[i][j].type == 'player'){
             playerInRange.push([objects[i][j].object, [i, j]]);
           }

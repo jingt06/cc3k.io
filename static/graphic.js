@@ -33,6 +33,7 @@ define(function(require, exports, module) {
             playerSouth: './image/playerSouth.png',
             // enemies
             goblin: './image/goblin.png',
+            imp: './image/imp.png',
             // races
             orc: './image/ORC.png',
             dwarf: './image/DWARF.png',
@@ -153,13 +154,9 @@ define(function(require, exports, module) {
           context.drawImage(Images.attPotion,x*cellWidth,y*cellWidth,cellWidth,cellWidth);
           break;
         case 'enemy':
-          switch (info.name) {
-            case 'Goblin':
-            var a = x * cellWidth;
-            var b = y * cellWidth;
-            context.drawImage(Images.goblin, a, b, cellWidth, cellWidth);
-            break;
-          }
+          var a = x * cellWidth;
+          var b = y * cellWidth;
+          context.drawImage(Images[info.name], a, b, cellWidth, cellWidth);
           drawHP(obj.info.HP, obj.info.maxHP, a+cellWidth/2, b+cellWidth/2);
           break;
         default:
