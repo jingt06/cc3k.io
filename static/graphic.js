@@ -31,13 +31,23 @@ define(function(require, exports, module) {
             playerWest: './image/playerWest.png',
             playerNorth: './image/playerNorth.png',
             playerSouth: './image/playerSouth.png',
+            // enemies
             goblin: './image/goblin.png',
+            // races
+            orc: './image/ORC.png',
+            dwarf: './image/DWARF.png',
+            human: './image/HUMAN.png',
+            troll: './image/TROLL.png',
+            elf: './image/ELF.png',
+            // map elements
             empty: './image/empty.png',
             floor: './image/floor.png',
             wall: './image/wall.png',
+            // potions
             hpPotion: './image/hpPotion.png',
             defPotion: './image/defPotion.png',
             attPotion: './image/attPotion.png',
+            // skills
             skill1: './image/theHumanSpirit.jpg',
             skill2: './image/rage.jpg',
             skill3: './image/dodge.jpg',
@@ -400,8 +410,8 @@ define(function(require, exports, module) {
       //wText.style='color:red;position:absolute;left:250px;top:370px;opacity:.5'
       wText.style['color'] = 'red';
       wText.style['position'] = 'absolute';
-      wText.style['left'] = '250px';
-      wText.style['top'] = '370px';
+      wText.style['left'] = 6 * cellWidth + 'px';
+      wText.style['top'] = 16 * cellWidth + 'px';
       wText.style['opacity'] = '0.5';
       iDiv.appendChild(wText);
 
@@ -411,11 +421,11 @@ define(function(require, exports, module) {
       var createButton = function(raceIndex, pos) {
         var button= document.createElement('button');
         name = raceList[raceIndex];
-        button.innerHTML= name;
+        button.innerHTML= '<img src="./image/'+name+'.png">';
         button.style['position']='absolute';
-        button.style['left'] = 6.5 * cellWidth + pos.x + 'px';
+        button.style['left'] = 5 * cellWidth + pos.x + 'px';
         button.style['top'] = 11 * cellWidth + pos.y +  'px';
-        button.style['opacity'] = .5;
+        button.style['opacity'] = .8;
         button.onclick = function() {
           var value = inputName.value;
           if(value == ''){
@@ -440,7 +450,7 @@ define(function(require, exports, module) {
       var num = 0;
       for(var i = 0;i < raceList.length;num++){
         for(var j = 0; j < 3&& i<raceList.length; j++){
-          buttonList.push(createButton(i,{x:70*j,y:30*num}));
+          buttonList.push(createButton(i,{x:110*j,y:80*num}));
           iDiv.appendChild(buttonList[i]);
           i++;
         }
