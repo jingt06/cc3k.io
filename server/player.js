@@ -138,6 +138,7 @@ module.exports = {
       while(p.exp >= p.expNextLevel){
         p.levelUp();
         p.level ++;
+        p.map.io.emit('effect' , {type: 'levelUp', duration: 10, location: p.position});
         p.exp -= p.expNextLevel;
         p.expNextLevel = p.level * (p.level - 1) * 50;
       }

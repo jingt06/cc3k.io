@@ -39,6 +39,7 @@ define(function(require, exports, module) {
       },
 			addEffect: function(effect) {
 				// effect = {type: , duration: , location:}
+        console.log (effect)
 				var type = effect.type;
 				var duration = effect.duration;
 				var location = effect.location;

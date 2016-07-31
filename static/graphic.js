@@ -59,7 +59,8 @@ define(function(require, exports, module) {
             swardAttack: './image/swardAttack.png',
             fireAttack: './image/fireAttack.png',
             //effect
-            shield: './image/shield.png'
+            shield: './image/shield.png',
+            levelUp: './image/levelUp.png'
             }
 
   function loader(sources, callback) {

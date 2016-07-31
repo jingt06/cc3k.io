@@ -189,6 +189,7 @@ module.exports = function(io) {
     width: mapWidth,
     margin:mapMargin,
     generateSpawnPoint: generateSpawnPoint,
+    io: io,
     getSight: function(point){
       var y = point[0]
       var x = point[1]
