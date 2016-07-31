@@ -14,6 +14,7 @@ module.exports = {
 			visionRange: 7,
 			actionCount: 0,
 			actionFreq: 3,
+			attackType: 'fireAttack'
 		};
 		imp.getInfo = function() {
 			return {

@@ -58,28 +58,15 @@ define(function(require, exports, module) {
         }
         return effects;
       },
-      drawEffect: function(x, y, effectType) {
-      x = parseInt(x);
-      y = parseInt(y);
-      switch (effectType) {
-        case 'attack':
-          context.beginPath();
-          context.lineWidth = 2;
-          context.strokeStyle="#FF0000";
-          context.moveTo(cellWidth * x, cellWidth * y);
-          context.lineTo(cellWidth * (x + 1), cellWidth * (y + 1));
-          context.stroke();
-          context.closePath();
-          context.beginPath();
-          context.moveTo(cellWidth * (x + 1), cellWidth * y);
-          context.lineTo(cellWidth * x, cellWidth * (y + 1));
-          context.stroke();
-          context.closePath();
-          break;
-        default:
-          return;
+      drawEffect: function(x, y, effectType, Images) {
+        console.log(effectType)
+        x = parseInt(x);
+        y = parseInt(y);
+        context.save();
+        context.globalAlpha = 0.4;
+        context.drawImage(Images[effectType], x*cellWidth, y*cellWidth, cellWidth, cellWidth);
+        context.restore();
       }
     }
-		}
 	}
 })

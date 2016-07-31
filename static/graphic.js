@@ -26,8 +26,7 @@ define(function(require, exports, module) {
     context.fillText(text, x, y);
   }
 
-  ImgSrc = {attack: './image/attack.png',
-            playerEast: './image/playerEast.png',
+  ImgSrc = {playerEast: './image/playerEast.png',
             playerWest: './image/playerWest.png',
             playerNorth: './image/playerNorth.png',
             playerSouth: './image/playerSouth.png',
@@ -53,7 +52,14 @@ define(function(require, exports, module) {
             skill2: './image/rage.jpg',
             skill3: './image/dodge.jpg',
             skill4: './image/regeneration.jpg',
-            skill5: './image/stoneSkin.jpg'
+            skill5: './image/stoneSkin.jpg',
+            // attacks
+            magicAttack: './image/magicAttack.png',
+            arrowAttack: './image/arrowAttack.png',
+            swardAttack: './image/swardAttack.png',
+            fireAttack: './image/fireAttack.png',
+            //effect
+            shield: './image/shield.png'
             }
 
   function loader(sources, callback) {
@@ -319,7 +325,7 @@ define(function(require, exports, module) {
       for(i in effects) {
         for (j in effects[i]) {
           if (effects[i][j]){
-            effect.drawEffect(j, i, effects[i][j]);
+            effect.drawEffect(j, i, effects[i][j], Images);
           }
         }
       }
