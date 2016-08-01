@@ -5,7 +5,8 @@ module.exports = {
     var y = enemy.location[1];
     var attackRange = enemy.attackRange;
     var visionRange = enemy.visionRange;
-    var playerInRange = []
+    var attackType = enemy.attackType;
+    var playerInRange = [];
     // playerInRange is [player, location] where location is [x, y]
     for (var i = x - attackRange; i <= x + attackRange; i++) {
       for (var j = y - attackRange; j <= y + attackRange; j++) {
@@ -18,7 +19,7 @@ module.exports = {
       // attack player
       var index = Math.floor(Math.random() * playerInRange.length);
       var attackedPlayer = playerInRange[index][0].attacked(enemy);
-      io.emit('effect' , {type: 'attack', duration: 5, location: playerInRange[index][1]});
+      io.emit('effect' , {type: attackType, duration: 5, location: playerInRange[index][1]});
     } else {
       // cannot attack anyone, search for near enemy
       for (var i = x - visionRange; i <= x + visionRange; i++) {

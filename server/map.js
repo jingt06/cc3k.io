@@ -189,6 +189,7 @@ module.exports = function(io) {
     width: mapWidth,
     margin:mapMargin,
     generateSpawnPoint: generateSpawnPoint,
+    io: io,
     getSight: function(point){
       var y = point[0]
       var x = point[1]
@@ -228,7 +229,7 @@ module.exports = function(io) {
     action: function(player, action, targets, options) {
       switch (action) {
         case 'attack':
-          io.emit('effects' , {type: 'attack', duration: 5, locations: targets});
+          io.emit('effects' , {type: options, duration: 5, locations: targets});
           notify(player.position);
           for (var i = targets.length - 1; i >= 0; i--) {
             obj = objects[targets[i][0]][targets[i][1]];

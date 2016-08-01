@@ -29,6 +29,7 @@ module.exports = {
                 p.defencePoint -= 5;
               }, 5000);
               coolDown(p, this.cd)
+              p.map.io.emit('effect' , {type: 'shield', duration: 10, location: p.position});
             }
           }
         }
@@ -49,6 +50,7 @@ module.exports = {
                 p.attackPoint -= 25;
               }, 3000);
               coolDown(p, this.cd)
+              p.map.io.emit('effect' , {type: 'shield', duration: 10, location: p.position});
             }
           }
         }
@@ -67,6 +69,7 @@ module.exports = {
                 p.dodge -= 20;
               }, 3000);
               coolDown(p, this.cd)
+              p.map.io.emit('effect' , {type: 'shield', duration: 10, location: p.position});
             }
           }
         }
@@ -83,6 +86,7 @@ module.exports = {
               p.HP += p.maxHP*25/100;
               if (p.HP >= p.maxHP) p.HP = p.maxHP;
               coolDown(p, this.cd)
+              p.map.io.emit('effect' , {type: 'shield', duration: 10, location: p.position});
             }
           }
         }
@@ -101,6 +105,7 @@ module.exports = {
                 p.defencePoint -= 50;
               }, 3000);
               coolDown(p, this.cd)
+              p.map.io.emit('effect' , {type: 'shield', duration: 10, location: p.position});
             }
           }
         }
