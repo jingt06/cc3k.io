@@ -64,7 +64,7 @@ define(function(require, exports, module) {
         x = parseInt(x);
         y = parseInt(y);
         context.save();
-        context.globalAlpha = 0.4;
+        context.globalAlpha = 0.8;
         context.drawImage(Images[effectType], x*cellWidth, y*cellWidth, cellWidth, cellWidth);
         context.restore();
       }
