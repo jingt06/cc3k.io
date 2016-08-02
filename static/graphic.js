@@ -325,8 +325,10 @@ define(function(require, exports, module) {
       // draw effects
       for(i in effects) {
         for (j in effects[i]) {
-          if (effects[i][j]){
-            effect.drawEffect(j, i, effects[i][j], Images);
+          if (effects[i][j].length > 0){
+            for (index in effects[i][j]) {
+              effect.drawEffect(j, i, effects[i][j][index].type, Images);
+            }
           }
         }
       }

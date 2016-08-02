@@ -22,7 +22,19 @@ module.exports = function() {
 				return enemy.HP < 0;
 			};
 			enemy.attacked = function(attacker) {
-		        enemy.HP -= attacker.attackPoint * 100 / (100 + enemy.defencePoint);
+		      var dodgeRoll = Math.random() * 100;
+		      var critRoll = Math.random() * 100;
+		      if (dodgeRoll > enemy.dodge) {
+		        var factor = 1;
+		        if (critRoll < attacker.critAtt) {
+		          factor = 2;
+		          attacker.map.io.emit('effect' , {type: 'critical', duration: 5, location: attacker.position});
+		        }
+		        enemy.HP -= factor * attacker.attackPoint * 100 / (100 + enemy.defencePoint);
+		      }else{
+		        attacker.map.io.emit('effect' , {type: 'dodge', duration: 5, location: enemy.position});
+		      }
+		      return -1;
 		    };
 		    enemy.addExp = function(expGain){
 		    	enemy.exp += expGain;

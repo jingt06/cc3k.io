@@ -8,7 +8,7 @@ define(function(require, exports, module) {
 		for (var i = 0; i < length; i++) {
 			row = []
 			for (var j = 0; j < width; j++) {
-				row.push(null)
+				row.push([])
 			}
 			effectMap.push(row);
 		}
@@ -21,9 +21,13 @@ define(function(require, exports, module) {
         var effect = effectList[i];
         effect.duration--;
         if (effect.duration == 0){
-          redraw = true;
-          effectMap[effect.location[0]][effect.location[1]] = null;
-          effectList.splice(i, 1);
+          for(index in effectMap[effect.location[0]][effect.location[1]]){
+            if (effectMap[effect.location[0]][effect.location[1]][index].duration == 0){
+              effectMap[effect.location[0]][effect.location[1]].splice(index, 1);
+              effectList.splice(i, 1);
+              redraw = true;
+            }
+          }
         } else {
           ++i;
         }
@@ -39,11 +43,10 @@ define(function(require, exports, module) {
       },
 			addEffect: function(effect) {
 				// effect = {type: , duration: , location:}
-        console.log (effect)
 				var type = effect.type;
 				var duration = effect.duration;
 				var location = effect.location;
-				effectMap[location[0]][location[1]] = type
+				effectMap[location[0]][location[1]].push(effect)
 				effectList.push(effect)
 			},
       getEffect: function(point) {
@@ -60,12 +63,18 @@ define(function(require, exports, module) {
         return effects;
       },
       drawEffect: function(x, y, effectType, Images) {
-        console.log(effectType)
         x = parseInt(x);
         y = parseInt(y);
         context.save();
         context.globalAlpha = 0.8;
-        context.drawImage(Images[effectType], x*cellWidth, y*cellWidth, cellWidth, cellWidth);
+        if(effectType == 'dodge' || effectType == 'critical'){
+          context.textAlign = 'center'
+          context.fillStyle = 'red';
+          context.font='15px';
+          context.fillText(effectType,x*cellWidth+cellWidth/2, y*cellWidth);
+        } else {
+          context.drawImage(Images[effectType], x*cellWidth, y*cellWidth, cellWidth, cellWidth);
+        }
         context.restore();
       }
     }
