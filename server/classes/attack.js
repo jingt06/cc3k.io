@@ -3,6 +3,15 @@ var south = 1;
 var west = 2;
 var north = 3;
 
+bullet = function(map, attacker, options, next){
+	options.position = next(options.position);
+	var retval = map.action(attacker, 'attack', [options.position], 'arrowAttack');
+	if (retval == 1) if (--options.num == 0) return; //hit
+	if (--options.range == 0) return;
+	setTimeout(function(){ bullet(map, attacker, options, next) }, options.speed*100);
+
+}
+
 module.exports = {
 	basicAttack: function(map, point, face, attack, player) {
 		var newPoint;
@@ -25,21 +34,28 @@ module.exports = {
 
 	rangeAttack: function(map, point, face, attack, player) {
 		var newPoints;
+		var options = {
+			factor: 1,
+			range: 5,
+			speed: 1,
+			radius: 0,
+			num: 1,
+			position: [point[0], point[1]]
+		}
 		switch (face) {
 			case east:
-				newPoints = [[point[0], point[1] + 1], [point[0], point[1] + 2],[point[0], point[1] + 3], [point[0], point[1] + 4]];
+				bullet(map, player, options, (point)=>{point[1]++; return point;})
 				break;
 			case west:
-				newPoints = [[point[0], point[1] - 1], [point[0], point[1] - 2], [point[0], point[1] - 3], [point[0], point[1] - 4]];
+				bullet(map, player, options, (point)=>{point[1]--; return point;})
 				break;
 			case north:
-				newPoints = [[point[0] - 1, point[1]], [point[0] - 2, point[1]], [point[0] - 3, point[1]], [point[0] - 4, point[1]]];
+				bullet(map, player, options, (point)=>{point[0]--; return point;})
 				break;
 			case south:
-				newPoints = [[point[0] + 1, point[1]], [point[0] + 2, point[1]], [point[0] + 3, point[1]], [point[0] + 4, point[1]]];
+				bullet(map, player, options, (point)=>{point[0]++; return point;})
 				break;
 		}
-    	map.action(player, 'attack', newPoints, 'arrowAttack');
 	},
 
 	coneAttack: function(map, point, face, attack, player) {

@@ -227,6 +227,7 @@ module.exports = function(io) {
       notify(point);
     },
     action: function(player, action, targets, options) {
+      var retval = 0;
       switch (action) {
         case 'attack':
           io.emit('effects' , {type: options, duration: 5, locations: targets});
@@ -240,6 +241,7 @@ module.exports = function(io) {
                 // share exp
                 shareExp(killed, targets[i]);
               }
+              retval = 1;
             } else if (obj && obj.type == 'enemy') {
               var attackedEnemy = obj.object;
               attackedEnemy.attacked(player);
@@ -250,11 +252,13 @@ module.exports = function(io) {
                 shareExp(attackedEnemy.exp, targets[i]);
                 generateEnemy(id);
               }
+              retval = 1;
             }
             notify(player.position);
           }
           break;
       }
+      return retval;
     },
     enemyMove: function(){
       for (var i = enemyList.length - 1; i >= 0; i--) {
