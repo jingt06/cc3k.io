@@ -48,7 +48,7 @@ module.exports = {
       p.attackPoint = 20;
       p.defencePoint =20;
       p.regenHP = 0;
-      p.dodge = 0;
+      p.dodge = 0; //test use
       p.critAtt = 0;
 
       // rest player skill cooldown
@@ -160,6 +160,7 @@ module.exports = {
         var factor = 1;
         if (critRoll < attacker.critAtt) {
           factor = 2;
+          p.map.io.emit('effect' , {type: 'critical', duration: 5, location: attacker.position});
         }
         p.HP -= factor * attacker.attackPoint * 100 / (100 + p.defencePoint);
         if (p.isDead()) {
@@ -167,6 +168,8 @@ module.exports = {
           p.delete();
           return p.expNextLevel;
         }
+      }else{
+        p.map.io.emit('effect' , {type: 'dodge', duration: 5, location: p.position});
       }
       return -1;
     }
