@@ -239,6 +239,7 @@ module.exports = function(io) {
           for (var i = targets.length - 1; i >= 0; i--) {
             obj = objects[targets[i][0]][targets[i][1]];
             if (obj && obj.type == 'player') {
+              if(obj.object == player) continue; // does not attack itself
               var attackedPlayer = obj.object;
               var killed = attackedPlayer.attacked(player);
               if (killed != -1) {

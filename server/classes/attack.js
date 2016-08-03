@@ -39,7 +39,7 @@ module.exports = {
 		var options = {
 			factor: 1,
 			range: 5,
-			speed: 1,
+			speed: 3,
 			radius: 0,
 			num: 1,
 			position: [point[0], point[1]]
