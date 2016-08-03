@@ -5,7 +5,8 @@ var north = 3;
 
 bullet = function(map, attacker, options, next){
 	options.position = next(options.position);
-	var retval = map.action(attacker, 'attack', [options.position], 'arrowAttack');
+	attackOptions = {type: 'arrowAttack', duration: options.speed}
+	var retval = map.action(attacker, 'attack', [options.position], attackOptions);
 	if (retval == 1) if (--options.num == 0) return; //hit
 	if (--options.range == 0) return;
 	setTimeout(function(){ bullet(map, attacker, options, next) }, options.speed*100);
@@ -14,6 +15,7 @@ bullet = function(map, attacker, options, next){
 
 module.exports = {
 	basicAttack: function(map, point, face, attack, player) {
+		options = {type: 'swardAttack'}
 		var newPoint;
 		switch (face) {
 			case east:
@@ -29,7 +31,7 @@ module.exports = {
 				newPoint = [point[0] + 1, point[1]];
 				break;
 		}
-  	  map.action(player, 'attack', [newPoint], 'swardAttack');
+  	  	map.action(player, 'attack', [newPoint], options);
 	},
 
 	rangeAttack: function(map, point, face, attack, player) {
@@ -59,6 +61,7 @@ module.exports = {
 	},
 
 	coneAttack: function(map, point, face, attack, player) {
+		options = {type: 'magicAttack'}
 		var newPoints;
 		switch (face) {
 			case east:
@@ -74,15 +77,17 @@ module.exports = {
 				newPoints = [[point[0] + 1, point[1]], [point[0] + 2, point[1]], [point[0] + 2, point[1] + 1], [point[0] + 2, point[1] - 1]];
 				break;
 		}
-    	map.action(player, 'attack', newPoints, 'magicAttack');
+  	  	map.action(player, 'attack', [newPoint], options);
 	},
 
 	adjacentAttack: function(map, point, face, attack, player) {
+		options = {type: 'swardAttack'}
 		var newPoints = [[point[0], point[1] + 1], [point[0], point[1] - 1],[point[0] + 1, point[1]], [point[0] - 1, point[1]]];
-    	map.action(player, 'attack', newPoints, 'swardAttack');
+    	map.action(player, 'attack', newPoints, options);
 	},
 
 	rowAttack: function(map, point, face, attack, player) {
+		options = {type: 'swardAttack'}
 		var newPoints;
 		switch (face) {
 			case east:
@@ -98,6 +103,6 @@ module.exports = {
 				newPoints = [[point[0] + 1, point[1]], [point[0] + 1, point[1] + 1], [point[0] + 1, point[1] - 1]];
 				break;
 		}
-    	map.action(player, 'attack', newPoints, 'swardAttack');
+    	map.action(player, 'attack', newPoints, options);
 	},
 }

@@ -230,7 +230,11 @@ module.exports = function(io) {
       var retval = 0;
       switch (action) {
         case 'attack':
-          io.emit('effects' , {type: options, duration: 5, locations: targets});
+          var type = options.type;
+          if (type == null) type = 'swardAttack';
+          var duration = options.duration;
+          if (duration == null) duration =5;
+          io.emit('effects' , {type: type, duration: duration, locations: targets});
           notify(player.position);
           for (var i = targets.length - 1; i >= 0; i--) {
             obj = objects[targets[i][0]][targets[i][1]];
