@@ -227,19 +227,26 @@ module.exports = function(io) {
       notify(point);
     },
     action: function(player, action, targets, options) {
+      var retval = 0;
       switch (action) {
         case 'attack':
-          io.emit('effects' , {type: options, duration: 5, locations: targets});
+          var type = options.type;
+          if (type == null) type = 'swardAttack';
+          var duration = options.duration;
+          if (duration == null) duration =5;
+          io.emit('effects' , {type: type, duration: duration, locations: targets});
           notify(player.position);
           for (var i = targets.length - 1; i >= 0; i--) {
             obj = objects[targets[i][0]][targets[i][1]];
             if (obj && obj.type == 'player') {
+              if(obj.object == player) continue; // does not attack itself
               var attackedPlayer = obj.object;
               var killed = attackedPlayer.attacked(player);
               if (killed != -1) {
                 // share exp
                 shareExp(killed, targets[i]);
               }
+              retval = 1;
             } else if (obj && obj.type == 'enemy') {
               var attackedEnemy = obj.object;
               attackedEnemy.attacked(player);
@@ -250,11 +257,13 @@ module.exports = function(io) {
                 shareExp(attackedEnemy.exp, targets[i]);
                 generateEnemy(id);
               }
+              retval = 1;
             }
             notify(player.position);
           }
           break;
       }
+      return retval;
     },
     enemyMove: function(){
       for (var i = enemyList.length - 1; i >= 0; i--) {
