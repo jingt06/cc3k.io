@@ -1,5 +1,5 @@
 var attack = require('./attack');
-
+var skill = require('../skills/classSkill');
 module.exports = {
 	transfer: function(player) {
 		if (player.class.tier == 0) {
@@ -21,6 +21,7 @@ module.exports = {
 					player.HP = player.maxHP;
 				}
 			};
+			player.classSkill = skill.fireBall;
 			player.upgradeClass = null;
 		}
 	}

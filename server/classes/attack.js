@@ -2,16 +2,7 @@ var east = 0;
 var south = 1;
 var west = 2;
 var north = 3;
-
-bullet = function(map, attacker, options, next){
-	options.position = next(options.position);
-	attackOptions = {type: 'arrowAttack', duration: options.speed}
-	var retval = map.action(attacker, 'attack', [options.position], attackOptions);
-	if (retval == 1) if (--options.num == 0) return; //hit
-	if (--options.range == 0) return;
-	setTimeout(function(){ bullet(map, attacker, options, next) }, options.speed*100);
-
-}
+bullet = require('../skills/bullet').sendBullet;
 
 module.exports = {
 	basicAttack: function(map, point, face, attack, player) {
@@ -35,14 +26,14 @@ module.exports = {
 	},
 
 	rangeAttack: function(map, point, face, attack, player) {
-		var newPoints;
 		var options = {
 			factor: 1,
-			range: 5,
-			speed: 3,
+			range: 7,
+			speed: 1,
 			radius: 0,
 			num: 1,
-			position: [point[0], point[1]]
+			position: [point[0], point[1]],
+			type: 'arrowAttack'
 		}
 		switch (face) {
 			case east:
@@ -77,7 +68,7 @@ module.exports = {
 				newPoints = [[point[0] + 1, point[1]], [point[0] + 2, point[1]], [point[0] + 2, point[1] + 1], [point[0] + 2, point[1] - 1]];
 				break;
 		}
-  	  	map.action(player, 'attack', [newPoint], options);
+  	  	map.action(player, 'attack', newPoints, options);
 	},
 
 	adjacentAttack: function(map, point, face, attack, player) {

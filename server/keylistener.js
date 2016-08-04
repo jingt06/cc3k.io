@@ -9,6 +9,7 @@ var key3 = 51;
 var key4 = 52;
 var keyR = 82;
 var keyQ = 81;
+var keyW = 87;
 
 module.exports = function(player){
   var keyLeft = function(cid) {
@@ -45,7 +46,12 @@ module.exports = function(player){
       p.raceSkill.use(p);
     }
   }
-
+  var useClassSkill = function(cid) {
+    var p = player.getPlayer(cid);
+    if (!p.isDead() && p.classSkill!=null) {
+      p.classSkill.use(p);
+    }
+  }
   var keyListener = function(cid, key){
     if(!player.getPlayer(cid)) return;
     switch(key) {
@@ -81,6 +87,9 @@ module.exports = function(player){
         break;
       case keyQ:
         useRaceSkill(cid);
+        break;
+      case keyW:
+        useClassSkill(cid);
         break;
     }
   }
