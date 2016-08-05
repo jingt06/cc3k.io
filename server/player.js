@@ -53,7 +53,6 @@ module.exports = {
 
       // rest player skill cooldown
       p.raceSkillCoolDown = 0;
-      p.raceSkill = null;
       p.classSkillCoolDown = 0;
       p.classSkill = null;
       p.classAdvancedSkillCoolDown = 0;

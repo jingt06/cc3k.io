@@ -26,7 +26,7 @@ module.exports = {
           point = player.position;
           face = player.face;
           var options = {
-            factor: 1.5,
+            factor: 0.8,
             range: 7,
             speed: 2,
             radius: 2,
@@ -51,5 +51,30 @@ module.exports = {
           classCoolDown(player, this.cd);
         }
   		}
+    },
+    arrowRain: {
+      name: 'Arrowrain',
+      sid: 6,
+      description: 'rain of arrow, attack surrounding enemyies 2 times',
+      cd: 15,
+      use: function(player) {
+        if (player.classSkillCoolDown == 0){
+          player.classSkillCoolDown = this.cd;
+          map = player.map;
+          point = player.position;
+          face = player.face;
+          var options = {
+            factor: 0.8,
+            range: 3,
+            speed: 2,
+            radius: 4,
+            num: 2,
+            position: [point[0], point[1]],
+            type: 'arrowAttack'
+          }
+          bullet(map, player, options, (point)=>{return point;})
+          classCoolDown(player, this.cd);
+        }
+      }
     }
 }

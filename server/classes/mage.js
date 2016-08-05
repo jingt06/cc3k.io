@@ -1,5 +1,6 @@
 var attack = require('./attack');
 var skill = require('../skills/classSkill');
+
 module.exports = {
 	transfer: function(player) {
 		if (player.class.tier == 0) {
