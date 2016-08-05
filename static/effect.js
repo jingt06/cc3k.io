@@ -63,7 +63,6 @@ define(function(require, exports, module) {
         return effects;
       },
       drawEffect: function(x, y, effectType, Images) {
-        console.log(effectType)
         x = parseInt(x);
         y = parseInt(y);
         context.save();
