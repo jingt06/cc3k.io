@@ -159,13 +159,14 @@ module.exports = {
       p.notify();
     }
 
-    p.attacked = function(attacker) {
+    p.attacked = function(attacker, factor) {
+      if(factor == null) factor = 1;
       var dodgeRoll = Math.random() * 100;
       var critRoll = Math.random() * 100;
       if (dodgeRoll > p.dodge) {
-        var factor = 1;
+        factor = factor;
         if (critRoll < attacker.critAtt) {
-          factor = 2;
+          factor = factor * 2;
           p.map.io.emit('effect' , {type: 'critical', duration: 5, location: attacker.position});
         }
         p.HP -= factor * attacker.attackPoint * 100 / (100 + p.defencePoint);
@@ -218,6 +219,4 @@ module.exports = {
       }
     }
   }
-
-
 }

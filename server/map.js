@@ -233,7 +233,9 @@ module.exports = function(io) {
           var type = options.type;
           if (type == null) type = 'swardAttack';
           var duration = options.duration;
-          if (duration == null) duration =5;
+          if (duration == null) duration = 5;
+          var factor = options.factor;
+          if (factor == null) factor = 1;
           io.emit('effects' , {type: type, duration: duration, locations: targets});
           notify(player.position);
           for (var i = targets.length - 1; i >= 0; i--) {
@@ -241,7 +243,7 @@ module.exports = function(io) {
             if (obj && obj.type == 'player') {
               if(obj.object == player) continue; // does not attack itself
               var attackedPlayer = obj.object;
-              var killed = attackedPlayer.attacked(player);
+              var killed = attackedPlayer.attacked(player, factor);
               if (killed != -1) {
                 // share exp
                 shareExp(killed, targets[i]);
@@ -249,7 +251,7 @@ module.exports = function(io) {
               retval = 1;
             } else if (obj && obj.type == 'enemy') {
               var attackedEnemy = obj.object;
-              attackedEnemy.attacked(player);
+              attackedEnemy.attacked(player, factor);
               if (attackedEnemy.isDead()) {
                 var id = attackedEnemy.id;
                 objects[targets[i][0]][targets[i][1]] = null;

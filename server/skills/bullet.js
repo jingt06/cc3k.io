@@ -15,7 +15,7 @@ module.exports = {
 				}
 			}
 		}
-		attackOptions = {type:options.type, duration: options.speed}
+		attackOptions = {type:options.type, duration: options.speed, factor: options.factor};
 		var retval = map.action(attacker, 'attack', points, attackOptions);
 		if (retval == 1) if (--options.num == 0) return; //hit
 		if (--options.range == 0) return;
