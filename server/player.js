@@ -48,9 +48,11 @@ module.exports = {
       p.attackPoint = 20;
       p.defencePoint =20;
       p.regenHP = 0;
-      p.dodge = 0; //test use
+      p.dodge = 0;
       p.critAtt = 0;
 
+      p.moveCoolDown = 1;
+      p.moveCounter = 0;
       // rest player skill cooldown
       p.raceSkillCoolDown = 0;
       p.classSkillCoolDown = 0;
@@ -119,6 +121,7 @@ module.exports = {
     };
 
     p.move = function (x, y) {
+      if(p.moveCounter != 0) return;
       var newPos = [p.position[0] + x, p.position[1] + y];
       var oldFace = p.face;
       p.face = determineFace(x, y);
@@ -129,6 +132,7 @@ module.exports = {
       } else if (oldFace != p.face) {
         p.notify();
       }
+      p.moveCounter = p.moveCoolDown;
     };
 
     p.isDead = function() {
@@ -204,6 +208,15 @@ module.exports = {
 
   getPlayer : function(cid) {
     return allPlayer[cid]
+  },
+
+  coolDown(){
+    for(i in allPlayer){
+      var player = allPlayer[i];
+      if(player.moveCounter != 0) {
+        player.moveCounter--;
+      }
+    }
   }
 
 
