@@ -13,6 +13,33 @@ classCoolDown = function (p, s) {
   }, 1000)
 }
 
+rush = function (player, num) {
+  if (num == 0 || player.isDead()) return;
+  var face = player.face;
+  var position = player.position;
+  var map = player.map;
+  switch (face) {
+    case east:
+      player.move(0, 1);
+      break;
+    case west:
+      player.move(0, -1);
+      break;
+    case north:
+      player.move(1, 0);
+      break;
+    case south:
+      player.move(-1, 0);
+      break;
+  }
+
+  points = [[position[0],position[1]], [position[0]-1,position[1]], [position[0]-1,position[1]-1],
+           [position[0]-1,position[1]+1], [position[0],position[1]-1], [position[0],position[1]+1],
+           [position[0]+1,position[1]], [position[0]+1,position[1]+1], [position[0]+1,position[1]-1]];
+  map.action(player, 'attack', points, {type: 'swardAttack'});
+  setTimeout(function(){rush(player, num-1)}, 100)
+}
+
 module.exports = {
 	fireBall: {
     	name: 'Fireball',
@@ -54,7 +81,7 @@ module.exports = {
     },
     arrowRain: {
       name: 'Arrowrain',
-      sid: 6,
+      sid: 7,
       description: 'rain of arrow, attack surrounding enemyies 2 times',
       cd: 15,
       use: function(player) {
@@ -73,6 +100,19 @@ module.exports = {
             type: 'arrowAttack'
           }
           bullet(map, player, options, (point)=>{return point;})
+          classCoolDown(player, this.cd);
+        }
+      }
+    },
+    rushing: {
+      name: 'Rushing',
+      sid: 8,
+      description: 'rush forward 5 times',
+      cd: 15,
+      use: function(player) {
+        if (player.classSkillCoolDown == 0){
+          player.classSkillCoolDown = this.cd;
+          rush(player, 5);
           classCoolDown(player, this.cd);
         }
       }
