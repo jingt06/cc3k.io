@@ -51,10 +51,14 @@ module.exports = {
       p.dodge = 0;
       p.critAtt = 0;
 
+      p.moveCoolDown = 1;
+      p.moveCounter = 0;
       // rest player skill cooldown
       p.raceSkillCoolDown = 0;
       p.classSkillCoolDown = 0;
+      p.classSkill = null;
       p.classAdvancedSkillCoolDown = 0;
+      p.advancedClassSkill = null;
       p.ultimateSkillCoolDown = 0;
       classes.createSoldier(p);
     }
@@ -117,16 +121,18 @@ module.exports = {
     };
 
     p.move = function (x, y) {
+      if(p.moveCounter != 0) return;
       var newPos = [p.position[0] + x, p.position[1] + y];
       var oldFace = p.face;
       p.face = determineFace(x, y);
-      if (p.map.available(newPos, p)){
+      if (p.map.available(newPos, p)) {
         p.map.removeObject(p.position, p);
         p.position = newPos;
         p.map.addObject(newPos, 'player', p);
       } else if (oldFace != p.face) {
         p.notify();
       }
+      p.moveCounter = p.moveCoolDown;
     };
 
     p.isDead = function() {
@@ -153,13 +159,15 @@ module.exports = {
       p.notify();
     }
 
-    p.attacked = function(attacker) {
+    p.attacked = function(attacker, factor) {
+      if(factor == null) factor = 1;
       var dodgeRoll = Math.random() * 100;
       var critRoll = Math.random() * 100;
       if (dodgeRoll > p.dodge) {
-        var factor = 1;
+        factor = factor;
         if (critRoll < attacker.critAtt) {
-          factor = 2;
+          factor = factor * 2;
+          p.map.io.emit('effect' , {type: 'critical', duration: 5, location: attacker.position});
         }
         p.HP -= factor * attacker.attackPoint * 100 / (100 + p.defencePoint);
         if (p.isDead()) {
@@ -167,6 +175,8 @@ module.exports = {
           p.delete();
           return p.expNextLevel;
         }
+      }else{
+        p.map.io.emit('effect' , {type: 'dodge', duration: 5, location: p.position});
       }
       return -1;
     }
@@ -199,7 +209,14 @@ module.exports = {
 
   getPlayer : function(cid) {
     return allPlayer[cid]
+  },
+
+  coolDown(){
+    for(i in allPlayer){
+      var player = allPlayer[i];
+      if(player.moveCounter != 0) {
+        player.moveCounter--;
+      }
+    }
   }
-
-
 }

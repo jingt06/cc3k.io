@@ -14,7 +14,9 @@ module.exports = {
 			visionRange: 5,
 			actionCount: 0,
 			actionFreq: 1,
-			attackType: 'swardAttack'
+			attackType: 'swardAttack',
+			dodge: 10,
+			critical: 0
 		};
 		goblin.getInfo = function() {
 			return {
