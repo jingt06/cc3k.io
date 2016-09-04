@@ -283,6 +283,24 @@ define(function(require, exports, module) {
           context.closePath();
         }
       }
+      if (skills.classSkill){
+      if(skills.raceSkill){
+        context.drawImage(Images['skill'+skills.raceSkill.sid], 10*cellWidth, 19*cellWidth, cellWidth, cellWidth);
+        context.textAlign = 'center';
+        context.fillStyle = 'rgba(250, 250, 250, 0.8)';
+        context.font = '10px Verdana';
+        context.fillText('W:' + skills.raceSkill.name,10.5*cellWidth,20.5*cellWidth);
+        if(skills.raceSkill.cd > 0) {
+          context.beginPath();
+          context.fillStyle = 'rgba(200, 200, 200, 0.6)';
+          context.fillRect(10*cellWidth, 19*cellWidth, cellWidth, cellWidth)
+          context.font = '30px Verdana';
+          context.fillStyle = '#ffffff';
+          context.fillText(skills.raceSkill.cd, 10.5*cellWidth, 20*cellWidth);
+          context.closePath();
+        }
+      }
+      }
     }
     var drawClassUpgradeInfo = function(upgradeClass) {
       context.beginPath();
